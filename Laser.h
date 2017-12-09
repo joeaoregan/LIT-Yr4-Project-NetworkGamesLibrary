@@ -1,0 +1,29 @@
+
+#ifndef LASER_H
+#define LASER_H
+
+#include "GameObject.h"
+#include "Texture.h"
+#include <iostream>
+
+class Laser : public GameObject {
+public:
+	Laser() {
+		std::cout << "Laser constuctor called.\n";	// Initializes the variables
+		setWidth(50);
+		setHeight(5);
+		setVel(20);
+	}	
+			
+	~Laser() {
+		std::cout << "Laser destructor called.\n";
+	}
+	
+	void spawn(int x, int y, int velocity);
+	void move();						// Moves the laser	
+	void render();						// Shows the laser on the screen
+
+
+};
+
+#endif
