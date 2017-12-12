@@ -11,6 +11,9 @@
 #define SCREEN_WIDTH 1280					// Screen Width
 #define SCREEN_HEIGHT 720					// Screen Height
 
+
+# define TCP_PORT 1066
+
 class Game {
 public:	
 
@@ -24,6 +27,7 @@ public:
 		return s_pInstance;				// Return the current game instance
 	}
 
+	//bool init(char* serverName);						// Starts up SDL and creates window
 	bool init();						// Starts up SDL and creates window
 
 	bool loadMedia();					// Loads media
@@ -38,6 +42,8 @@ public:
 
 
 	void spawnLaser();
+	
+	bool gameFinished() { return quit; }			// Has the game exited
 
 
 
@@ -47,6 +53,14 @@ private:
 	SDL_Renderer* gRenderer = NULL;				// The window renderer
 
 	TTF_Font *gFont = NULL;					// Globally used font
+	
+	bool quit;						// Main game loop condition
+	
+	SDL_Event e;						// Event handler
+
+	int scrollingOffset;
+
+	
 };
 
 #endif	/* __GAME_H */

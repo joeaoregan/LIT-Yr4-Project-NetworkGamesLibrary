@@ -22,8 +22,6 @@ public:
 	void spawn(int x, int y, int velocity);
 	void move();						// Moves the laser	
 	void render();						// Shows the laser on the screen
-
-
 };
 
 #endif
