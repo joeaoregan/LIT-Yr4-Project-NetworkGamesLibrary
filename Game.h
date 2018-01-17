@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Game.h
+
+	Main game file
+	Using singleton pattern to access variables and functionality
+*/
 #ifndef	__GAME_H
 #define	__GAME_H
 
@@ -63,7 +72,7 @@ private:
 
 	int scrollingOffset;
 
-	
+	int prevX, prevY;
 };
 
 #endif	/* __GAME_H */

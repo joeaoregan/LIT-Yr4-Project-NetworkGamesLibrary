@@ -1,6 +1,10 @@
 /*
+	Joe O'Regan
+	K00203642
+
 	Laser.cpp 
-	implementations of Laser functions
+
+	Implementations of Laser functions
 */
 
 #include "Laser.h"

@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+	
+	Server.c
+	17/01/2018
+
+	UDP Server socket to read data from Game Client
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

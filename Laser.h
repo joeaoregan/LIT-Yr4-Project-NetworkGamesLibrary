@@ -1,4 +1,11 @@
+/*
+	Joe O'Regan
+	K00203642
 
+	Laser.h 
+
+	Functionality for laser objects
+*/
 #ifndef LASER_H
 #define LASER_H
 

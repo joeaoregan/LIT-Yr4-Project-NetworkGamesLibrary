@@ -1,3 +1,11 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	GameObject.h
+
+	Base class for game objects
+*/
 #ifndef GAME_OBJECTS_H
 #define GAME_OBJECTS_H
 

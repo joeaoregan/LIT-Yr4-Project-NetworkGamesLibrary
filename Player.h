@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Player.h
+
+	Player game object functionality
+*/
+
 #ifndef	__PLAYER_H
 #define	__PLAYER_H
 

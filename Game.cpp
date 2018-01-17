@@ -1,7 +1,13 @@
 /*
 	Joe O'Regan
 	K00203642
+
+	Game.cpp
+
 	08/12/2017
+
+	20180117	Game client sends information to UDP Server about player position, and when Lasers are fired
+			Altered to only send positional information when the player has changed positions
 */
 // Socket
 #include <stdio.h>
@@ -50,6 +56,11 @@ int sock;
 
 //bool Game::init(const char* serverName) {	// Init game SOCKET
 bool Game::init() {	
+
+	// Set the players previous position
+	// Only update server when player position changes
+	prevX = -1;
+	prevY = -1;
 /*
 printf("init() called\n");
 
@@ -115,7 +126,7 @@ printf("init() called\n");
 			printf( "Warning: Linear texture filtering not enabled!" );
 		}
 		
-		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, 
+		gWindow = SDL_CreateWindow( "Joe O'Regan K00203642 - Year 4 Project", SDL_WINDOWPOS_UNDEFINED, 
 					SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );	// Create window
 		if( gWindow == NULL ) {
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -221,6 +232,8 @@ void Game::close() {
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
+
+	closeSocketStuff();
 }
 
 void Game::update() {		
@@ -230,6 +243,8 @@ void Game::update() {
  //	char o_line[80];
 //	char outbuf[80];
 //	int count;
+
+	//int prevX = -1, prevY = -1;												// Stupidly resetting variables before checking values
 
 	while( SDL_PollEvent( &e ) != 0 ) {											// Handle events on queue				
 		if( e.type == SDL_QUIT ) {											// User requests quit
@@ -254,9 +269,13 @@ void Game::update() {
 
 	updateText.str("");													// 20180117										
 	updateText << "Player X: " << player.getX() << " Player Y: " << player.getY();
-
-	sendToServer2(updateText.str().c_str());
-
+	
+	// Send update on player position to Server
+	if (player.getX() != prevX || player.getY() != prevY) {									// Only send update if position changes
+		sendToServer2(updateText.str().c_str());
+		prevX = player.getX();
+		prevY = player.getY();
+	}
 
 
 

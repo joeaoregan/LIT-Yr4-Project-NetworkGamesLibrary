@@ -3,16 +3,28 @@
 ### Joe O'Regan
 ### K00203642
 
-![alt text](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
-Select Server Handling Two Clients
+![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
+Simple 2D side-scrolling game in C++
 
 ---
 
-## Feature 1:
+## Feature 1: Game
 
 ###### 08/12/2017
 
 Simple 2D side-scrolling C++ game. Created in Linux (Ubuntu) using SDL2
+
+![Feature 2: Networking](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature2.png "Coordinates and shots fired data sending using UDP to Server")
+Using UDP to communicate Player position and indicate shots fired, from Game Client to Server
+
+---
+
+## Feature 2: Networking
+
+###### 17/01/2018
+
+Game Client sends data to Server via UDP. Player coordinates update for X and Y, shots fired indicated
+
 
 ###### Tutorials used in creating the game:
 
@@ -47,7 +59,11 @@ Game loop. Call init(), loadMedia(), loop on update(), and close() when done.
 
 Create, move, and render a Player game object
 
-##### 6-Texture
+##### 6-Socket
+
+UDP Socket functions. Create socket, and send data
+
+##### 7-Texture
 
 Handle Texture functionality
 
@@ -56,7 +72,7 @@ Handle Texture functionality
 ## Running:
 
 ```c.
-./gameProject
+./projgame
 ```
 
 ###### Compile command:
@@ -72,9 +88,11 @@ Ensure dependendent files are in the root directory, and Assets directories
 | No. | File        | Description |
 | --- | ------------- |-------------|
 | 1 | **Game.h** | Functions for playing the game |
-| 2 | **Laser.h** | Create, move, and render Laser objects |
-| 3 | **Player.h** | Create, move, and render Player objects |
-| 4 | **Texture.h** | Texture functionality |
+| 2 | **GameObject.h** | Base class for game objects |
+| 3 | **Laser.h** | Create, move, and render Laser objects |
+| 4 | **Player.h** | Create, move, and render Player objects |
+| 5 | **Socket.h** | UDP Socket functions |
+| 6 | **Texture.h** | Texture functionality |
 
 ## Class Files:
 
@@ -84,7 +102,35 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 2 | **Laser.cpp** | Create, move, and render Laser objects |
 | 3 | **Main.cpp** | Main entry point to the game, and game loop |
 | 4 | **Player.cpp** | Create, move, and render Player objects |
-| 4 | **Texture.cpp** | Texture functionality |
+| 5 | **Server.c** | UDP Server receives data from game |
+| 6 | **Texture.cpp** | Texture functionality |
+
+## Setup SDL Libraries:
+
+### SDL Library:
+```c
+apt-cache search libsdl2
+sudo apt-get install libsdl2-dev
+```
+
+### Image Library:
+```c
+apt-cache search libsdl2-image
+sudo apt-get install libsdl2-image-dev
+```
+
+### Audio Library:
+```c
+apt-cache search libsdl2-mixer
+sudo apt-get install libsdl2-mixer-dev
+```
+
+### True Type Fonts (Text) Library:
+```c
+apt-cache search libsdl2-ttf
+sudo apt-get install libsdl2-ttf-dev
+```
+
 
 
 

@@ -1,5 +1,13 @@
-#include "Texture.h"
+/*
+	Joe O'Regan
+	K00203642
 
+	Texture.cpp
+
+	Game texture functionality
+*/
+
+#include "Texture.h"
 
 Texture::Texture() {
 	//Initialize

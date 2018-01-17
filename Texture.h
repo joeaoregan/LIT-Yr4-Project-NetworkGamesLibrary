@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Texture.h
+
+	Game texture functionality
+*/
+
 #ifndef	__TEXTURE_H
 #define	__TEXTURE_H
 

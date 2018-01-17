@@ -1,3 +1,13 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Socket.h
+	16/01/2018
+	
+	UDP socket functions
+	Create sockets and send data
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -68,10 +78,9 @@ void createUDPSocket(char* serverName, char* msg){
 	//close(sockfd);
 }
 
-
+// Send data
 void sendData(int fd, struct addrinfo *q, char* sendStr) {
 	int byteCount;
-	//char* sendStr = "test";
 
 	if ((byteCount = sendto(fd, sendStr, strlen(sendStr), 0, q->ai_addr, q->ai_addrlen)) == -1) {
 		perror("talker: sendto");
@@ -85,11 +94,14 @@ void sendToServer(char* sendStr) {
 	sendData(sockfd, p, sendStr);
 }
 
+// String stream requires const char* value
 void sendToServer2(const char* sendStr) {
 	sendData(sockfd, p, (char*) sendStr);
 }
 
+// Moved from createUDPSocket(), call when game closes
 void closeSocketStuff(){
 	freeaddrinfo(servinfo);
 	close(sockfd);
+	printf("Socket.h: close socket, and free memory used to store address");
 }

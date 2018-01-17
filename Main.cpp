@@ -1,7 +1,11 @@
-
 /*
-	MAIN:
+	Joe O'Regan
+	K00203642
+
+	Main.cpp
+
 	This is the main entry point for the game
+	Includes Game Loop
 */
 
 	

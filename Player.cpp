@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Player.cpp
+
+	Functionality for the Player GameObject
+	Handle movement
+*/
 #include "Player.h"
 #include "Game.h"
 
