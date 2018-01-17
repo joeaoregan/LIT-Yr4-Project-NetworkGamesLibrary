@@ -19,6 +19,11 @@
 #include "Laser.h"
 #include <list>
 
+#include "Socket.h"
+#include <sstream>							// 20180117 Updating text
+
+std::stringstream updateText;
+
 Game* Game::s_pInstance = 0;						// Game singleton
 
 SDL_Window* gWindow = NULL;						// The window we'll be rendering to
@@ -43,10 +48,11 @@ void Player::render() {
 
 int sock;
 
-//bool Game::init(char* serverName) {	// Init game SOCKET
+//bool Game::init(const char* serverName) {	// Init game SOCKET
 bool Game::init() {	
-printf("init() called\n");
 /*
+printf("init() called\n");
+
 	struct sockaddr_in server; // Server's address assembled here 
  	struct hostent * host_info;
  	//char* server_name;
@@ -88,9 +94,14 @@ printf("init() called\n");
 			write(1,o_line, count);
 
 	//send (sock, "test", 5, 0);	
-		
+*/	
 
-*/
+
+	createUDPSocket("localhost", "socket test" );
+	std::cout << "test1" << std::endl;
+	sendToServer("GameTest");
+	std::cout << "test2" << std::endl;
+
 
 	bool success = true;						// Initialization flag
 
@@ -240,6 +251,15 @@ void Game::update() {
 	//printf("Client-Received: %s\n", i_line);	
 
 
+
+	updateText.str("");													// 20180117										
+	updateText << "Player X: " << player.getX() << " Player Y: " << player.getY();
+
+	sendToServer2(updateText.str().c_str());
+
+
+
+
 	--scrollingOffset;													// Decrement: Moves right to left on X axis
 	if( scrollingOffset < -gBGTexture.getWidth() ) {									// Scroll background
 		scrollingOffset = 0;
@@ -272,6 +292,7 @@ void Game::spawnLaser() {
 	Laser* p_Laser = new Laser();
 	p_Laser->spawn(player.getX() + 65, player.getY() + 30, 20);
 	listOfLaserObjects.push_back(p_Laser);
+	sendToServer("Player Laser Fired");											// Notify server when laser fired
 }
 
 void Laser::render() {

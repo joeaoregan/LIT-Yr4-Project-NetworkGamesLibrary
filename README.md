@@ -41,7 +41,7 @@ Spawn, move, and render Laser game objects
 
 ##### 4-Main
 
-Call update(), and close() when done. Game loop will go here in future iteration
+Game loop. Call init(), loadMedia(), loop on update(), and close() when done. 
 
 ##### 5-Player
 
@@ -78,11 +78,11 @@ Ensure dependendent files are in the root directory, and Assets directories
 
 ## Class Files:
 
-| File        | Description           |
-| ------------- |-------------|
-| 1. **Game.cpp** | Functions for playing the game |
+| No. |File        | Description           |
+| --- | ------------- |-------------|
+| 1 | **Game.cpp** | Functions for playing the game |
 | 2 | **Laser.cpp** | Create, move, and render Laser objects |
-| 3 | **Main.cpp** | Main entry point to the game |
+| 3 | **Main.cpp** | Main entry point to the game, and game loop |
 | 4 | **Player.cpp** | Create, move, and render Player objects |
 | 4 | **Texture.cpp** | Texture functionality |
 

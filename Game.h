@@ -8,6 +8,8 @@
 #include <ctime>						// For Random Numbers
 #include <string>
 
+//#include "Socket.h"
+
 #define SCREEN_WIDTH 1280					// Screen Width
 #define SCREEN_HEIGHT 720					// Screen Height
 
@@ -27,8 +29,9 @@ public:
 		return s_pInstance;				// Return the current game instance
 	}
 
-	//bool init(char* serverName);						// Starts up SDL and creates window
+	//bool init(const char* serverName);			// Starts up SDL and creates window
 	bool init();						// Starts up SDL and creates window
+	//void createUDPSocket(char* serverName);		// Create a UDP Socket
 
 	bool loadMedia();					// Loads media
 

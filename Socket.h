@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+
+#define UDP_PORT "1066"							// The port the game connects to
+
+void sendData(int fd, struct addrinfo *q, char* sendStr);
+
+// Global
+int sockfd;
+struct addrinfo *servinfo, *p;
+
+// UDP Socket
+void createUDPSocket(char* serverName, char* msg){
+	printf ("Connecting To Server: %s\n", serverName);
+
+	int rv, numbytes;
+	struct addrinfo hints;
+/*
+	if (argc == 1) {
+		argv[1] = "localhost";
+		argv[2] = "test";
+	}
+*/
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+
+	//if ((rv = getaddrinfo(argv[1], UDP_PORT, &hints, &servinfo)) != 0) {
+	if ((rv = getaddrinfo(serverName, UDP_PORT, &hints, &servinfo)) != 0) {
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+		//return 1;
+	}
+
+	// Create a socket
+	for(p = servinfo; p != NULL; p = p->ai_next) {
+		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+			perror("talker: socket");
+			continue;
+		}
+		break;
+	}
+
+	// Check socket
+	if (p == NULL) {
+		fprintf(stderr, "talker: failed to bind socket\n");
+		//return 2;
+	}
+/*
+	if ((numbytes = sendto(sockfd, argv[2], strlen(argv[2]), 0, p->ai_addr, p->ai_addrlen)) == -1) {
+		perror("talker: sendto");
+		exit(1);
+	}
+*/
+	//sendData(sockfd, p, "Socket.h test");
+	sendData(sockfd, p, msg);
+
+	//freeaddrinfo(servinfo);
+
+	//printf("Sent %d bytes to %s\n", numbytes, argv[1]);
+	//close(sockfd);
+}
+
+
+void sendData(int fd, struct addrinfo *q, char* sendStr) {
+	int byteCount;
+	//char* sendStr = "test";
+
+	if ((byteCount = sendto(fd, sendStr, strlen(sendStr), 0, q->ai_addr, q->ai_addrlen)) == -1) {
+		perror("talker: sendto");
+		exit(1);
+	}
+
+	printf("Sent %d bytes to %s\n", byteCount, sendStr);
+}
+
+void sendToServer(char* sendStr) {
+	sendData(sockfd, p, sendStr);
+}
+
+void sendToServer2(const char* sendStr) {
+	sendData(sockfd, p, (char*) sendStr);
+}
+
+void closeSocketStuff(){
+	freeaddrinfo(servinfo);
+	close(sockfd);
+}
