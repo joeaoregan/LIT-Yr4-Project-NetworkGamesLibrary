@@ -9,6 +9,7 @@
 #ifndef LASER_H
 #define LASER_H
 
+//#include "Socket.h"
 #include "GameObject.h"
 #include "Texture.h"
 #include <iostream>
@@ -20,6 +21,7 @@ public:
 		setWidth(50);
 		setHeight(5);
 		setVel(20);
+		setAlive(true);
 	}	
 			
 	~Laser() {

@@ -19,13 +19,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+
+#include "Socket.h"
+
 #include "Game.h"							// Game functions
 #include "Texture.h"							// Texture functions
 #include "Player.h"							// Player functions
 #include "Laser.h"
 #include <list>
 
-#include "Socket.h"
 #include <sstream>							// 20180117 Updating text
 
 std::stringstream updateText;
@@ -109,9 +111,9 @@ printf("init() called\n");
 
 
 	createUDPSocket("localhost", "socket test" );
-	std::cout << "test1" << std::endl;
-	sendToServer("GameTest");
-	std::cout << "test2" << std::endl;
+	//std::cout << "test1" << std::endl;
+	//sendToServer("GameTest");
+	//std::cout << "test2" << std::endl;
 
 
 	bool success = true;						// Initialization flag
@@ -160,7 +162,8 @@ printf("init() called\n");
 		}
 	}
 
-	player.spawn(0,(SCREEN_HEIGHT - player.getY())/2, player.getVel());
+	//player.spawn(0,(SCREEN_HEIGHT - player.getY())/2, player.getVel());
+	player.spawn(0,(SCREEN_HEIGHT - player.getHeight() - 120)/2, player.getVel());					// Center of play area
 	
 	// Game variables
 	quit = false;													// Main loop flag	
@@ -249,6 +252,8 @@ void Game::update() {
 	while( SDL_PollEvent( &e ) != 0 ) {											// Handle events on queue				
 		if( e.type == SDL_QUIT ) {											// User requests quit
 			quit = true;
+
+			sendToServer("3 exit");											// Let the server know to exit
 		}
 		
 		player.handleEvent( e );											// Handle input for the Player
@@ -268,7 +273,8 @@ void Game::update() {
 
 
 	updateText.str("");													// 20180117										
-	updateText << "Player X: " << player.getX() << " Player Y: " << player.getY();
+	//updateText << "Player X: " << player.getX() << " Player Y: " << player.getY();										
+	updateText << "0 Player1 " << player.getX() << " " << player.getY();							// 20180118 Send name/ID, x coord, y coord  -  to server
 	
 	// Send update on player position to Server
 	if (player.getX() != prevX || player.getY() != prevY) {									// Only send update if position changes
@@ -311,7 +317,12 @@ void Game::spawnLaser() {
 	Laser* p_Laser = new Laser();
 	p_Laser->spawn(player.getX() + 65, player.getY() + 30, 20);
 	listOfLaserObjects.push_back(p_Laser);
-	sendToServer("Player Laser Fired");											// Notify server when laser fired
+	sendToServer("1 Player_Laser_Fired");											// Notify server when laser fired
+}
+
+
+void Game::netDestroyGameObject(){
+	sendToServer("4 Laser_Destroyed");
 }
 
 void Laser::render() {

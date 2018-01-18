@@ -57,7 +57,7 @@ public:
 	
 	bool gameFinished() { return quit; }			// Has the game exited
 
-
+	void netDestroyGameObject();
 
 private:
 	static Game* s_pInstance;				// Game singleton instance

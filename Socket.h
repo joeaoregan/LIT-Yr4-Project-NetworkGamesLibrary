@@ -8,6 +8,9 @@
 	UDP socket functions
 	Create sockets and send data
 */
+#ifndef	__SOCKET_H
+#define	__SOCKET_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -105,3 +108,5 @@ void closeSocketStuff(){
 	close(sockfd);
 	printf("Socket.h: close socket, and free memory used to store address");
 }
+
+#endif	/* __SOCKET_H */

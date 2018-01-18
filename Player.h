@@ -10,7 +10,7 @@
 #ifndef	__PLAYER_H
 #define	__PLAYER_H
 
-#include "Game.h"
+//#include "Game.h"
 #include "GameObject.h"
 
 // The Player that will move around on the screen
