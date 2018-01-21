@@ -87,23 +87,33 @@ Ensure dependendent files are in the root directory, and Assets directories
 
 | No. | File        | Description |
 | --- | ------------- |-------------|
-| 1 | **Game.h** | Functions for playing the game |
-| 2 | **GameObject.h** | Base class for game objects |
-| 3 | **Laser.h** | Create, move, and render Laser objects |
-| 4 | **Player.h** | Create, move, and render Player objects |
-| 5 | **Socket.h** | UDP Socket functions |
-| 6 | **Texture.h** | Texture functionality |
+| 1 | **Background.h** | Scrolling background |
+| 2 | **Game.h** | Functions for playing the game |
+| 3 | **GameObject.h** | Base class for game objects |
+| 4 | **GameState.h** | Abstract base class for game state |
+| 5 | **GameStateMachine.h** | Handle changing between states |
+| 6 | **Input.h** | Handle input from keyboard, mouse, and gamepad |
+| 7 | **Laser.h** | Create, move, and render Laser objects |
+| 8 | **MenuState.h** | Menu state header file |
+| 9 | **Player.h** | Create, move, and render Player objects |
+| 10 | **PlayState.h** | Play state header file|
+| 11 | **Socket.h** | UDP Socket functions |
+| 12 | **Texture.h** | Texture functionality |
 
 ## Class Files:
 
 | No. |File        | Description           |
 | --- | ------------- |-------------|
 | 1 | **Game.cpp** | Functions for playing the game |
-| 2 | **Laser.cpp** | Create, move, and render Laser objects |
-| 3 | **Main.cpp** | Main entry point to the game, and game loop |
-| 4 | **Player.cpp** | Create, move, and render Player objects |
-| 5 | **Server.c** | UDP Server receives data from game |
-| 6 | **Texture.cpp** | Texture functionality |
+| 2 | **GameStateMachine.cpp** | Functions for changing state |
+| 3 | **Input.cpp** | Functions for handling input |
+| 4 | **Laser.cpp** | Create, move, and render Laser objects |
+| 5 | **Main.cpp** | Main entry point to the game, and game loop |
+| 6 | **MenuState.cpp** | Functions for handling the menu state |
+| 7 | **Player.cpp** | Create, move, and render Player objects |
+| 8 | **PlayState.cpp** | Functions for handling the play state |
+| 9 | **Server.c** | UDP Server receives data from game |
+| 10 | **Texture.cpp** | Texture functionality |
 
 ## Setup SDL Libraries:
 

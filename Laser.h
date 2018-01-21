@@ -22,6 +22,7 @@ public:
 		setHeight(5);
 		setVel(20);
 		setAlive(true);
+		setTextureID("greenLaserID");
 	}	
 			
 	~Laser() {
@@ -30,7 +31,7 @@ public:
 	
 	void spawn(int x, int y, int velocity);
 	void move();						// Moves the laser	
-	void render();						// Shows the laser on the screen
+	virtual void render();					// Shows the laser on the screen
 };
 
 #endif

@@ -28,7 +28,7 @@ void Laser::move() {
 	// destroy laser beam once it is offscreen
 	if (getX() > SCREEN_WIDTH) {
 		setAlive(false);
-		Game::Instance()->netDestroyGameObject();
+		//Game::Instance()->netDestroyGameObject();
 		//delete this;
 
 		//sendToServer("4 Laser_Destroyed");
@@ -37,3 +37,10 @@ void Laser::move() {
 	}
 	else setAlive(true);
 }
+
+void Laser::render() {
+	SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };	// Set rendering space and render to screen
+
+	//SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, getAngle(), NULL, SDL_FLIP_NONE);	// Render to screen
+	SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0, NULL, SDL_FLIP_NONE);	// Render to screen
+};

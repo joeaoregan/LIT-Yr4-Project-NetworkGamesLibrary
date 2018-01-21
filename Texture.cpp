@@ -8,6 +8,9 @@
 */
 
 #include "Texture.h"
+#include <iostream>
+
+Texture* Texture::s_pInstance = 0;										// Singleton, so only one instance of texture class is used throughout the game
 
 Texture::Texture() {
 	//Initialize
@@ -107,4 +110,47 @@ bool Texture::loadFromRenderedText( std::string textureText, SDL_Color textColor
 }
 #endif
 
+bool Texture::load(std::string fileName, std::string id) {
+	SDL_Surface* pTempSurface = IMG_Load(fileName.c_str());
+
+	if (pTempSurface == 0) {
+		std::cout << IMG_GetError();
+		return false;
+	}
+
+	SDL_Texture* pTexture = SDL_CreateTextureFromSurface(Game::Instance()->getRenderer(), pTempSurface);
+
+	SDL_FreeSurface(pTempSurface);
+
+	if (pTexture != 0) {
+		m_TextureMap[id] = pTexture;
+		return true;
+	}
+
+	return false;
+}
+
+// Array of texture details, with path, id, and description
+std::string textures[3][3] = {
+	{ "Assets/Art/Player1Ship.png", "player1ID", "Player 1" },
+	{ "Assets/Art/bg720.png", "bgID", "Background" },
+	{ "Assets/Art/LaserGreen.png", "greenLaserID", "Green Laser" }
+};
+
+/*
+	Load the game textures
+*/
+bool Texture::loadTextures(){
+	bool success = true;
+
+	// Load the textures stored in the textures array
+	for (int i = 0; i < sizeof(textures)/sizeof(textures[0]); i++) {
+		if (!load(textures[i][0], textures[i][1])) {
+			std::cout << "Failed to load " << textures[i][2] << " texture!" << std::endl;
+			success = false;
+		}
+	}
+
+	return success;
+}
 

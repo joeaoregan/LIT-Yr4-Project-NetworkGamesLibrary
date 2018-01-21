@@ -12,15 +12,28 @@
 
 #include "Game.h"
 #include <SDL2/SDL_image.h>
+#include <map>
 
 // Texture wrapper class
 class Texture {
-public:
+public:	
+	static Texture* Instance() {														// Single instance of Textures used throughout Game
+		if (s_pInstance == 0) {
+			s_pInstance = new Texture();
+			return s_pInstance;
+		}
+
+		return s_pInstance;														// Make sure the texture manager only exists once
+	}
 	
-	Texture();																// Initializes variables
-	
+	Texture();																// Initializes variables	
 	~Texture();																// Deallocates memory
 
+	bool loadTextures();
+
+	SDL_Texture* getTexture(std::string id) { return m_TextureMap[id]; }									// Get a texture from the map using ID
+
+	bool load(std::string fileName, std::string id);											// Load an image to the texture map given its path, assigning an ID
 	bool loadFromFile( std::string path );													// Loads image at specified path
 	
 	#ifdef _SDL_TTF_H	
@@ -45,6 +58,9 @@ public:
 	int getHeight() { return mHeight; }													// Return the texture height
 
 private:
+	static Texture* s_pInstance;														// Single Instance of Texture class used in Game
+
+	std::map<std::string, SDL_Texture*> m_TextureMap;											// Map to store textures
 	
 	SDL_Texture* mTexture;															// The hardware texture
 

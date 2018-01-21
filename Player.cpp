@@ -9,6 +9,7 @@
 */
 #include "Player.h"
 #include "Game.h"
+#include "Texture.h"
 
 void Player::move(){  
 	setX(getX() + getVelX());					// Move the Player left or right
@@ -50,3 +51,9 @@ void Player::handleEvent( SDL_Event& e ) {
         }
     }
 }
+
+void Player::render() {
+	SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };										// Set rendering space and render to screen
+
+	SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0, NULL, SDL_FLIP_NONE);	// Render to screen
+};

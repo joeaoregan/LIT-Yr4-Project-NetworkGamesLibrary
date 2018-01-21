@@ -32,6 +32,7 @@
 	else {
 		while (!Game::Instance()->gameFinished()) {
 			Game::Instance()->update();			// Game singleton used to call update()
+			Game::Instance()->render();			// Draw the game textures to the screen
 		}
 	}
 

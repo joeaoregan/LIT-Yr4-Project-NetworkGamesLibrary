@@ -25,6 +25,7 @@ public:
 		setWidth(100);
 		setHeight(47);
 		setVel(10);
+		setTextureID("player1ID");
 	}
 
 	void handleEvent( SDL_Event& e );			// Takes key presses and adjusts the Player's velocity		

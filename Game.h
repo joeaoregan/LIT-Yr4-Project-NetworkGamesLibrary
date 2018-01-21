@@ -16,6 +16,7 @@
 #include <cstdlib>						// For Random Numbers
 #include <ctime>						// For Random Numbers
 #include <string>
+#include "State/GameStateMachine.h"
 
 //#include "Socket.h"
 
@@ -45,8 +46,11 @@ public:
 	bool loadMedia();					// Loads media
 
 	void update();						// Update the game
+	void render();						// Draw the game to screen
 
 	void close();						// Frees media and shuts down SDL
+
+	void handleEvents();
 
 	SDL_Renderer* getRenderer() const { return gRenderer; }	// Get the renderer
 
@@ -63,6 +67,9 @@ private:
 	static Game* s_pInstance;				// Game singleton instance
 
 	SDL_Renderer* gRenderer = NULL;				// The window renderer
+	SDL_Window* gWindow;					// The window we'll be rendering to
+
+	GameStateMachine* m_pGameStateMachine;
 
 	TTF_Font *gFont = NULL;					// Globally used font
 	
