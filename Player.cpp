@@ -10,8 +10,13 @@
 #include "Player.h"
 #include "Game.h"
 #include "Texture.h"
+#include "Input.h"
 
 void Player::update(){  
+	//std::cout << "Player update" << std::endl;
+
+	handleInput();
+
 	setX(getX() + getVelX());					// Move the Player left or right
    
 	if((getX() < 0) || (getX() + getWidth() > SCREEN_WIDTH)) {	// If the Player went too far to the left or right  
@@ -23,8 +28,33 @@ void Player::update(){
 	if((getY() < 40) || (getY() + getHeight() > 600)) {  		// If the Player went too far up or down    
 		setY(getY() - getVelY());				// Move the Player down
 	}
+
 }
 
+void Player::handleInput(){
+	if (Input::Instance()->isKeyDown(SDL_SCANCODE_UP)) {
+		setVelY(-getVel());
+		//std::cout << "up" << std::endl;
+	}  else if(Input::Instance()->isKeyDown(SDL_SCANCODE_DOWN)) {
+		setVelY(getVel());
+	//	std::cout << "down" << std::endl;
+        } else {
+		setVelY(0);
+	}
+	 
+
+        
+        if(Input::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
+		setVelX(-getVel());
+	//	std::cout << "left" << std::endl;
+        } else if(Input::Instance()->isKeyDown(SDL_SCANCODE_RIGHT)) {
+		setVelX(getVel());
+	//	std::cout << "right" << std::endl;
+        } else {
+		setVelX(0);
+	}
+}
+/*
 void Player::handleEvent( SDL_Event& e ) {
     //If a key was pressed
     if( e.type == SDL_KEYDOWN && e.key.repeat == 0 ) {
@@ -51,7 +81,7 @@ void Player::handleEvent( SDL_Event& e ) {
         }
     }
 }
-
+*/
 void Player::render() {
 	SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };										// Set rendering space and render to screen
 

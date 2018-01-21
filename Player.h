@@ -28,7 +28,8 @@ public:
 		setTextureID("player1ID");
 	}
 
-	void handleEvent( SDL_Event& e );			// Takes key presses and adjusts the Player's velocity		
+	void handleInput();
+	//void handleEvent( SDL_Event& e );			// Takes key presses and adjusts the Player's velocity		
 	void update();						// Moves the Player		
 	void render();						// Shows the Player on the screen
 

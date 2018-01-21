@@ -55,7 +55,7 @@ bool PlayState::onEnter() {
 
 void PlayState::update(){		
 	//std::cout << "PlayState update()" << std::endl;
-	player->handleEvent( e );											// Handle input for the Player
+	//player->handleEvent( e );											// Handle input for the Player
 	//player->handleEvent( Game::Instance()->getEvent() );											// Handle input for the Player
 
 	for (int index = 0; index != listOfGameObjects.size(); ++index) {	

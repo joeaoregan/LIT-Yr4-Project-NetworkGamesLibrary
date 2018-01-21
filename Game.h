@@ -43,7 +43,7 @@ public:
 	bool init();						// Starts up SDL and creates window
 	//void createUDPSocket(char* serverName);		// Create a UDP Socket
 
-	bool loadMedia();					// Loads media
+	//bool loadMedia();					// Loads media
 
 	void update();						// Update the game
 	void render();						// Draw the game to screen

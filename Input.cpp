@@ -85,9 +85,10 @@ void Input::reset() {
 }
 
 bool Input::isKeyDown(SDL_Scancode key) const {
+	//std::cout << "Input iskeyDown()" << std::endl;
     if(m_keystates != 0) {
         if(m_keystates[key] == 1) {
-		std::cout << "key down" << std::endl;
+		//std::cout << "key down" << std::endl;
             return true;
         } else {
             return false;

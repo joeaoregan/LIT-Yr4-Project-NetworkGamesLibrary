@@ -28,46 +28,19 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "Socket.h"
-//#include "Texture.h"							// Texture functions
-//#include "Player.h"							// Player functions
 #include "Laser.h"
-//#include <list>
-//#include <sstream>							// 20180117 Updating text
 #include "Input.h"							// 20180120
-//#include "Background.h"							// 20180121
 #include "Audio.h"							// 20180121
 
 #include "State/MainMenuState.h"
 #include "State/PlayState.h"
 
-
-//std::stringstream updateText;
-
 Game* Game::s_pInstance = 0;						// Game singleton
-//std::vector<GameObject*> listOfGameObjects;				// List of game objects
-
-//GameObject* background;	 						// Scrolling background
-//GameObject* player;							// The Player that will be moving around on the screen	
-
-// UI textures
-//Texture gTextTexture;
-
-//Mix_Chunk *laserFX = NULL;
 
 int sock;
 
 bool Game::init() {
 	printf("init() called\n");
-
-	//updateText.str("");
-/*
-	// Create player and background, and add to game object list
-	background = new Background();
-	player = new Player();
-	listOfGameObjects.push_back(background);
-	listOfGameObjects.push_back(player);
-*/
-	//player->spawn(0,(SCREEN_HEIGHT - player->getHeight() - 120)/2, player->getVel());				// Center of play area
 	
 	quit = false;													// Main loop flag	
 
@@ -125,7 +98,7 @@ bool Game::init() {
 		}
 	}
 
-	success = Texture::Instance()->loadTextures();			// Moved from loadMedia()
+	gFont = TTF_OpenFont( "Assets/Fonts/lazy.ttf", 28 );
 
 	m_pGameStateMachine = NULL;					// init state machine
 	m_pGameStateMachine = new GameStateMachine();
@@ -137,41 +110,10 @@ bool Game::init() {
 	return success;
 }
 
-bool Game::loadMedia() {	
-	printf("loadMedia() called\n");
-	bool success = true;	
-
-//	success = Texture::Instance()->loadTextures();									// Load the game textures
-
-	//Open the font
-	//gFont = TTF_OpenFont( "Assets/Fonts/lazy.ttf", 28 );
-/*
-	if( gFont == NULL ) {
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
-		success = false;
-	} else {
-		//Render text
-		SDL_Color textColor = { 255, 0, 0 };
-		if( !gTextTexture.loadFromRenderedText( "Linux SDL Test Game - Joe O'Regan", textColor )) {
-			printf( "Failed to render text texture!\n" );
-			success = false;
-		}
-	}
-*/
-	return success;
-}
-
 void Game::close() {
 	printf("close() called\n");
 
 	sendToServer("3 exit");													// Let the server know to exit
-
-	//Free loaded images
-	//gTextTexture.free();
-
-	//Free the sound effects
-	//Mix_FreeChunk( laserFX );
-	//laserFX = NULL;
 
 	//Destroy window	
 	SDL_DestroyRenderer( Game::Instance()->getRenderer() );
@@ -187,23 +129,7 @@ void Game::close() {
 }
 
 void Game::update() {
-/*	
-	//std::cout << "Game update()" << std::endl;
-	while( SDL_PollEvent( &event ) != 0 ) {	
-		std::cout << "Game update() while" << std::endl;
-	//while( SDL_PollEvent( (*event) ) != 0 ) {										// Handle events on queue				
-//		if( event.type == SDL_QUIT ) {											// User requests quit			
-		//if( event->type == SDL_QUIT ) {										// User requests quit
-//			quit = true;
-
-//			sendToServer("3 exit");											// Let the server know to exit
-//		}
-		
-		//player->handleEvent( e );											// Handle input for the Player
-		
-		m_pGameStateMachine->update();											// Update the current state
-	}
-
+/*
 	for (int index = 0; index != listOfGameObjects.size(); ++index) {	
 		listOfGameObjects[index]->update();										// Move/Update the game objects
 	}
@@ -217,10 +143,6 @@ void Game::update() {
 		prevY = player->getY();
 	}
 */
-	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
-	//	std::cout << "Enter Pressed" << std::endl;
-	//}
-
 
 	m_pGameStateMachine->update();	
 }
@@ -228,13 +150,7 @@ void Game::update() {
 void Game::render() {	
 	SDL_SetRenderDrawColor( Game::Instance()->getRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );					// Set clear colour
 	SDL_RenderClear( Game::Instance()->getRenderer() );									// Clear screen
-/*
-	for (int index = 0; index != listOfGameObjects.size(); ++index) {	
-		listOfGameObjects[index]->render();										// Render the game object
-	}
 
-	gTextTexture.render((SCREEN_WIDTH - gTextTexture.getWidth()) / 2,((SCREEN_HEIGHT -600 -gTextTexture.getHeight())/ 2)+ 600);
-*/
 	m_pGameStateMachine->render();												// Render the current state
 
 	SDL_RenderPresent( Game::Instance()->getRenderer() );									// Update screen
@@ -243,24 +159,13 @@ void Game::render() {
 void Game::handleEvents() {
 	//if (!enterTextState)		// If not in the state for entering text update
 	Input::Instance()->update();
-
-
-	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_PERIOD) ||					// 2017/04/23	If "." is pressed
-	//	Input::Instance()->getButtonState(0, 5)) {							// OR Right Shoulder button is pressed on the Gamepad
-	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {							// OR Right Shoulder button is pressed on the Gamepad
-		//if (!keyPressed) {
-	//		std::cout << "Enter Pressed" << std::endl;
-			//SoundManager::Instance()->trackBackwards();								// Skip the current track backwards
-			//keyDelay = SDL_GetTicks();
-			//keyPressed = true;
-		//}
-	//}
-
-	//m_pGameStateMachine->changeState(new PlayState());
-
-	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
-	//	std::cout << "Enter Pressed" << std::endl;
-	//}
+/*
+	if (Input::Instance()->isKeyDown(SDL_SCANCODE_UP)) {
+		std::cout << "Up Pressed" << std::endl;
+	} else if (Input::Instance()->isKeyDown(SDL_SCANCODE_DOWN)) {
+		std::cout << "Down Pressed" << std::endl;
+	}
+*/
 }
 
 void Game::spawnLaser() {
