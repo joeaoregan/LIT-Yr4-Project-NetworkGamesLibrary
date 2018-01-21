@@ -106,7 +106,7 @@ void sendToServer2(const char* sendStr) {
 void closeSocketStuff(){
 	freeaddrinfo(servinfo);
 	close(sockfd);
-	printf("Socket.h: close socket, and free memory used to store address");
+	printf("Socket.h: close socket, and free memory used to store address\n");
 }
 
 #endif	/* __SOCKET_H */

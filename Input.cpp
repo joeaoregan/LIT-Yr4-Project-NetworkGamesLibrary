@@ -87,6 +87,7 @@ void Input::reset() {
 bool Input::isKeyDown(SDL_Scancode key) const {
     if(m_keystates != 0) {
         if(m_keystates[key] == 1) {
+		std::cout << "key down" << std::endl;
             return true;
         } else {
             return false;
@@ -127,7 +128,8 @@ void Input::update() {
     while(SDL_PollEvent(&event)) {
         switch (event.type) {
             //case SDL_QUIT: Game::Instance()->quit(); break;   
-            //case SDL_QUIT: Game::Instance()->close(); break;                
+            //case SDL_QUIT: Game::Instance()->close(); break;    
+            case SDL_QUIT: Game::Instance()->setGameFinished(); std::cout << "Input quit" << std::endl; break;                
             case SDL_JOYAXISMOTION: onJoystickAxisMove(event); break;                
             case SDL_JOYBUTTONDOWN: onJoystickButtonDown(event); 
             case SDL_JOYBUTTONUP: onJoystickButtonUp(event); break;                

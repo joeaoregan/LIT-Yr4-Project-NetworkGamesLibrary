@@ -30,7 +30,7 @@ public:
 	}
 	
 	void spawn(int x, int y, int velocity);
-	void move();						// Moves the laser	
+	void update();						// Moves the laser	
 	virtual void render();					// Shows the laser on the screen
 };
 

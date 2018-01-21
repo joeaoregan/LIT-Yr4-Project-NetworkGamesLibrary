@@ -20,8 +20,8 @@ public:
 
 	~Background() {}
 
-	virtual void move() {
-		GameObject::move();
+	virtual void update() {
+		GameObject::update();
 
 		if (getX() <= -getWidth()) setX(0); 		// Move back to start when fully off screen
 	}

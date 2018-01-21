@@ -1,3 +1,7 @@
+
+#ifndef GAME_STATE_MACHINE_H
+#define GAME_STATE_MACHINE_H
+
 #include "GameState.h"
 
 class GameStateMachine {
@@ -19,3 +23,5 @@ public:
 private:
 	std::vector<GameState*> m_gameStates;
 };
+
+#endif

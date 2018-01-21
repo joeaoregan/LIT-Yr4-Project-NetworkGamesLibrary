@@ -16,6 +16,8 @@
 			Moved object rendering to individual classes from Game.cpp
 	20180121	Added Audio class to handle game music and effects
 */
+#include "Game.h"							// Game functions
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -26,48 +28,54 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "Socket.h"
-#include "Game.h"							// Game functions
-#include "Texture.h"							// Texture functions
-#include "Player.h"							// Player functions
+//#include "Texture.h"							// Texture functions
+//#include "Player.h"							// Player functions
 #include "Laser.h"
-#include <list>
-#include <sstream>							// 20180117 Updating text
+//#include <list>
+//#include <sstream>							// 20180117 Updating text
 #include "Input.h"							// 20180120
-#include "Background.h"							// 20180121
+//#include "Background.h"							// 20180121
 #include "Audio.h"							// 20180121
 
-std::stringstream updateText;
+#include "State/MainMenuState.h"
+#include "State/PlayState.h"
+
+
+//std::stringstream updateText;
 
 Game* Game::s_pInstance = 0;						// Game singleton
-std::vector<GameObject*> listOfGameObjects;				// List of game objects
+//std::vector<GameObject*> listOfGameObjects;				// List of game objects
 
-GameObject* background;	 						// Scrolling background
-GameObject* player;							// The Player that will be moving around on the screen	
+//GameObject* background;	 						// Scrolling background
+//GameObject* player;							// The Player that will be moving around on the screen	
 
 // UI textures
-Texture gTextTexture;
+//Texture gTextTexture;
 
 //Mix_Chunk *laserFX = NULL;
 
 int sock;
 
-bool Game::init() {	
+bool Game::init() {
 	printf("init() called\n");
+
+	//updateText.str("");
+/*
 	// Create player and background, and add to game object list
 	background = new Background();
 	player = new Player();
 	listOfGameObjects.push_back(background);
 	listOfGameObjects.push_back(player);
-
-	player->spawn(0,(SCREEN_HEIGHT - player->getHeight() - 120)/2, player->getVel());				// Center of play area
+*/
+	//player->spawn(0,(SCREEN_HEIGHT - player->getHeight() - 120)/2, player->getVel());				// Center of play area
 	
 	quit = false;													// Main loop flag	
 
 	gWindow = NULL;
 	// Set the players previous position
 	// Only update server when player position changes
-	prevX = -1;
-	prevY = -1;
+	//prevX = -1;
+	//prevY = -1;
 
 	createUDPSocket("localhost", "socket test" );
 
@@ -117,6 +125,13 @@ bool Game::init() {
 		}
 	}
 
+	success = Texture::Instance()->loadTextures();			// Moved from loadMedia()
+
+	m_pGameStateMachine = NULL;					// init state machine
+	m_pGameStateMachine = new GameStateMachine();
+	//m_pGameStateMachine->changeState(new MainMenuState());
+	m_pGameStateMachine->changeState(new PlayState());
+
 	//printf("init() exit\n");
 
 	return success;
@@ -126,16 +141,11 @@ bool Game::loadMedia() {
 	printf("loadMedia() called\n");
 	bool success = true;	
 
-	success = Texture::Instance()->loadTextures();									// Load the game textures
-/*															// Loading success flag
-	laserFX = Mix_LoadWAV( "Assets/Effects/scratch.wav" );
-	if( laserFX == NULL ) {
-		printf( "Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
-		success = false;
-	}
-*/
+//	success = Texture::Instance()->loadTextures();									// Load the game textures
+
 	//Open the font
-	gFont = TTF_OpenFont( "Assets/Fonts/lazy.ttf", 28 );
+	//gFont = TTF_OpenFont( "Assets/Fonts/lazy.ttf", 28 );
+/*
 	if( gFont == NULL ) {
 		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
@@ -147,14 +157,17 @@ bool Game::loadMedia() {
 			success = false;
 		}
 	}
-
+*/
 	return success;
 }
 
 void Game::close() {
 	printf("close() called\n");
+
+	sendToServer("3 exit");													// Let the server know to exit
+
 	//Free loaded images
-	gTextTexture.free();
+	//gTextTexture.free();
 
 	//Free the sound effects
 	//Mix_FreeChunk( laserFX );
@@ -173,19 +186,26 @@ void Game::close() {
 	closeSocketStuff();
 }
 
-void Game::update() {	
-	while( SDL_PollEvent( &e ) != 0 ) {											// Handle events on queue				
-		if( e.type == SDL_QUIT ) {											// User requests quit
-			quit = true;
+void Game::update() {
+/*	
+	//std::cout << "Game update()" << std::endl;
+	while( SDL_PollEvent( &event ) != 0 ) {	
+		std::cout << "Game update() while" << std::endl;
+	//while( SDL_PollEvent( (*event) ) != 0 ) {										// Handle events on queue				
+//		if( event.type == SDL_QUIT ) {											// User requests quit			
+		//if( event->type == SDL_QUIT ) {										// User requests quit
+//			quit = true;
 
-			sendToServer("3 exit");											// Let the server know to exit
-		}
+//			sendToServer("3 exit");											// Let the server know to exit
+//		}
 		
-		player->handleEvent( e );											// Handle input for the Player
-	}															// Move the Player
+		//player->handleEvent( e );											// Handle input for the Player
+		
+		m_pGameStateMachine->update();											// Update the current state
+	}
 
 	for (int index = 0; index != listOfGameObjects.size(); ++index) {	
-		listOfGameObjects[index]->move();										// Move the game object
+		listOfGameObjects[index]->update();										// Move/Update the game objects
 	}
 
 	updateText.str("");													// 20180117			
@@ -196,27 +216,56 @@ void Game::update() {
 		prevX = player->getX();
 		prevY = player->getY();
 	}
+*/
+	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
+	//	std::cout << "Enter Pressed" << std::endl;
+	//}
+
+
+	m_pGameStateMachine->update();	
 }
 
 void Game::render() {	
 	SDL_SetRenderDrawColor( Game::Instance()->getRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );					// Set clear colour
 	SDL_RenderClear( Game::Instance()->getRenderer() );									// Clear screen
-
+/*
 	for (int index = 0; index != listOfGameObjects.size(); ++index) {	
 		listOfGameObjects[index]->render();										// Render the game object
 	}
 
 	gTextTexture.render((SCREEN_WIDTH - gTextTexture.getWidth()) / 2,((SCREEN_HEIGHT -600 -gTextTexture.getHeight())/ 2)+ 600);
+*/
+	m_pGameStateMachine->render();												// Render the current state
 
 	SDL_RenderPresent( Game::Instance()->getRenderer() );									// Update screen
 }
 
 void Game::handleEvents() {
+	//if (!enterTextState)		// If not in the state for entering text update
 	Input::Instance()->update();
+
+
+	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_PERIOD) ||					// 2017/04/23	If "." is pressed
+	//	Input::Instance()->getButtonState(0, 5)) {							// OR Right Shoulder button is pressed on the Gamepad
+	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {							// OR Right Shoulder button is pressed on the Gamepad
+		//if (!keyPressed) {
+	//		std::cout << "Enter Pressed" << std::endl;
+			//SoundManager::Instance()->trackBackwards();								// Skip the current track backwards
+			//keyDelay = SDL_GetTicks();
+			//keyPressed = true;
+		//}
+	//}
+
+	//m_pGameStateMachine->changeState(new PlayState());
+
+	//if (Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
+	//	std::cout << "Enter Pressed" << std::endl;
+	//}
 }
 
 void Game::spawnLaser() {
 	std::cout << "Laser Spawned" << std::endl;
+/*
 //	Mix_PlayChannel( -1, laserFX, 0 );											// 20180120 Sound effects not playing now ???
 //	std::cout << "sound" << std::endl;
 	Audio::Instance()->playFX("laserFX");
@@ -224,6 +273,7 @@ void Game::spawnLaser() {
 	listOfGameObjects.push_back(p_Laser1);
 	p_Laser1->spawn(player->getX() + 65, player->getY() + 30, 20);
 	sendToServer("1 Player_Laser_Fired");											// Notify server when laser fired
+*/
 }
 
 void Game::netDestroyGameObject() {

@@ -31,6 +31,7 @@
 		printf( "Failed to load media!\n" );
 	else {
 		while (!Game::Instance()->gameFinished()) {
+			Game::Instance()->handleEvents();
 			Game::Instance()->update();			// Game singleton used to call update()
 			Game::Instance()->render();			// Draw the game textures to the screen
 		}

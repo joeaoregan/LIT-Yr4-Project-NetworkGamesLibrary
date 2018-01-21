@@ -20,8 +20,8 @@ void Laser::spawn(int x, int y, int velocity) {
 	setVel(velocity);
 }
 
-void Laser::move() {
-	GameObject::move();
+void Laser::update() {
+	GameObject::update();
 
 	setX(getX() + getVel());			// Move the ship left or right
 

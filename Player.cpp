@@ -11,7 +11,7 @@
 #include "Game.h"
 #include "Texture.h"
 
-void Player::move(){  
+void Player::update(){  
 	setX(getX() + getVelX());					// Move the Player left or right
    
 	if((getX() < 0) || (getX() + getWidth() > SCREEN_WIDTH)) {	// If the Player went too far to the left or right  

@@ -2,6 +2,7 @@
 # Project: Networked Games Library
 ### Joe O'Regan
 ### K00203642
+### 21/01/2018
 
 ![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
 Simple 2D side-scrolling game in C++
@@ -91,15 +92,17 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 2 | **Background.h** | Scrolling background |
 | 3 | **Game.h** | Functions for playing the game |
 | 4 | **GameObject.h** | Base class for game objects |
-| 5 | **GameState.h** | Abstract base class for game state |
+| 5 | **GameState.h** | Abstract base class for game states |
 | 6 | **GameStateMachine.h** | Handle changing between states |
 | 7 | **Input.h** | Handle input from keyboard, mouse, and gamepad |
 | 8 | **Laser.h** | Create, move, and render Laser objects |
-| 9 | **MenuState.h** | Menu state header file |
-| 10 | **Player.h** | Create, move, and render Player objects |
-| 11 | **PlayState.h** | Play state header file|
-| 12 | **Socket.h** | UDP Socket functions |
-| 13 | **Texture.h** | Texture functionality |
+| 9 | **MainMenuState.h** | Menu state header file |
+| 10 | **MenuButton.h** | Handle button clicks |
+| 11 | **MenuState.h** | Abstract base class for menu states |
+| 12 | **Player.h** | Create, move, and render Player objects |
+| 13 | **PlayState.h** | Play state header file|
+| 14 | **Socket.h** | UDP Socket functions |
+| 15 | **Texture.h** | Texture functionality |
 
 ## Class Files:
 
@@ -111,11 +114,12 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 4 | **Input.cpp** | Functions for handling input |
 | 5 | **Laser.cpp** | Create, move, and render Laser objects |
 | 6 | **Main.cpp** | Main entry point to the game, and game loop |
-| 7 | **MenuState.cpp** | Functions for handling the menu state |
-| 8 | **Player.cpp** | Create, move, and render Player objects |
-| 9 | **PlayState.cpp** | Functions for handling the play state |
-| 10 | **Server.c** | UDP Server receives data from game |
-| 11 | **Texture.cpp** | Texture functionality |
+| 7 | **MainMenuState.cpp** | Functions for handling the menu state |
+| 8 | **MenuButton.cpp** | Functions for handling button clicks |
+| 9 | **Player.cpp** | Create, move, and render Player objects |
+| 10 | **PlayState.cpp** | Functions for handling the play state |
+| 11 | **Server.c** | UDP Server receives data from game |
+| 12 | **Texture.cpp** | Texture functionality |
  
 ## Setup SDL Libraries:
 

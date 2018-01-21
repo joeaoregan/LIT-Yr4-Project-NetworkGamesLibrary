@@ -19,6 +19,28 @@ public:
 	GameObject() {};
 	~GameObject() {};					// Deconstructor
 
+	virtual void handleEvent(SDL_Event& e) {}		// Handle events for objects
+
+	virtual void update() {
+		setX(getX() + getVel());
+	};
+
+	virtual void render() {
+		//m_Texture.render(getX(), getY(), NULL, 0, NULL, SDL_FLIP_NONE);
+		SDL_Rect renderQuad = { getX(), getY(), m_width, m_height };						// Set rendering space and render to screen
+
+		/*
+		if (clip != NULL) {											// Set clip rendering dimensions
+			renderQuad.w = clip->w;
+			renderQuad.h = clip->h;
+		}
+		*/
+		SDL_RenderCopyEx(Game::Instance()->getRenderer(), m_Texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);	// Render to screen
+	};
+
+	virtual void clean() {}
+
+	// Get & Set methods
 	int getX() { return m_x; }				// Get GameObject X coord
 	int getY() { return m_y; }				// Get GameObject Y coord
 	int getVelX() { return m_xVel; }
@@ -45,30 +67,14 @@ public:
 		setVel(v);
 	}
 
-	virtual void handleEvent(SDL_Event& e) {}		// Handle events for objects
-
-	virtual void move() {
-		setX(getX() + getVel());
-	};
-
-	virtual void render() {
-		//m_Texture.render(getX(), getY(), NULL, 0, NULL, SDL_FLIP_NONE);
-		SDL_Rect renderQuad = { getX(), getY(), m_width, m_height };						// Set rendering space and render to screen
-
-		/*
-		if (clip != NULL) {											// Set clip rendering dimensions
-			renderQuad.w = clip->w;
-			renderQuad.h = clip->h;
-		}
-		*/
-		SDL_RenderCopyEx(Game::Instance()->getRenderer(), m_Texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);	// Render to screen
-	};
 
 	//SDL_Rect getCollider();
 	//void setColliderW(int w);
 	//void setColliderH(int h);
 	//void setColliderX(int x);
 	//void setColliderY(int y);
+protected: 
+	int m_currentFrame;					// Current animation frame
 
 private:
 	// GameObject Variables

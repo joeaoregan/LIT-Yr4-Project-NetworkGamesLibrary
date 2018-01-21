@@ -7,8 +7,12 @@
 	Abstract state base class
 */
 
+#ifndef GAME_STATE_H
+#define GAME_STATE_H
+
 #include <string>
 #include <vector>
+#include <iostream>
 
 enum StateIDs{
 	MENU = 0,
@@ -29,3 +33,5 @@ public:
 
 	virtual int getStateID() const = 0;
 };
+
+#endif

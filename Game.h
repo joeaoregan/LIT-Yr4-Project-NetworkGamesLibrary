@@ -60,8 +60,11 @@ public:
 	void spawnLaser();
 	
 	bool gameFinished() { return quit; }			// Has the game exited
+	void setGameFinished() { quit = true; }			// Has the game exited
 
 	void netDestroyGameObject();
+
+	SDL_Event getEvent() { return event;}
 
 private:
 	static Game* s_pInstance;				// Game singleton instance
@@ -75,7 +78,8 @@ private:
 	
 	bool quit;						// Main game loop condition
 	
-	SDL_Event e;						// Event handler
+	SDL_Event event;					// Event handler
+	//SDL_Event* event;					// Event handler
 
 	int scrollingOffset;
 
