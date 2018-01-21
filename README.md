@@ -96,13 +96,14 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 6 | **GameStateMachine.h** | Handle changing between states |
 | 7 | **Input.h** | Handle input from keyboard, mouse, and gamepad |
 | 8 | **Laser.h** | Create, move, and render Laser objects |
-| 9 | **MainMenuState.h** | Menu state header file |
-| 10 | **MenuButton.h** | Handle button clicks |
-| 11 | **MenuState.h** | Abstract base class for menu states |
-| 12 | **Player.h** | Create, move, and render Player objects |
-| 13 | **PlayState.h** | Play state header file|
-| 14 | **Socket.h** | UDP Socket functions |
-| 15 | **Texture.h** | Texture functionality |
+| 9 | **LaserManager.h** | Manage the player lasers |
+| 10 | **MainMenuState.h** | Menu state header file |
+| 11 | **MenuButton.h** | Handle button clicks |
+| 12 | **MenuState.h** | Abstract base class for menu states |
+| 13 | **Player.h** | Create, move, and render Player objects |
+| 14 | **PlayState.h** | Play state header file|
+| 15 | **Socket.h** | UDP Socket functions |
+| 16 | **Texture.h** | Texture functionality |
 
 ## Class Files:
 
@@ -113,13 +114,14 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 3 | **GameStateMachine.cpp** | Functions for changing state |
 | 4 | **Input.cpp** | Functions for handling input |
 | 5 | **Laser.cpp** | Create, move, and render Laser objects |
-| 6 | **Main.cpp** | Main entry point to the game, and game loop |
-| 7 | **MainMenuState.cpp** | Functions for handling the menu state |
-| 8 | **MenuButton.cpp** | Functions for handling button clicks |
-| 9 | **Player.cpp** | Create, move, and render Player objects |
-| 10 | **PlayState.cpp** | Functions for handling the play state |
-| 11 | **Server.c** | UDP Server receives data from game |
-| 12 | **Texture.cpp** | Texture functionality |
+| 6 | **LaserManager.cpp** | Functions to manage lasers from anywhere in the game |
+| 7 | **Main.cpp** | Main entry point to the game, and game loop |
+| 8 | **MainMenuState.cpp** | Functions for handling the menu state |
+| 9 | **MenuButton.cpp** | Functions for handling button clicks |
+| 10 | **Player.cpp** | Create, move, and render Player objects |
+| 11 | **PlayState.cpp** | Functions for handling the play state |
+| 12 | **Server.c** | UDP Server receives data from game |
+| 13 | **Texture.cpp** | Texture functionality |
  
 ## Setup SDL Libraries:
 

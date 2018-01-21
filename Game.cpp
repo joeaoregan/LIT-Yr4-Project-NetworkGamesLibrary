@@ -15,6 +15,7 @@
 			Moved loading of textures to Texture class
 			Moved object rendering to individual classes from Game.cpp
 	20180121	Added Audio class to handle game music and effects
+			Added finite state machine, and state for playing game
 */
 #include "Game.h"							// Game functions
 
@@ -28,9 +29,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "Socket.h"
-#include "Laser.h"
+//#include "Laser.h"
 #include "Input.h"							// 20180120
-#include "Audio.h"							// 20180121
+//#include "Audio.h"							// 20180121
 
 #include "State/MainMenuState.h"
 #include "State/PlayState.h"

@@ -11,6 +11,7 @@
 #include "Game.h"
 #include "Texture.h"
 #include "Input.h"
+#include "LaserManager.h"
 
 void Player::update(){  
 	//std::cout << "Player update" << std::endl;
@@ -32,6 +33,7 @@ void Player::update(){
 }
 
 void Player::handleInput(){
+	// Vertical movement
 	if (Input::Instance()->isKeyDown(SDL_SCANCODE_UP)) {
 		setVelY(-getVel());
 		//std::cout << "up" << std::endl;
@@ -40,10 +42,9 @@ void Player::handleInput(){
 	//	std::cout << "down" << std::endl;
         } else {
 		setVelY(0);
-	}
-	 
+	}	 
 
-        
+        // Horizontal movement
         if(Input::Instance()->isKeyDown(SDL_SCANCODE_LEFT)) {
 		setVelX(-getVel());
 	//	std::cout << "left" << std::endl;
@@ -53,6 +54,12 @@ void Player::handleInput(){
         } else {
 		setVelX(0);
 	}
+        
+	// Fire weapons
+        if(Input::Instance()->isKeyDown(SDL_SCANCODE_SPACE)) {
+		//PlayState::Instance()->spawnLaser();
+		LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20);
+        }
 }
 /*
 void Player::handleEvent( SDL_Event& e ) {

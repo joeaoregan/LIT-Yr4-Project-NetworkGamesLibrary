@@ -1,9 +1,12 @@
 #include "PlayState.h"
 #include "../Texture.h"							// Texture functions
-#include "../Player.h"													// Player functions
-#include <list>										// Store game objects in a list
-#include <sstream>									// 20180117 Updating text
-#include "../Background.h"							// 20180121
+#include "../Player.h"							// Player functions
+#include <list>								// Store game objects in a list
+#include <sstream>							// 20180117 Updating text
+#include "../Background.h"						// 20180121
+//#include "Audio.h"							// 20180121
+//#include "Laser.h"
+#include "../LaserManager.h"
 
 std::stringstream updateText;
 std::vector<GameObject*> listOfGameObjects;				// List of game objects
@@ -21,7 +24,7 @@ bool PlayState::onEnter() {
 	prevX = -1;
 	prevY = -1;
 
-	success = Texture::Instance()->loadTextures();									// Load the game textures
+	success = Texture::Instance()->loadTextures();										// Load the game textures
 
 	std::cout << "Textures Loaded" << std::endl;
 
@@ -47,19 +50,15 @@ bool PlayState::onEnter() {
 	listOfGameObjects.push_back(background);
 	listOfGameObjects.push_back(player);
 
-	player->spawn(0,(SCREEN_HEIGHT - player->getHeight() - 120)/2, player->getVel());				// Center of play area
+	player->spawn(0,(SCREEN_HEIGHT - player->getHeight() - 120)/2, player->getVel());					// Center of play area
 	std::cout << "Spawn Player" << std::endl;
 
 	return success;
 }
 
 void PlayState::update(){		
-	//std::cout << "PlayState update()" << std::endl;
-	//player->handleEvent( e );											// Handle input for the Player
-	//player->handleEvent( Game::Instance()->getEvent() );											// Handle input for the Player
-
 	for (int index = 0; index != listOfGameObjects.size(); ++index) {	
-		listOfGameObjects[index]->update();									// Move/Update the game objects
+		listOfGameObjects[index]->update();										// Move/Update the game objects
 	}
 
 	updateText.str("");													// 20180117			
@@ -70,6 +69,8 @@ void PlayState::update(){
 		prevX = player->getX();
 		prevY = player->getY();
 	}
+
+	LaserManager::Instance()->update();
 }
 
 void PlayState::render() {
@@ -77,7 +78,9 @@ void PlayState::render() {
 		listOfGameObjects[index]->render();										// Render the game object
 	}
 
-	gTextTexture.render((SCREEN_WIDTH - gTextTexture.getWidth()) / 2,((SCREEN_HEIGHT -600 -gTextTexture.getHeight())/ 2)+ 600);
+	gTextTexture.render((SCREEN_WIDTH - gTextTexture.getWidth())/2,((SCREEN_HEIGHT-600-gTextTexture.getHeight())/ 2)+600);
+
+	LaserManager::Instance()->render();
 }
 
 bool PlayState::onExit() {
@@ -89,3 +92,16 @@ bool PlayState::onExit() {
 }
 
 // spawnlasers
+
+/*
+void PlayState::spawnLaser() {
+	std::cout << "Laser Spawned" << std::endl;
+
+//	Mix_PlayChannel( -1, laserFX, 0 );											// 20180120 Sound effects not playing now ???
+	Audio::Instance()->playFX("laserFX");
+	GameObject* p_Laser1 = new Laser();											// 20180120 Add laser to game object list 
+	listOfGameObjects.push_back(p_Laser1);
+	p_Laser1->spawn(player->getX() + 65, player->getY() + 30, 20);
+//	sendToServer("1 Player_Laser_Fired");											// Notify server when laser fired
+}
+*/

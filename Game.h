@@ -13,6 +13,7 @@
 #include <SDL2/SDL.h>						// SDL
 #include <SDL2/SDL_mixer.h>					// Audio
 #include <SDL2/SDL_ttf.h>					// True type fonts
+#include <SDL2/SDL_image.h>
 #include <cstdlib>						// For Random Numbers
 #include <ctime>						// For Random Numbers
 #include <string>
