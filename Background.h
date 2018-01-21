@@ -22,6 +22,8 @@ public:
 
 	virtual void move() {
 		GameObject::move();
+
+		if (getX() <= -getWidth()) setX(0); 		// Move back to start when fully off screen
 	}
 
 	virtual void render() {

@@ -45,7 +45,7 @@ public:
 		setVel(v);
 	}
 
-	virtual void handleEvent(SDL_Event& e) {}				// Handle events for objects
+	virtual void handleEvent(SDL_Event& e) {}		// Handle events for objects
 
 	virtual void move() {
 		setX(getX() + getVel());
