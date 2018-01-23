@@ -13,6 +13,10 @@
 #include "Input.h"
 #include "LaserManager.h"
 
+// Add gap between lasers firing
+Uint32 lastFire;
+Uint32 fireInterval = 500;
+
 void Player::update(){  
 	//std::cout << "Player update" << std::endl;
 
@@ -56,9 +60,10 @@ void Player::handleInput(){
 	}
         
 	// Fire weapons
-        if(Input::Instance()->isKeyDown(SDL_SCANCODE_SPACE)) {
+        if(Input::Instance()->isKeyDown(SDL_SCANCODE_SPACE) && SDL_GetTicks() >= lastFire + fireInterval) {
 		//PlayState::Instance()->spawnLaser();
 		LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20);
+		lastFire = SDL_GetTicks();
         }
 }
 /*

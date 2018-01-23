@@ -17,24 +17,28 @@
 	20180121	Added Audio class to handle game music and effects
 			Added finite state machine, and state for playing game
 */
+
+
 #include "Game.h"							// Game functions
 
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
+//#include <sys/types.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
+//#include <netdb.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include "Socket.h"
+//#include <unistd.h>
+//#include "Networking/Socket.h"
 //#include "Laser.h"
 #include "Input.h"							// 20180120
 //#include "Audio.h"							// 20180121
 
 #include "State/MainMenuState.h"
 #include "State/PlayState.h"
+
+//#include "Networking/NetJOR.h"
+
 
 Game* Game::s_pInstance = 0;						// Game singleton
 
@@ -51,9 +55,11 @@ bool Game::init() {
 	//prevX = -1;
 	//prevY = -1;
 
-	createUDPSocket("localhost", "socket test" );
+	bool success = true;												// Initialisation flag	
 
-	bool success = true;												// Initialization flag
+	//createUDPSocket("localhost", "socket test" );									// Moved to NetJOR
+	success = NetJOR::Instance()->init();										// Initialise networking stuff
+	if (!success) std::cout << "Failed to init() NetJOR" << std::endl;
 
 	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
@@ -114,7 +120,7 @@ bool Game::init() {
 void Game::close() {
 	printf("close() called\n");
 
-	sendToServer("3 exit");													// Let the server know to exit
+	//sendToServer("3 exit");												// Let the server know to exit ***MOVED TO NetJOR::close()
 
 	//Destroy window	
 	SDL_DestroyRenderer( Game::Instance()->getRenderer() );
@@ -126,7 +132,8 @@ void Game::close() {
 	IMG_Quit();
 	SDL_Quit();
 
-	closeSocketStuff();
+	//closeSocketStuff();													// Moved to NetJOR
+	NetJOR::Instance()->close();												// Close networking stuff
 }
 
 void Game::update() {
@@ -145,7 +152,8 @@ void Game::update() {
 	}
 */
 
-	m_pGameStateMachine->update();	
+	m_pGameStateMachine->update();												// Update the current state
+	NetJOR::Instance()->update();												// Update networking stuff	
 }
 
 void Game::render() {	
@@ -160,29 +168,10 @@ void Game::render() {
 void Game::handleEvents() {
 	//if (!enterTextState)		// If not in the state for entering text update
 	Input::Instance()->update();
-/*
-	if (Input::Instance()->isKeyDown(SDL_SCANCODE_UP)) {
-		std::cout << "Up Pressed" << std::endl;
-	} else if (Input::Instance()->isKeyDown(SDL_SCANCODE_DOWN)) {
-		std::cout << "Down Pressed" << std::endl;
-	}
-*/
 }
-
-void Game::spawnLaser() {
-	std::cout << "Laser Spawned" << std::endl;
 /*
-//	Mix_PlayChannel( -1, laserFX, 0 );											// 20180120 Sound effects not playing now ???
-//	std::cout << "sound" << std::endl;
-	Audio::Instance()->playFX("laserFX");
-	GameObject* p_Laser1 = new Laser();											// 20180120 Add laser to game object list 
-	listOfGameObjects.push_back(p_Laser1);
-	p_Laser1->spawn(player->getX() + 65, player->getY() + 30, 20);
-	sendToServer("1 Player_Laser_Fired");											// Notify server when laser fired
-*/
-}
-
 void Game::netDestroyGameObject() {
 	sendToServer("4 Laser_Destroyed");
 }
+*/
 

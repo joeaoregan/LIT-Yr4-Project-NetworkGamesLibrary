@@ -105,7 +105,7 @@ int main(void) {
 		//if (!strcmp(buf, "exit")) break;									// exit the while loop
 		else if (parseType == 3) {											// If the message type is 3
 			printf("%sClient has terminated connection%s\n",MGNT,NORM);					// Display exit message and
-			break;												// exit the while loop
+			//break;												// exit the while loop
 		}
 		else if (parseType == 4){
 			printf("%sLaser Desroyed%s\n", RED,NORM);

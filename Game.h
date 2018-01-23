@@ -4,13 +4,12 @@
 
 	Game.h
 
-	Main game file
+	Main game header file
 	Using singleton pattern to access variables and functionality
 */
 #ifndef	__GAME_H
 #define	__GAME_H
 
-#include <SDL2/SDL.h>						// SDL
 #include <SDL2/SDL_mixer.h>					// Audio
 #include <SDL2/SDL_ttf.h>					// True type fonts
 #include <SDL2/SDL_image.h>
@@ -18,6 +17,8 @@
 #include <ctime>						// For Random Numbers
 #include <string>
 #include "State/GameStateMachine.h"
+
+#include "Networking/NetJOR.h"
 
 //#include "Socket.h"
 
@@ -58,12 +59,12 @@ public:
 	TTF_Font* getFont() {return gFont;}
 
 
-	void spawnLaser();
+	//void spawnLaser();					// Moved to LaserManager
 	
 	bool gameFinished() { return quit; }			// Has the game exited
 	void setGameFinished() { quit = true; }			// Has the game exited
 
-	void netDestroyGameObject();
+	//void netDestroyGameObject();
 
 	SDL_Event getEvent() { return event;}
 

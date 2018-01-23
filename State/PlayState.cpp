@@ -8,6 +8,9 @@
 //#include "Laser.h"
 #include "../LaserManager.h"
 
+//#include "../Networking/Socket.h"
+#include "../Networking/NetJOR.h"
+
 std::stringstream updateText;
 std::vector<GameObject*> listOfGameObjects;				// List of game objects
 
@@ -66,6 +69,7 @@ void PlayState::update(){
 
 	if (player->getX() != prevX || player->getY() != prevY) {								// Only send update if position changes
 		//sendToServer2(updateText.str().c_str());
+		NetJOR::Instance()->sendString(updateText.str().c_str());
 		prevX = player->getX();
 		prevY = player->getY();
 	}

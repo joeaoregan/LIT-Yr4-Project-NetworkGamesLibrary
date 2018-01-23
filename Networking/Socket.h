@@ -8,8 +8,8 @@
 	UDP socket functions
 	Create sockets and send data
 */
-#ifndef	__SOCKET_H
-#define	__SOCKET_H
+#ifndef	SOCKET_H
+#define	SOCKET_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +31,9 @@ int sockfd;
 struct addrinfo *servinfo, *p;
 
 // UDP Socket
-void createUDPSocket(char* serverName, char* msg){
+bool createUDPSocket(char* serverName, char* msg){
+	bool success = true;
+
 	printf ("Connecting To Server: %s\n", serverName);
 
 	int rv, numbytes;
@@ -49,13 +51,15 @@ void createUDPSocket(char* serverName, char* msg){
 	//if ((rv = getaddrinfo(argv[1], UDP_PORT, &hints, &servinfo)) != 0) {
 	if ((rv = getaddrinfo(serverName, UDP_PORT, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+		success = false;
 		//return 1;
 	}
 
 	// Create a socket
 	for(p = servinfo; p != NULL; p = p->ai_next) {
 		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-			perror("talker: socket");
+			perror("Game client: socket");
+			success = false;
 			continue;
 		}
 		break;
@@ -63,8 +67,9 @@ void createUDPSocket(char* serverName, char* msg){
 
 	// Check socket
 	if (p == NULL) {
-		fprintf(stderr, "talker: failed to bind socket\n");
+		fprintf(stderr, "Game client: failed to bind socket\n");
 		//return 2;
+		success = false;
 	}
 /*
 	if ((numbytes = sendto(sockfd, argv[2], strlen(argv[2]), 0, p->ai_addr, p->ai_addrlen)) == -1) {
@@ -79,6 +84,7 @@ void createUDPSocket(char* serverName, char* msg){
 
 	//printf("Sent %d bytes to %s\n", numbytes, argv[1]);
 	//close(sockfd);
+	return success;
 }
 
 // Send data

@@ -85,7 +85,7 @@ Ensure dependendent files are in the root directory, and Assets directories
 ---
 
 ## Header Files:
-
+		
 | No. | File        | Description |
 | --- | ------------- |-------------|
 | 1 | **Audio.h** | Game sound effects and music |
@@ -100,10 +100,11 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 10 | **MainMenuState.h** | Menu state header file |
 | 11 | **MenuButton.h** | Handle button clicks |
 | 12 | **MenuState.h** | Abstract base class for menu states |
-| 13 | **Player.h** | Create, move, and render Player objects |
-| 14 | **PlayState.h** | Play state header file|
-| 15 | **Socket.h** | UDP Socket functions |
-| 16 | **Texture.h** | Texture functionality |
+| 13 | **NetJOR.h** | Networking header file, with singleton |
+| 14 | **Player.h** | Create, move, and render Player objects |
+| 15 | **PlayState.h** | Play state header file|
+| 16 | **Socket.h** | UDP Socket functions |
+| 17 | **Texture.h** | Texture functionality |
 
 ## Class Files:
 
@@ -119,9 +120,10 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 8 | **MainMenuState.cpp** | Functions for handling the menu state |
 | 9 | **MenuButton.cpp** | Functions for handling button clicks |
 | 10 | **Player.cpp** | Create, move, and render Player objects |
-| 11 | **PlayState.cpp** | Functions for handling the play state |
-| 12 | **Server.c** | UDP Server receives data from game |
-| 13 | **Texture.cpp** | Texture functionality |
+| 11 | **NetJOR.cpp** | Functions for handling networking and communication with Server|
+| 12 | **PlayState.cpp** | Functions for handling the play state |
+| 13 | **Server.c** | UDP Server receives data from game |
+| 14 | **Texture.cpp** | Texture functionality |
  
 ## Setup SDL Libraries:
 

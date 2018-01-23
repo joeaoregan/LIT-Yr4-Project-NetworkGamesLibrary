@@ -2,7 +2,8 @@
 #include "LaserManager.h"
 #include "Game.h"
 #include "Audio.h"
-
+//#include "Networking/Socket.h"
+#include "Networking/NetJOR.h"
 
 LaserManager* LaserManager::s_pInstance = new LaserManager();
 
@@ -11,10 +12,19 @@ LaserManager::LaserManager()
 }
 
 void LaserManager::addLaser(int x, int y, int v) {
+//	Mix_PlayChannel( -1, laserFX, 0 );											// 20180120 Sound effects not playing now ???
+//	std::cout << "sound" << std::endl;
+/*	Audio::Instance()->playFX("laserFX");
+	GameObject* p_Laser1 = new Laser();											// 20180120 Add laser to game object list 
+	listOfGameObjects.push_back(p_Laser1);
+	p_Laser1->spawn(player->getX() + 65, player->getY() + 30, 20);
+*/
 	Audio::Instance()->playFX("laserFX");
 	Laser* pLaser = new Laser();
 	pLaser->spawn(x,y,v);
 	m_Lasers.push_back(pLaser);
+	//sendToServer("1 Player_Laser_Fired");				// Error with header files
+	NetJOR::Instance()->sendText("1 Player_Laser_Fired");		// Sends char* string to server
 }
 
 void LaserManager::clear() {
