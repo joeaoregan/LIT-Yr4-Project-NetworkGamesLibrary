@@ -14,8 +14,6 @@ public:
 		setVel(-1);
 		setAlive(true);
 		setTextureID("bgID");
-
-
 	}
 
 	~Background() {}

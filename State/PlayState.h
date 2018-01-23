@@ -23,7 +23,7 @@ public:
 
 	virtual int getStateID() const { return PLAY; };
 
-	void spawnLaser();
+	//void spawnLaser();
 
 private:
 	int prevX;					// Players previous position

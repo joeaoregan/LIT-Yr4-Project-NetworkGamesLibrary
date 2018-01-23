@@ -131,23 +131,38 @@ bool Texture::load(std::string fileName, std::string id) {
 }
 
 // Array of texture details, with path, id, and description
-std::string textures[3][3] = {
+std::string texturesL1[3][3] = {
 	{ "Assets/Art/Player1Ship.png", "player1ID", "Player 1" },
 	{ "Assets/Art/bg720.png", "bgID", "Background" },
 	{ "Assets/Art/LaserGreen.png", "greenLaserID", "Green Laser" }
 };
 
+std::string texturesMenu[1][3] = {
+	{ "Assets/Art/Logo2720.png", "logoID", "Menu Logo" }
+};
+
 /*
 	Load the game textures
 */
-bool Texture::loadTextures(){
+//bool Texture::loadTextures(){
+bool Texture::loadTextures(int select){
 	bool success = true;
-
-	// Load the textures stored in the textures array
-	for (int i = 0; i < sizeof(textures)/sizeof(textures[0]); i++) {
-		if (!load(textures[i][0], textures[i][1])) {
-			std::cout << "Failed to load " << textures[i][2] << " texture!" << std::endl;
-			success = false;
+	
+	if (select == MENU_DATA) {
+		// Load the textures stored in the textures array
+		for (int i = 0; i < sizeof(texturesMenu)/sizeof(texturesMenu[0]); i++) {
+			if (!load(texturesMenu[i][0], texturesMenu[i][1])) {
+				std::cout << "Failed to load " << texturesMenu[i][2] << " Menu texture!" << std::endl;
+				success = false;
+			}
+		}
+	} else if (select == LEVEL1_DATA) {
+		// Load the textures stored in the textures array
+		for (int i = 0; i < sizeof(texturesL1)/sizeof(texturesL1[0]); i++) {
+			if (!load(texturesL1[i][0], texturesL1[i][1])) {
+				std::cout << "Failed to load " << texturesL1[i][2] << " Level 1 texture!" << std::endl;
+				success = false;
+			}
 		}
 	}
 

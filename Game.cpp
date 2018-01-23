@@ -109,8 +109,8 @@ bool Game::init() {
 
 	m_pGameStateMachine = NULL;					// init state machine
 	m_pGameStateMachine = new GameStateMachine();
-	//m_pGameStateMachine->changeState(new MainMenuState());
-	m_pGameStateMachine->changeState(new PlayState());
+	m_pGameStateMachine->changeState(new MainMenuState());
+	//m_pGameStateMachine->changeState(new PlayState());
 
 	//printf("init() exit\n");
 

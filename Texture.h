@@ -14,6 +14,13 @@
 #include <SDL2/SDL_image.h>
 #include <map>
 
+enum LoadData{
+	MENU_DATA = 0,
+	LEVEL1_DATA,
+	PAUSE_DATA,
+	GAMEOVER_DATA
+};
+
 // Texture wrapper class
 class Texture {
 public:	
@@ -29,7 +36,8 @@ public:
 	Texture();																// Initializes variables	
 	~Texture();																// Deallocates memory
 
-	bool loadTextures();
+	//bool loadTextures();
+	bool loadTextures(int select);
 
 	SDL_Texture* getTexture(std::string id) { return m_TextureMap[id]; }									// Get a texture from the map using ID
 

@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+	
+	PlayState.cpp
+
+	Play the game
+*/
+
 #include "PlayState.h"
 #include "../Texture.h"							// Texture functions
 #include "../Player.h"							// Player functions
@@ -5,11 +14,8 @@
 #include <sstream>							// 20180117 Updating text
 #include "../Background.h"						// 20180121
 //#include "Audio.h"							// 20180121
-//#include "Laser.h"
 #include "../LaserManager.h"
-
-//#include "../Networking/Socket.h"
-#include "../Networking/NetJOR.h"
+#include "../Networking/NetJOR.h"					// 20180123 Communicate with Server
 
 std::stringstream updateText;
 std::vector<GameObject*> listOfGameObjects;				// List of game objects
@@ -27,12 +33,10 @@ bool PlayState::onEnter() {
 	prevX = -1;
 	prevY = -1;
 
-	success = Texture::Instance()->loadTextures();										// Load the game textures
+	//success = Texture::Instance()->loadTextures();										// Load the game textures
+	success = Texture::Instance()->loadTextures(LEVEL1_DATA);									// Load the LEVEL 1 textures
+	if (success) std::cout << "Level Textures Loaded" << std::endl;
 
-	std::cout << "Textures Loaded" << std::endl;
-
-
-//	gFont = TTF_OpenFont( "Assets/Fonts/lazy.ttf", 28 );
 	if( Game::Instance()->getFont() == NULL ) {
 		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
@@ -68,7 +72,6 @@ void PlayState::update(){
 	updateText << "0 Player1 " << player->getX() << " " << player->getY();							// 20180118 Send name/ID, x coord, y coord  -  to server
 
 	if (player->getX() != prevX || player->getY() != prevY) {								// Only send update if position changes
-		//sendToServer2(updateText.str().c_str());
 		NetJOR::Instance()->sendString(updateText.str().c_str());
 		prevX = player->getX();
 		prevY = player->getY();
@@ -94,18 +97,3 @@ bool PlayState::onExit() {
 
 	return true;
 }
-
-// spawnlasers
-
-/*
-void PlayState::spawnLaser() {
-	std::cout << "Laser Spawned" << std::endl;
-
-//	Mix_PlayChannel( -1, laserFX, 0 );											// 20180120 Sound effects not playing now ???
-	Audio::Instance()->playFX("laserFX");
-	GameObject* p_Laser1 = new Laser();											// 20180120 Add laser to game object list 
-	listOfGameObjects.push_back(p_Laser1);
-	p_Laser1->spawn(player->getX() + 65, player->getY() + 30, 20);
-//	sendToServer("1 Player_Laser_Fired");											// Notify server when laser fired
-}
-*/

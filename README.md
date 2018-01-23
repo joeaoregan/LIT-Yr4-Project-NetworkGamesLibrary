@@ -2,7 +2,7 @@
 # Project: Networked Games Library
 ### Joe O'Regan
 ### K00203642
-### 21/01/2018
+### 23/01/2018
 
 ![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
 Simple 2D side-scrolling game in C++
