@@ -9,17 +9,18 @@
 #ifndef GAME_OBJECTS_H
 #define GAME_OBJECTS_H
 
-#include <SDL2/SDL.h>				// SDL
+#include <SDL2/SDL.h>						// SDL
 //#include "Texture.h"
 #include <iostream>
 #include "Game.h"
+#include "Texture.h"
 
 class GameObject {
 public:
 	GameObject() {};
 	~GameObject() {};					// Deconstructor
 
-	virtual void handleEvent(SDL_Event& e) {}		// Handle events for objects
+	//virtual void handleEvent(SDL_Event& e) {}		// Handle events for objects
 
 	virtual void update() {
 		setX(getX() + getVel());
@@ -35,7 +36,16 @@ public:
 			renderQuad.h = clip->h;
 		}
 		*/
-		SDL_RenderCopyEx(Game::Instance()->getRenderer(), m_Texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);	// Render to screen
+		//SDL_RenderCopyEx(Game::Instance()->getRenderer(), m_Texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);	// Render to screen
+		SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);	// Render to screen
+	};
+
+	void renderAnimation() {
+		//Texture::Instance()->modifyAlpha( getAlpha(), getTextureID() );
+		SDL_Rect renderQuadSource = { getWidth() * getCurrentFrame(), getHeight() * getAnimRow(), getWidth(), getHeight() };
+		SDL_Rect renderQuadDest = { getX(), getY(), getWidth(), getHeight() };
+
+		SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), &renderQuadSource, &renderQuadDest, 0, NULL, SDL_FLIP_NONE);
 	};
 
 	virtual void clean() {}
@@ -49,7 +59,10 @@ public:
 	int getWidth() { return m_width; }
 	int getHeight() { return m_height; }
 	bool getAlive() { return m_Alive; }
-	std::string getTextureID() const { return m_TextureID; }// return the texture ID
+	std::string getTextureID() const { return m_TextureID; }// Return the texture ID
+	int getCurrentFrame() const { return m_CurrentFrame; }	// The current animation frame of sprite sheet
+	int getAnimRow() const { return m_CurrentAnimationRow; }// Get the current animation row of sprite sheet
+	int getAlpha() const { return m_Alpha; }		// Get the texture alpha value
 
 	void setX(int x) { m_x = x; }				// Set GameObject X coord
 	void setY(int y) { m_y = y; }				// Set GameObject Y coord
@@ -60,13 +73,15 @@ public:
 	void setHeight(int h) { m_height = h; }
 	void setAlive(bool a) { m_Alive = a; }
 	void setTextureID(std::string t) { m_TextureID = t; }	// Set the texture ID
+	void setCurrentFrame(int f) { m_CurrentFrame = f; }	// Set the current frame of animation in the sprite sheet
+	void setAnimRow(int f) { m_CurrentAnimationRow = f; }	// Set the current row of animation in the sprite sheet
+	void setAlpha(int a) { m_Alpha = a; }			// Set the texture alpha value
 
 	void spawn(int x, int y, int v) {			// Spawn at coords with velocity
 		setX(x);
 		setY(y);
 		setVel(v);
 	}
-
 
 	//SDL_Rect getCollider();
 	//void setColliderW(int w);
@@ -85,6 +100,9 @@ private:
 	//SDL_Rect mCollider;
 	SDL_Texture* m_Texture;					// The actual hardware texture
 	std::string m_TextureID;				// ID for the texture associated with the object
+	int m_CurrentFrame;					// The current animation frame in the sprite sheet
+	int m_CurrentAnimationRow;				// The current animation row in the sprite sheet
+	int m_Alpha;						// Alpha value for Texture
 };
 
 #endif

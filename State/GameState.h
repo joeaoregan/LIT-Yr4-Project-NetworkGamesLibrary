@@ -23,7 +23,8 @@ enum StateIDs{
 
 class GameState {
 public:
-	virtual void update() = 0;		// = 0 -> has to be implemented in derived class
+	virtual void handleInput() = 0;
+	virtual void update() = 0;					// = 0 -> has to be implemented in derived class
 	virtual void render() = 0;
 		
 	virtual bool onEnter() = 0;
@@ -32,6 +33,12 @@ public:
 	virtual void resume() {}
 
 	virtual int getStateID() const = 0;
+
+protected:
+	GameState() : m_loadingComplete(false), m_exiting(false) { }	// Constructor
+
+	bool m_loadingComplete;						// Finished loading textures etc
+    	bool m_exiting;	
 };
 
 #endif

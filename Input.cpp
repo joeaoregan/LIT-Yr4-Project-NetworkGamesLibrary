@@ -86,16 +86,17 @@ void Input::reset() {
 
 bool Input::isKeyDown(SDL_Scancode key) const {
 	//std::cout << "Input iskeyDown()" << std::endl;
-    if(m_keystates != 0) {
-        if(m_keystates[key] == 1) {
-		//std::cout << "key down" << std::endl;
-            return true;
-        } else {
-            return false;
-        }
-    }
+	if(m_keystates != 0) {
+		if(m_keystates[key] == 1) {
+			//std::cout << "key down" << std::endl;
+			return true;
+		} else {
+			return false;
+		}
+	}
     
-    return false;
+	std::cout << "Input iskeyDown() end " << std::endl;
+	return false;
 }
 
 int Input::getAxisX(int joy, int stick) const {
@@ -122,6 +123,14 @@ int Input::getAxisY(int joy, int stick) const {
     }
 */
     return 0;
+}
+
+bool Input::getButtonState(int joy, int buttonNumber) const {
+	//std::cout << "Input getButtonState()" << std::endl;
+	if (SDL_NumJoysticks() > 0)								// If there is a joystick plugged in
+		return m_buttonStates[joy][buttonNumber];					// Return it's state
+		
+	return false;										// Otherwise return false
 }
 
 void Input::update() {

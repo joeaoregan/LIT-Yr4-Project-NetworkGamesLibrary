@@ -25,9 +25,10 @@ public:
 	}
 
 	virtual void render() {
-		SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };
+		GameObject::render();
+		//SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };
 		SDL_Rect renderQuad2 = { getX() + getWidth(), getY(), getWidth(), getHeight() };								// Set rendering space and render to screen
-		SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0, NULL, SDL_FLIP_NONE);	// Render to screen
+		//SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0, NULL, SDL_FLIP_NONE);	// Render to screen
 
 		SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad2, 0, NULL, SDL_FLIP_NONE);	// Render to screen
 	}

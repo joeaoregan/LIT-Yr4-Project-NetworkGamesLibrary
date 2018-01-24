@@ -168,6 +168,7 @@ void Game::render() {
 void Game::handleEvents() {
 	//if (!enterTextState)		// If not in the state for entering text update
 	Input::Instance()->update();
+	m_pGameStateMachine->handleInput();												// Update the current state
 }
 /*
 void Game::netDestroyGameObject() {

@@ -34,7 +34,8 @@ public:
 	// joystick events
 	int getAxisX(int joy, int stick) const;
 	int getAxisY(int joy, int stick) const;
-	bool getButtonState(int joy, int buttonNumber) const { return m_buttonStates[joy][buttonNumber]; }
+	bool getButtonState(int joy, int buttonNumber) const;
+
     
 	// mouse events
 	bool getMouseButtonState(int buttonNumber) const{ return m_mouseButtonStates[buttonNumber]; }

@@ -15,6 +15,7 @@ class MainMenuState : public MenuState {
 public:
     	virtual ~MainMenuState() {}
 
+	virtual void handleInput() {};
 	virtual void update();
 	virtual void render();
 		
@@ -27,6 +28,8 @@ private:
 	virtual void setCallbacks(const std::vector<Callback>& callbacks);
 
 	std::vector<GameObject*> m_gameObjects;
+
+	static void startGame();
 };
 
 #endif
