@@ -1,6 +1,13 @@
 #include "GameStateMachine.h"
 #include <iostream>
 
+void GameStateMachine::handleInput() {
+	//std::cout << "GameStateMachine handleInput()" << std::endl;
+	if(!m_gameStates.empty()) {
+		m_gameStates.back()->handleInput();
+	}
+}
+
 void GameStateMachine::update() {
 	if(!m_gameStates.empty()) {
 		m_gameStates.back()->update();
@@ -13,6 +20,8 @@ void GameStateMachine::render() {
 		m_gameStates.back()->render();
 	}
 }
+
+
 
 /*
 	Push pState into the states array, and call onEnter()

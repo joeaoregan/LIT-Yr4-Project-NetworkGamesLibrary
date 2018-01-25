@@ -40,7 +40,9 @@ public:
 	// mouse events
 	bool getMouseButtonState(int buttonNumber) const{ return m_mouseButtonStates[buttonNumber]; }
 	//Vector2D* getMousePosition() const { return m_mousePosition; }
-    
+    SDL_Event* getEvent(){ return &event; }
+
+    SDL_Event event;
 private:
     
 	Input();

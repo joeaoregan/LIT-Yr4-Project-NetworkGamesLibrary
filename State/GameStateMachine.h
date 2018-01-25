@@ -9,7 +9,7 @@ public:
 	GameStateMachine() {}
 	~GameStateMachine() {}
     
-	void handleInput() {};
+	void handleInput();
 	void update();
 	void render();
 

@@ -15,7 +15,7 @@ class MainMenuState : public MenuState {
 public:
     	virtual ~MainMenuState() {}
 
-	virtual void handleInput() {};
+	virtual void handleInput();
 	virtual void update();
 	virtual void render();
 		

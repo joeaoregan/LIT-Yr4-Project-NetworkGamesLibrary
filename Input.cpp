@@ -95,7 +95,7 @@ bool Input::isKeyDown(SDL_Scancode key) const {
 		}
 	}
     
-	std::cout << "Input iskeyDown() end " << std::endl;
+	//std::cout << "Input iskeyDown() end " << std::endl;
 	return false;
 }
 
@@ -134,7 +134,7 @@ bool Input::getButtonState(int joy, int buttonNumber) const {
 }
 
 void Input::update() {
-    SDL_Event event;
+    //SDL_Event event;
     while(SDL_PollEvent(&event)) {
         switch (event.type) {
             //case SDL_QUIT: Game::Instance()->quit(); break;   

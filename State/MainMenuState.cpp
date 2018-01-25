@@ -5,11 +5,14 @@
 #include "../Background.h"
 #include "PlayState.h"
 #include "../MenuButton.h"
+#include "../Input.h"
 
 //Texture bg;
 std::vector<GameObject*> listOfMenuObjects;								// List of game objects
+std::vector<MenuButton*> listOfMenuButtons;								// List of game objects
 GameObject* menuBackground;
-GameObject* menuButton1;
+//GameObject* menuButton1;
+MenuButton* menuButton1;
 
 bool MainMenuState::onEnter() {
 	std::cout << "Loading Menu State" << std::endl;
@@ -35,7 +38,7 @@ bool MainMenuState::onEnter() {
 	//menuButton1->setY(0);
 	//menuButton1->setWidth(1200);
 	//menuButton1->setHeight(100);
-	listOfMenuObjects.push_back(menuButton1);
+	listOfMenuButtons.push_back(menuButton1);
 
 	//std::cout << "test1" << std::endl;
 	m_loadingComplete = true;
@@ -43,10 +46,24 @@ bool MainMenuState::onEnter() {
 	return success;
 }
 
+SDL_Event e;
+
+void MainMenuState::handleInput() {
+	//std::cout << "MainMenuState handleInput()" << std::endl;
+
+	//while (SDL_PollEvent(&e) !=0) {
+	//	std::cout << "test poll events" << std::endl;
+		menuButton1->handleEvents((Input::Instance()->getEvent()), 0);	// 0 = button 1 (put more buttons  in for loop
+	//}
+}
+
 void MainMenuState::update(){	
 	//std::cout << "test2" << std::endl;
 	for (int index = 0; index != listOfMenuObjects.size(); ++index) {	
 		listOfMenuObjects[index]->update();							// Update the game objects
+	}
+	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
+		listOfMenuButtons[index]->update();							// Update the game objects
 	}
 	
 	//std::cout << "test3" << std::endl;
@@ -87,6 +104,9 @@ void MainMenuState::render() {
 	for (int index = 0; index != listOfMenuObjects.size(); ++index) {	
 		listOfMenuObjects[index]->render();							// Render the game object
 	}
+	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
+		listOfMenuButtons[index]->render();							// Render the game object
+	}
 }
 
 bool MainMenuState::onExit() {
@@ -108,3 +128,4 @@ void MainMenuState::setCallbacks(const std::vector<Callback>& callbacks) {
 void MainMenuState::startGame() {
 	Game::Instance()->getStateMachine()->changeState(new PlayState());				// Start the game
 }
+

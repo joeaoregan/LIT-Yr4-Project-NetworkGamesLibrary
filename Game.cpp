@@ -22,23 +22,14 @@
 #include "Game.h"							// Game functions
 
 #include <stdio.h>
-//#include <sys/types.h>
-//#include <sys/socket.h>
-//#include <netinet/in.h>
-//#include <netdb.h>
 #include <string.h>
 #include <stdlib.h>
-//#include <unistd.h>
-//#include "Networking/Socket.h"
-//#include "Laser.h"
 #include "Input.h"							// 20180120
 //#include "Audio.h"							// 20180121
 
 #include "State/MainMenuState.h"
 #include "State/PlayState.h"
-
 //#include "Networking/NetJOR.h"
-
 
 Game* Game::s_pInstance = 0;						// Game singleton
 
@@ -50,14 +41,9 @@ bool Game::init() {
 	quit = false;													// Main loop flag	
 
 	gWindow = NULL;
-	// Set the players previous position
-	// Only update server when player position changes
-	//prevX = -1;
-	//prevY = -1;
 
 	bool success = true;												// Initialisation flag	
 
-	//createUDPSocket("localhost", "socket test" );									// Moved to NetJOR
 	success = NetJOR::Instance()->init();										// Initialise networking stuff
 	if (!success) std::cout << "Failed to init() NetJOR" << std::endl;
 
@@ -137,21 +123,6 @@ void Game::close() {
 }
 
 void Game::update() {
-/*
-	for (int index = 0; index != listOfGameObjects.size(); ++index) {	
-		listOfGameObjects[index]->update();										// Move/Update the game objects
-	}
-
-	updateText.str("");													// 20180117			
-	updateText << "0 Player1 " << player->getX() << " " << player->getY();							// 20180118 Send name/ID, x coord, y coord  -  to server
-
-	if (player->getX() != prevX || player->getY() != prevY) {								// Only send update if position changes
-		sendToServer2(updateText.str().c_str());
-		prevX = player->getX();
-		prevY = player->getY();
-	}
-*/
-
 	m_pGameStateMachine->update();												// Update the current state
 	NetJOR::Instance()->update();												// Update networking stuff	
 }
@@ -168,7 +139,8 @@ void Game::render() {
 void Game::handleEvents() {
 	//if (!enterTextState)		// If not in the state for entering text update
 	Input::Instance()->update();
-	m_pGameStateMachine->handleInput();												// Update the current state
+//	std::cout <<  "Game handleEvents() 1" << std::endl;
+	m_pGameStateMachine->handleInput();											// Update the current state
 }
 /*
 void Game::netDestroyGameObject() {

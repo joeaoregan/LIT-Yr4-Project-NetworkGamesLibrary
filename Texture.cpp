@@ -44,6 +44,9 @@ void Texture::setAlpha( Uint8 alpha ) {
 	SDL_SetTextureAlphaMod( mTexture, alpha );								// Modulate texture alpha
 }
 
+/*
+	Render a button texture
+*/
 void Texture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip ) {	
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };							// Set rendering space and render to screen
 	
