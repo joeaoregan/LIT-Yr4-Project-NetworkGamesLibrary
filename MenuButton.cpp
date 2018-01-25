@@ -14,8 +14,8 @@ MenuButton::MenuButton() : GameObject(), m_callback(0), m_bReleased(true) {
 //	mPosition.y = 0;
 	setWidth(400);
 	setHeight(100);
-	setTextureID("playBtnID");
 	setCurrentFrame(0);
+	setTextureID("playBtnID");
 }
 /*
 void MenuButton::load(std::unique_ptr<LoaderParams> const &pParams) {
@@ -27,7 +27,6 @@ void MenuButton::load(std::unique_ptr<LoaderParams> const &pParams) {
 */
 void MenuButton::render() {
 	//GameObject::render();	
-	setTextureID("playBtnID");
 	GameObject::renderAnimation();
 	//SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };								// Set rendering space and render to screen
 	//SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0, NULL, SDL_FLIP_NONE);	// Render to screen
@@ -79,6 +78,7 @@ void MenuButton::testcase() {
 void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 	SDL_Color textColorOne = { 255, 255, 255 };	//If mouse event happened	
 
+	//std::cout << "Texture ID: " << getTextureID() << std::endl;
 	
 	if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP) {
 	//std::cout << "test1" << std::endl;
@@ -108,14 +108,18 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 				std::cout << "case mouse motion" << std::endl;
 				setButtonSprite(BUTTON_SPRITE_MOUSE_OVER_MOTION);				// Set sprite mouse over 1 2017/03/24 Use setter method
 				
-				setTextureID("player1ID");
+				if (getTextureID() != "logoID")
+					setTextureID("logoID");
+
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
 				setButtonSprite(BUTTON_SPRITE_MOUSE_DOWN);					// Set sprite mouse down 2 2017/03/24 Use setter method
 				//std::cout << "Mouse Button Down" << std::endl;
 
-				setTextureID("player1ID");
+				if (getTextureID() != "playBtnID")
+					setTextureID("playBtnID");
+
 				// Handle Main Menu Buttons
 				if (buttonSelected == STORY) {
 					std::cout << "Selected: Start Game!" << std::endl;

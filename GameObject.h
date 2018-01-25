@@ -72,7 +72,10 @@ public:
 	void setWidth(int w) { m_width = w; }
 	void setHeight(int h) { m_height = h; }
 	void setAlive(bool a) { m_Alive = a; }
-	void setTextureID(std::string t) { m_TextureID = t; }	// Set the texture ID
+	void setTextureID( std::string t) { 
+		std::cout << "Texture set to: " << t << std::endl;
+		m_TextureID = t; 
+	}	// Set the texture ID
 	void setCurrentFrame(int f) { m_CurrentFrame = f; }	// Set the current frame of animation in the sprite sheet
 	void setAnimRow(int f) { m_CurrentAnimationRow = f; }	// Set the current row of animation in the sprite sheet
 	void setAlpha(int a) { m_Alpha = a; }			// Set the texture alpha value
