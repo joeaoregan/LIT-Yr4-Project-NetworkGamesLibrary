@@ -13,13 +13,16 @@ std::vector<MenuButton*> listOfMenuButtons;								// List of game objects
 GameObject* menuBackground;
 //GameObject* menuButton1;
 MenuButton* menuButton1;
+MenuButton* menuButton2;
+MenuButton* menuButton3;
 
 bool MainMenuState::onEnter() {
 	std::cout << "Loading Menu State" << std::endl;
+
 	bool success = true;
 
-	numButtons = 1;
-	currentBtn = 1;
+	//numButtons = 3;
+	currentBtn = 0;
 	
 	m_callbacks.push_back(0);
 	m_callbacks.push_back(startGame);								// Add the game state to callbacks list
@@ -29,18 +32,23 @@ bool MainMenuState::onEnter() {
 	success = Texture::Instance()->loadTextures(MENU_DATA);						// Load the menu textures
 	if (success) std::cout << "Menu Textures Loaded" << std::endl;
 
-	menuBackground = new Background();
-	menuBackground->setTextureID("logoID");
-	listOfMenuObjects.push_back(menuBackground);
+	//menuBackground = new Background();
+	//menuBackground->setTextureID("logoID");
+	//listOfMenuObjects.push_back(menuBackground);
 
 	menuButton1 = new MenuButton();
-	//menuButton1->setX(0);
-	//menuButton1->setY(0);
-	//menuButton1->setWidth(1200);
-	//menuButton1->setHeight(100);
-	listOfMenuButtons.push_back(menuButton1);
+	menuButton2 = new MenuButton();
+	menuButton3 = new MenuButton();
 
-	//std::cout << "test1" << std::endl;
+	menuButton2->setY(100);
+	menuButton3->setY(200);
+	menuButton1->setCallbackID(1);
+	menuButton1->setCallbackID(2);
+	menuButton1->setCallbackID(3);
+	listOfMenuButtons.push_back(menuButton1);
+	listOfMenuButtons.push_back(menuButton2);
+	listOfMenuButtons.push_back(menuButton3);
+
 	m_loadingComplete = true;
 
 	return success;
@@ -49,45 +57,41 @@ bool MainMenuState::onEnter() {
 SDL_Event e;
 
 void MainMenuState::handleInput() {
-	//std::cout << "MainMenuState handleInput()" << std::endl;
+	//menuButton1->handleEvents((Input::Instance()->getEvent()), 0);					// 0 = button 1 (put more buttons  in for loop
 
-	//while (SDL_PollEvent(&e) !=0) {
-	//	std::cout << "test poll events" << std::endl;
-		menuButton1->handleEvents((Input::Instance()->getEvent()), 0);	// 0 = button 1 (put more buttons  in for loop
-	//}
+	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
+		listOfMenuButtons[index]->handleEvents((Input::Instance()->getEvent()), index);		// Update the buttons
+	}
 }
 
 void MainMenuState::update(){	
-	//std::cout << "test2" << std::endl;
+	// Update objects
 	for (int index = 0; index != listOfMenuObjects.size(); ++index) {	
-		listOfMenuObjects[index]->update();							// Update the game objects
+		listOfMenuObjects[index]->update();	
 	}
+
+	// Update buttons
 	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
 		listOfMenuButtons[index]->update();							// Update the game objects
+
+		if (listOfMenuButtons[index]->getButtonSelected() && currentBtn == 0)  {
+			listOfMenuButtons[index]->setButtonSelected(false);				// Reset the button for when the menu is entered again
+			startGame();
+		}
 	}
 	
-	//std::cout << "test3" << std::endl;
-
 	if (!buttonPressed()) {
-	//std::cout << "test before menustate update" << std::endl;
 		MenuState::update();									// Up and down buttons
 
-	//std::cout << "test after menustate update" << std::endl;
-
 		if (Input::Instance()->isKeyDown(SDL_SCANCODE_SPACE)) {					// If spacebar is pressed - start playing game
-	//std::cout << "test before startGame(0" << std::endl;
 			startGame();									// Advance to play game
 			setButtonPressed();								// Disable ability to press button, and time before button can be pressed again
-	//std::cout << "test4" << std::endl;
 		}
 		else if ((Input::Instance()->isKeyDown(SDL_SCANCODE_RETURN) ||				// If return key pressed
 			Input::Instance()->getButtonState(0, 0))) {					// Or gamepad button A - select current highlighted button
 			
-	//std::cout << "test5" << std::endl;
 			if (currentBtn == 1) startGame();
-	//std::cout << "test6" << std::endl;
 /*
-			if (currentBtn == 1) s_menuToPlay();						// 1. Play Game
 			else if (currentBtn == 2) s_highScores();					// 2. High Scores
 			else if (currentBtn == 3) s_settings();						// 3. Settings
 			else if (currentBtn == 4) s_instructions();					// 4. Instructions
@@ -96,14 +100,13 @@ void MainMenuState::update(){
 			setButtonPressed();								// Disable ability to press button, and time before button can be pressed again
 		}
 	} 
-
-	//std::cout << "test end update" << std::endl;
 }
 
 void MainMenuState::render() {
 	for (int index = 0; index != listOfMenuObjects.size(); ++index) {	
 		listOfMenuObjects[index]->render();							// Render the game object
 	}
+
 	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
 		listOfMenuButtons[index]->render();							// Render the game object
 	}
@@ -111,6 +114,7 @@ void MainMenuState::render() {
 
 bool MainMenuState::onExit() {
 	std::cout << "Exit Menu State" << std::endl;
+
 	return true;
 }
 

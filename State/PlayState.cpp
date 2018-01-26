@@ -16,6 +16,8 @@
 //#include "Audio.h"							// 20180121
 #include "../LaserManager.h"
 #include "../Networking/NetJOR.h"					// 20180123 Communicate with Server
+#include "../Input.h"
+#include "MainMenuState.h"
 
 std::stringstream updateText;
 std::vector<GameObject*> listOfGameObjects;				// List of game objects
@@ -62,6 +64,12 @@ bool PlayState::onEnter() {
 
 	return success;
 }
+
+void PlayState::handleInput() {
+	if (Input::Instance()->isKeyDown(SDL_SCANCODE_ESCAPE))
+		Game::Instance()->getStateMachine()->changeState(new MainMenuState());						// Open the main menu
+}
+
 
 void PlayState::update(){		
 	for (int index = 0; index != listOfGameObjects.size(); ++index) {	

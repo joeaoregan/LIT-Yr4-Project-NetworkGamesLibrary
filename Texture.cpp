@@ -57,7 +57,21 @@ void Texture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
 	
 	SDL_RenderCopyEx( Game::Instance()->getRenderer(), mTexture, clip, &renderQuad, angle, center, flip );	// Render to screen
 }
+/*
+void Texture::renderAnim(int x, int y, int frame){
+	SDL_Rect srcRect;
+	SDL_Rect destRect;
+	srcRect.x = width * currentFrame;
+	srcRect.y = height * currentRow;
+	srcRect.w = destRect.w = width;
+	srcRect.h = destRect.h = height;
+	destRect.x = x;
+	destRect.y = y;
 
+	SDL_SetTextureAlphaMod(m_textureMap[id], alpha);
+	SDL_RenderCopyEx(pRenderer, m_textureMap[id], &srcRect, &destRect, angle, 0, flip);
+}
+*/
 bool Texture::loadFromFile( std::string path ) {	
 	free();													// Get rid of preexisting texture
 	

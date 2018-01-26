@@ -93,7 +93,7 @@ bool Game::init() {
 
 	gFont = TTF_OpenFont( "Assets/Fonts/lazy.ttf", 28 );
 
-	m_pGameStateMachine = NULL;					// init state machine
+	m_pGameStateMachine = NULL;											// init state machine
 	m_pGameStateMachine = new GameStateMachine();
 	m_pGameStateMachine->changeState(new MainMenuState());
 	//m_pGameStateMachine->changeState(new PlayState());

@@ -10,8 +10,8 @@
 #include "GameObject.h"
 //#include "GameObjectFactory.h"
 
-const int BUTTON_WIDTH = 400;
-const int BUTTON_HEIGHT = 100;
+//const int BUTTON_WIDTH = 400;
+//const int BUTTON_HEIGHT = 100;
 
 enum ButtonSprite {
 	BUTTON_SPRITE_MOUSE_OUT = 0,
@@ -40,17 +40,20 @@ public:
 	void handleEvents(SDL_Event* e, int buttonSelected);		// Handles button events
 
 	void setCallback(void(*callback)()) { m_callback = callback;}
+
 	int getCallbackID() { return m_callbackID; }
+	void setCallbackID(int set) { m_callbackID = set;}
 
 	void testcase();
 
 	bool selected;							// The button has been selected by keyboard / gamepad
 	bool m_bReleased;						// Mouse over selected or not
 
-
 	ButtonSprite getButtonSprite() { return mCurrentSprite; }	// Get the button sprite
 	void setButtonSprite(ButtonSprite bs) { mCurrentSprite = bs; }	// Set the button sprite
 
+	bool getButtonSelected() { return buttonSelected; }
+	void setButtonSelected(bool set) { buttonSelected = set; }
 
 private:    
 	ButtonSprite mCurrentSprite;					// Currently used global sprite - Sprite enumeration
@@ -62,6 +65,8 @@ private:
 	int m_callbackID;
 
 	void (*m_callback)();
+
+	bool buttonSelected;
 };
 /*
 class MenuButtonCreator : public BaseCreator {

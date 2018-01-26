@@ -9,8 +9,8 @@
 #include <SDL2/SDL.h>	
 #include "GameState.h"
 #include "../Input.h"
-//#include "GameObject.h"
-//#include "MenuButton.h"
+#include "../GameObject.h"
+#include "../MenuButton.h"
 #include "../Audio.h"
 
 static const int TIME_BETWEEN_BUTTON_PRESSES = 200;
@@ -47,8 +47,7 @@ public:
 			}
 		}
 	}
-    
-	
+    	
 	// Mark button has been pressed
 	void setButtonPressed() {
 		btnTimer = SDL_GetTicks();								// Set The timer to the current game time
@@ -74,7 +73,7 @@ public:
 protected:    
     typedef void(*Callback)();
     virtual void setCallbacks(const std::vector<Callback>& callbacks) = 0;
-/*
+
 	virtual void highlightCurrentButton(const std::vector<GameObject *> *pObjects) {
 		if (!pObjects->empty()) {								// If list of game objects is not empty
 			for (int i = 0; i < pObjects->size(); i++) {					// Go through the game objects list
@@ -91,7 +90,7 @@ protected:
 			}
 		}
 	}
-*/
+
 	std::vector<Callback> m_callbacks;
 
 	unsigned int btnTimer;										// 2017/04/24 Delay between buttons. Moved from MainMenuState to be used by all menus
@@ -100,7 +99,6 @@ protected:
 	int currentBtn;											// Current selected menu button for keyboard / gamepad // 2017/04/24 Moved from Main Menu State
 	int numButtons;											// The number of buttons in the menu/state
 };
-
 
 #endif
 
