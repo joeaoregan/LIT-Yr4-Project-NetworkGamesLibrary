@@ -1,12 +1,23 @@
 /*
-	MenuButton.h
-*/
+	Joe O'Regan
+	K00203642
 
+	MenuButton.h
+
+	Cross-platfrom button class
+*/
 #ifndef MENU_BUTTON_H
 #define MENU_BUTTON_H
 
-//#include "ShooterObject.h"
+// Unix (Ubuntu)
+#if defined __linux__
 #include <SDL2/SDL.h>						// SDL
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL.h>
+#endif
+
+//#include "ShooterObject.h"
 #include "GameObject.h"
 //#include "GameObjectFactory.h"
 

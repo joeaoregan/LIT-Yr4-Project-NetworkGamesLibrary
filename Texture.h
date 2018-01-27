@@ -10,8 +10,15 @@
 #ifndef	__TEXTURE_H
 #define	__TEXTURE_H
 
-#include "Game.h"
+// Unix (Ubuntu)
+#if defined __linux__
 #include <SDL2/SDL_image.h>
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL_image.h>
+#endif
+
+#include "Game.h"
 #include <map>
 
 enum LoadData{

@@ -2,8 +2,10 @@
 #include "LaserManager.h"
 #include "Game.h"
 #include "Audio.h"
-//#include "Networking/Socket.h"
+
+#ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present
 #include "Networking/NetJOR.h"
+#endif
 
 LaserManager* LaserManager::s_pInstance = new LaserManager();
 
@@ -23,8 +25,9 @@ void LaserManager::addLaser(int x, int y, int v) {
 	Laser* pLaser = new Laser();
 	pLaser->spawn(x,y,v);
 	m_Lasers.push_back(pLaser);
-	//sendToServer("1 Player_Laser_Fired");				// Error with header files
-	NetJOR::Instance()->sendText("1 Player_Laser_Fired");		// Sends char* string to server
+#ifdef	__NETWORKING_JOE_O_REGAN												// Check for Windows version of game that Network Library is present
+	NetJOR::Instance()->sendText("1 Player_Laser_Fired");									// Sends char* string to server
+#endif	
 }
 
 void LaserManager::clear() {

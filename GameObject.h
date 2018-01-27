@@ -4,12 +4,19 @@
 
 	GameObject.h
 
-	Base class for game objects
+	Cross-platform base class for game objects
 */
 #ifndef GAME_OBJECTS_H
 #define GAME_OBJECTS_H
 
+// Unix (Ubuntu)
+#if defined __linux__
 #include <SDL2/SDL.h>						// SDL
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL.h>
+#endif
+
 //#include "Texture.h"
 #include <iostream>
 #include "Game.h"

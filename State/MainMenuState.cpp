@@ -49,6 +49,9 @@ bool MainMenuState::onEnter() {
 	listOfMenuButtons.push_back(menuButton2);
 	listOfMenuButtons.push_back(menuButton3);
 
+
+
+
 	m_loadingComplete = true;
 
 	return success;

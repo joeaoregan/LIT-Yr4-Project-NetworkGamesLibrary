@@ -8,11 +8,16 @@
 	Using singleton pattern to access variables and functionality
 */
 
+// Unix (Ubuntu)
+#if defined __linux__
+#include <SDL2/SDL.h>								// SDL Linux
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL.h>								// SDL Windows
+#endif
+
 #include "NetJOR.h"
-#include <SDL2/SDL.h>						// SDL
-//#include "../Game.h"
 #include "Socket.h"
-//#include <stdlib.h>
 #include <iostream>
 
 NetJOR* NetJOR::s_pInstance = 0;						// Networking singleton

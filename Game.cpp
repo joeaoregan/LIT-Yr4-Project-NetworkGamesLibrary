@@ -29,7 +29,9 @@
 
 #include "State/MainMenuState.h"
 #include "State/PlayState.h"
-//#include "Networking/NetJOR.h"
+#ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present
+#include "Networking/NetJOR.h"
+#endif
 
 Game* Game::s_pInstance = 0;						// Game singleton
 
@@ -44,8 +46,10 @@ bool Game::init() {
 
 	bool success = true;												// Initialisation flag	
 
+#ifdef	__NETWORKING_JOE_O_REGAN											// Check for Windows version of game that Network Library is present
 	success = NetJOR::Instance()->init();										// Initialise networking stuff
 	if (!success) std::cout << "Failed to init() NetJOR" << std::endl;
+#endif
 
 	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
@@ -118,13 +122,16 @@ void Game::close() {
 	IMG_Quit();
 	SDL_Quit();
 
-	//closeSocketStuff();													// Moved to NetJOR
+#ifdef	__NETWORKING_JOE_O_REGAN												// Check for Windows version of game that Network Library is present
 	NetJOR::Instance()->close();												// Close networking stuff
+#endif
 }
 
 void Game::update() {
 	m_pGameStateMachine->update();												// Update the current state
-	NetJOR::Instance()->update();												// Update networking stuff	
+#ifdef	__NETWORKING_JOE_O_REGAN												// Check for Windows version of game that Network Library is present
+	NetJOR::Instance()->update();												// Update networking stuff
+#endif	
 }
 
 void Game::render() {	

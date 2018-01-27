@@ -1,8 +1,26 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Audio.h
+
+	Cross-platform class for managing game music and sound effects
+*/
+
 #ifndef AUDIO_H
 #define AUDIO_H
 
+// Unix (Ubuntu)
+#if defined __linux__
 #include <SDL2/SDL.h>									// SDL Library
 #include <SDL2/SDL_mixer.h>								// SDL Audio Library
+// Windows
+#elif defined _WIN32 || defined _WIN64
+//#ifdef _WIN32
+#include <SDL.h> 
+#include "SDL_mixer.h"
+#endif
+
 #include <vector>
 #include <map>										// The sound effects are contained in a map and can be accessed using a unique id
 #include <cstdlib>									// For Random Numbers

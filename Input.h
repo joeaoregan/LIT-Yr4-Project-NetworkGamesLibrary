@@ -1,10 +1,26 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Input.h
+
+	Cross-platform class for managing input from keyboard, mouse, and gamepad
+*/
+
 #ifndef __Input_Manager__
 #define __Input_Manager__
+
+// Unix (Ubuntu)
+#if defined __linux__
+#include <SDL2/SDL.h>						// SDL
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL.h>
+#endif
 
 #include <iostream>
 #include <vector>
 
-#include "SDL2/SDL.h"
 //#include "Vector2D.h"
 
 enum mouse_buttons { LEFT = 0, MIDDLE, RIGHT };

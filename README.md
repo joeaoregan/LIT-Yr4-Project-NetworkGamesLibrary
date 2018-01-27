@@ -2,7 +2,21 @@
 # Project: Networked Games Library
 ### Joe O'Regan
 ### K00203642
-### 25/01/2018 Menu Button Updates
+#### 26/01/2018 
+#### Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. The Network functionality still needs some work to be compatible with Windows (winsock2)
+
+## Features:
+##### Netork Library:
+* Server recieves and parses the players coordinates from the game
+* Server notified, and displays message when Player fires laser
+
+##### Game:
+* **Ported to Linux:** Third-year project SDL game has been ported to Linux
+* **Cross-platform:** Code base now compiles under Windows (Visual Studio), and Ubuntu (Terminal)
+* **Finite State Machine:** Used to manage switching states in the game
+* **Singleton Pattern:** Used to access Game, Audio, Input, NetJOR, and LaserManager classes
+
+---
 
 ![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
 Simple 2D side-scrolling game in C++
@@ -30,9 +44,7 @@ Game Client sends data to Server via UDP. Player coordinates update for X and Y,
 ###### Tutorials used in creating the game:
 
 [LazyFoo SDL2 Tutorials](http://lazyfoo.net/tutorials/SDL/)
-
 [Install instructions for SDL2](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)
-
 [SDL2 Extension Libraries (sdl_image png etc., sdl_ttf fonts, sdl_mixer audio) ](http://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/linux/index.php)
 
 ---

@@ -15,7 +15,11 @@
 #include "../Background.h"						// 20180121
 //#include "Audio.h"							// 20180121
 #include "../LaserManager.h"
-#include "../Networking/NetJOR.h"					// 20180123 Communicate with Server
+
+#ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present, 20180123 Communicate with Server
+#include "../Networking/NetJOR.h"
+#endif
+
 #include "../Input.h"
 #include "MainMenuState.h"
 
@@ -80,7 +84,9 @@ void PlayState::update(){
 	updateText << "0 Player1 " << player->getX() << " " << player->getY();							// 20180118 Send name/ID, x coord, y coord  -  to server
 
 	if (player->getX() != prevX || player->getY() != prevY) {								// Only send update if position changes
+	#ifdef	__NETWORKING_JOE_O_REGAN											// Check for Windows version of game that Network Library is present
 		NetJOR::Instance()->sendString(updateText.str().c_str());
+	#endif
 		prevX = player->getX();
 		prevY = player->getY();
 	}

@@ -6,21 +6,28 @@
 	16/01/2018
 	
 	UDP socket functions
-	Create sockets and send data
+	Cross platform functions to create sockets and send data to game server
 */
 #ifndef	SOCKET_H
 #define	SOCKET_H
 
-#include <stdio.h>
-#include <stdlib.h>
+// Unix (Ubuntu)
+#if defined __linux__
 #include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#elif defined _WIN32 || defined _WIN64
+#include <WinSock2.h>							// Windows sockets
+#include <ws2tcpip.h>							// getaddrinfo()
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
 
 #define UDP_PORT "1066"							// The port the game connects to
 

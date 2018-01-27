@@ -4,23 +4,30 @@
 
 	Game.h
 
-	Main game header file
+	Cross-platform main game header file
 	Using singleton pattern to access variables and functionality
 */
 #ifndef	__GAME_H
 #define	__GAME_H
 
-#include <SDL2/SDL_mixer.h>					// Audio
-#include <SDL2/SDL_ttf.h>					// True type fonts
+// Unix (Ubuntu)
+#if defined __linux__
+#include <SDL2/SDL_mixer.h>							// Audio
+#include <SDL2/SDL_ttf.h>							// True type fonts
 #include <SDL2/SDL_image.h>
-#include <cstdlib>						// For Random Numbers
-#include <ctime>						// For Random Numbers
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+#include <SDL_image.h>
+#endif
+
+#include <cstdlib>								// For Random Numbers
+#include <ctime>								// For Random Numbers
 #include <string>
 #include "State/GameStateMachine.h"
 
 #include "Networking/NetJOR.h"
-
-//#include "Socket.h"
 
 #define SCREEN_WIDTH 1280							// Screen Width
 #define SCREEN_HEIGHT 720							// Screen Height
@@ -41,24 +48,15 @@ public:
 		return s_pInstance;						// Return the current game instance
 	}
 
-	//bool init(const char* serverName);					// Starts up SDL and creates window
 	bool init();								// Starts up SDL and creates window
-	//void createUDPSocket(char* serverName);				// Create a UDP Socket
-
-	//bool loadMedia();							// Loads media
-
 	void update();								// Update the game
 	void render();								// Draw the game to screen
-
 	void close();								// Frees media and shuts down SDL
-
 	void handleEvents();
 
 	SDL_Renderer* getRenderer() const { return gRenderer; }			// Get the renderer
 
 	TTF_Font* getFont() {return gFont;}
-
-	//void spawnLaser();							// Moved to LaserManager
 	
 	bool gameFinished() { return quit; }					// Has the game exited
 	void setGameFinished() { quit = true; }					// Has the game exited
@@ -86,7 +84,7 @@ private:
 
 	int scrollingOffset;
 
-	int prevX, prevY;
+	//int prevX, prevY;
 };
 
 #endif	/* __GAME_H */

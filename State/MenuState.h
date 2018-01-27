@@ -1,12 +1,23 @@
 /*
 	Joe O'Regan
 	K00203642
+
+	MenuState.h
+
+	Cross-platform menu state
 */
 
 #ifndef MENU_STATE_H
 #define MENU_STATE_H
 
-#include <SDL2/SDL.h>	
+// Unix (Ubuntu)
+#if defined __linux__
+#include <SDL2/SDL.h>						// SDL
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <SDL.h>
+#endif
+
 #include "GameState.h"
 #include "../Input.h"
 #include "../GameObject.h"
