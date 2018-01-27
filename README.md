@@ -2,7 +2,7 @@
 # Project: Networked Games Library
 ### Joe O'Regan
 ### K00203642
-#### 26/01/2018 
+#### 27/01/2018 (Moved Server text functions to Text.h)
 #### Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. The Network functionality still needs some work to be compatible with Windows (winsock2)
 
 ## Features:
@@ -96,7 +96,17 @@ Ensure dependendent files are in the root directory, and Assets directories
 
 ---
 
-## Header Files:
+## Server Files:
+
+
+| No. | File        | Description |
+| --- | ------------- |-------------|
+| 1 | **server.c** | UDP Server, receives player coordinates as string from game, and parses to integers |
+| 2 | **Text.h** | Text formatting functionality, including coloured text, for Windows and Linux |
+
+## Game Files:
+
+#### Header Files:
 		
 | No. | File        | Description |
 | --- | ------------- |-------------|
@@ -118,7 +128,7 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 16 | **Socket.h** | UDP Socket functions |
 | 17 | **Texture.h** | Texture functionality |
 
-## Class Files:
+#### Class Files:
 
 | No. |File        | Description           |
 | --- | ------------- |-------------|
@@ -134,8 +144,7 @@ Ensure dependendent files are in the root directory, and Assets directories
 | 10 | **Player.cpp** | Create, move, and render Player objects |
 | 11 | **NetJOR.cpp** | Functions for handling networking and communication with Server|
 | 12 | **PlayState.cpp** | Functions for handling the play state |
-| 13 | **Server.c** | UDP Server receives data from game |
-| 14 | **Texture.cpp** | Texture functionality |
+| 13 | **Texture.cpp** | Texture functionality |
  
 ## Setup SDL Libraries:
 

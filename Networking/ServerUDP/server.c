@@ -7,28 +7,28 @@
 
 	UDP Server socket to read data from Game Client
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
+// Linux
+#if defined __linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <unistd.h>
+// Windows
+#elif defined _WIN32 || defined _WIN64
+#include <WinSock2.h>								// Windows sockets
+#include <ws2tcpip.h>								// getaddrinfo()
+#endif
 
-#define UDP_PORT "1066" 					// Port number to connect to
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include "Text.h"
+
+#define UDP_PORT "1066" 							// Port number to connect to
 #define MAXBUFLEN 100
-
-// Colours
-#define RED   "\x1B[31m"
-#define GREEN "\x1B[32m"
-#define YELO  "\x1B[33m"
-#define BLUE  "\x1B[34m"
-#define MGNT  "\x1B[35m"
-#define CYAN  "\x1B[36m"
-#define NORM  "\x1B[0m"
 
 void parseCoordinates(char* input);
  
@@ -42,17 +42,17 @@ void *get_in_addr(struct sockaddr *sa) {
 }
 
 int main(void) {
-	int sockfd, rv, numbytes, parseType;			// 20180118 Decide what function is used to parse the string received from the game client
+	int sockfd, rv, numbytes, parseType;					// 20180118 Decide what function is used to parse the string received from the game client
 	struct addrinfo hints, *servinfo, *p;
 	struct sockaddr_storage their_addr;
-	char buf[MAXBUFLEN], parseString[MAXBUFLEN];		// 20180118 Added parse string, to separate received data from game client
+	char buf[MAXBUFLEN], parseString[MAXBUFLEN];				// 20180118 Added parse string, to separate received data from game client
 	socklen_t addr_len;
 	char s[INET6_ADDRSTRLEN];
 
 	memset(&hints, 0, sizeof hints);
-	hints.ai_family = AF_UNSPEC; // set to AF_INET to force IPv4
+	hints.ai_family = AF_UNSPEC; 						// set to AF_INET to force IPv4
 	hints.ai_socktype = SOCK_DGRAM;
-	hints.ai_flags = AI_PASSIVE; // use my IP
+	hints.ai_flags = AI_PASSIVE; 						// use my IP
 
 	if ((rv = getaddrinfo(NULL, UDP_PORT, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
@@ -66,7 +66,9 @@ int main(void) {
 			continue;
 		}
 		if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+#if defined __linux__
 			close(sockfd);
+#endif
 			perror("listener: bind");
 			continue;
 		}
@@ -80,7 +82,8 @@ int main(void) {
 
 	freeaddrinfo(servinfo);
 
-	printf("Waiting on data...\n");
+	//printf("Waiting on data...\n");
+	printColour("Waiting on data...", 9);
 
 	// Keep receiving until "exit" received // 20180118 Replaced with message type
 	while(1) {
@@ -100,18 +103,24 @@ int main(void) {
 		if (parseType == 0)
 			parseCoordinates(buf);										// 20180118 Parse the coordinates from the string buffer to integers
 		else if (parseType == 1)
-			printf("%sPlayer Fired Laser%s\n",RED,NORM);
+			//printf("%sPlayer Fired Laser%s\n",RED,NORM);
+			//printRed("Player Fired Laser");
+			printColour("Player Fired Laser", 12);
 
 		//if (!strcmp(buf, "exit")) break;									// exit the while loop
 		else if (parseType == 3) {										// If the message type is 3
-			printf("%sClient has terminated connection%s\n",MGNT,NORM);					// Display exit message and
+			//printf("%sClient has terminated connection%s\n",MGNT,NORM);					// Display exit message and
+			printColour("Client has terminated connection", 5);						// Display exit message and
 			//break;											// exit the while loop
 		}
 		else if (parseType == 4){
-			printf("%sLaser Desroyed%s\n", RED,NORM);
+			//printf("%sLaser Desroyed%s\n", RED,NORM);
+			printColour("Laser Desroyed", 12);
 		}
 	}
+#if defined __linux__
 	close(sockfd);
+#endif
 
 	return 0;
 }
@@ -126,7 +135,8 @@ void parseCoordinates(char* input) {
 	sscanf(input, "%d %s %d %d", &discard, &(*name), &x, &y);							// Parse string data received from Game containing player name, and x and y coordinates
 	//printf("X: %d\n", x);
 
-	printf("%sPlayer:%s\t%s\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, name, BLUE, NORM, x, BLUE, NORM, y);		// Display Coordinates
+	//printf("%sPlayer:%s\t%s\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, name, BLUE, NORM, x, BLUE, NORM, y);		// Display Coordinates
+	printCoords(name, x, y);
 
 	//if (lives > 0) printf("%sWord To Guess:%s\t\t%s\n", CYAN, NORM, name);					// The part word string while game is playing OR
 	//else printf("%sThe word was:%s\t\t%s\n", RED, NORM, name);							// The actual word if player loses
