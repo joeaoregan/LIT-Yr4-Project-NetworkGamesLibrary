@@ -13,7 +13,7 @@
 #include <list>								// Store game objects in a list
 #include <sstream>							// 20180117 Updating text
 #include "../Background.h"						// 20180121
-//#include "Audio.h"							// 20180121
+#include "../Audio.h"							// 20180121
 #include "../LaserManager.h"
 
 #ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present, 20180123 Communicate with Server
@@ -39,9 +39,11 @@ bool PlayState::onEnter() {
 	prevX = -1;
 	prevY = -1;
 
-	//success = Texture::Instance()->loadTextures();										// Load the game textures
-	success = Texture::Instance()->loadTextures(LEVEL1_DATA);									// Load the LEVEL 1 textures
+	//success = Texture::Instance()->loadTextures();									// Load the game textures
+	success = Texture::Instance()->loadTextures(LEVEL1_DATA);								// Load the LEVEL 1 textures
 	if (success) std::cout << "Level Textures Loaded" << std::endl;
+
+	success = Audio::Instance()->loadMediaAudio();										// Load audio asset files
 
 	if( Game::Instance()->getFont() == NULL ) {
 		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());

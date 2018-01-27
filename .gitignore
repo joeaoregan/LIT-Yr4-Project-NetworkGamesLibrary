@@ -1,0 +1,9 @@
+# Keep
+!.c
+!.cpp
+!.h
+!README.md
+
+# Windows
+*.vcxproj
+*.vcxproj.filters

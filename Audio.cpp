@@ -27,7 +27,8 @@ std::string arrMusic[NUMBER_OF_SONGS][3] = {
 	The audio is initialised in the Game class init() function
 */
 Audio::Audio() {
-	Mix_OpenAudio(22050, AUDIO_S16, 2, (4096 / 2));						// Initialise the mixer API
+	//Mix_OpenAudio(22050, AUDIO_S16, 2, (4096 / 2));					// ***DELAY*** Initialise the mixer API
+	Mix_OpenAudio(44100, AUDIO_S16, 2, 1024);						// Initialise the mixer API
 }
 
 /*
@@ -53,9 +54,9 @@ bool Audio::loadMediaAudio() {
 	bool success = true;
 
 	success = LoadFX();									// Load SoundFX
-	success = LoadMusic();									// Load Music 
+	//success = LoadMusic();									// Load Music 
 	
-	PlayRandomSong();									// Play a random song at start of scene
+	//PlayRandomSong();									// Play a random song at start of scene
 
 	return success;
 }
@@ -94,7 +95,7 @@ bool Audio::LoadFX() {
 			success = false;
 		}
 		else
-			std::cout << "Loaded " << arrSoundEffects[i][2] << std::endl;
+			std::cout << "Loaded Effect: " << arrSoundEffects[i][2] << std::endl;
 
 		m_sfxs[arrSoundEffects[i][1]] = pChunk;
 	}
@@ -123,7 +124,7 @@ void Audio::playFX(std::string id) {
 
 	Mix_PlayChannel(-1, m_sfxs[id], 0);	
 
-	std::cout << "Effect: " << id << " Played" << std::endl;	// Test effect playing
+	//std::cout << "Effect: " << id << " Played" << std::endl;	// Test effect playing
 }
 
 void Audio::Fire1() {
