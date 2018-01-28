@@ -6,8 +6,16 @@
 #include "MenuButton.h"
 #include "Input.h"
 
-
 MenuButton::MenuButton() : GameObject(), m_callback(0), m_bReleased(true) {
+	SetParameters();
+}
+
+MenuButton::MenuButton(int callbackID) : GameObject(), m_callback(0), m_bReleased(true) {
+	SetParameters();
+	setCallbackID(callbackID);
+}
+
+void MenuButton::SetParameters() {
 	setX(0);
 	setY(0);
 //	mPosition.x = 0;
@@ -17,7 +25,11 @@ MenuButton::MenuButton() : GameObject(), m_callback(0), m_bReleased(true) {
 	setCurrentFrame(0);
 	setTextureID("playBtnID");
 	setButtonSelected(false);	// The button has not been selected yet
+	m_currentFrame = MOUSE_OUT;
+	selected = false;
 }
+
+
 /*
 void MenuButton::load(std::unique_ptr<LoaderParams> const &pParams) {
 	ShooterObject::load(std::move(pParams));
@@ -27,16 +39,19 @@ void MenuButton::load(std::unique_ptr<LoaderParams> const &pParams) {
 }
 */
 void MenuButton::render() {
+	//std::cout << "MenuButton render()" << std::endl;
 	GameObject::renderAnimation();
 	
 }
 
 void MenuButton::render(Texture &texture, SDL_Rect *currentClip) {
-	texture.render(mPosition.x, mPosition.y, currentClip);	// Show current button spriteCHANGED - RENDERER IS ADDED
+	texture.render(mPosition.x, mPosition.y, currentClip);								// Show current button spriteCHANGED - RENDERER IS ADDED
 }
 
 
 void MenuButton::update() {
+
+//	std::cout << "MenuButton update()" << std::endl;
 /*
 	Vector2D* pMousePos = Input::Instance()->getMousePosition();
     
@@ -60,9 +75,9 @@ void MenuButton::update() {
 	else {
 		m_currentFrame = MOUSE_OUT;
     	}
-
-	if (selected) m_currentFrame = CLICKED;
 */
+	if (selected) m_currentFrame = CLICKED;
+
 }
 
 void MenuButton::clean() {
@@ -118,7 +133,7 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 
 			case SDL_MOUSEBUTTONDOWN:
 				//setButtonSprite(BUTTON_SPRITE_MOUSE_DOWN);					// Set sprite mouse down 2 2017/03/24 Use setter method
-				std::cout << "Mouse Button Down" << std::endl;
+				std::cout << "MenuButton.cpp handleEvents() Mouse Button Down" << std::endl;
 
 				//if (getTextureID() != "playBtnID")
 				//	setTextureID("playBtnID");
@@ -126,10 +141,20 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 				
 				setCurrentFrame(2);
 				setButtonSelected(true);							// The button has been selected
+
+				if(m_callback != 0)  {
+					m_callback();
+				}
  
 				// Handle Main Menu Buttons
-				if (buttonSelected == STORY) {
-					std::cout << "Selected: Start Game!" << std::endl;
+				if (buttonSelected == BUTTON1) {
+					std::cout << "MenuButton.cpp handleEvents() Selected: Start Game!" << std::endl;
+				}
+				else if (buttonSelected == BUTTON2) {
+					std::cout << "MenuButton.cpp handleEvents() Selected: Connect To Server!" << std::endl;
+				}
+				else if (buttonSelected == BUTTON3) {
+					std::cout << "MenuButton.cpp handleEvents() Selected: Ready To Start!" << std::endl;
 				}
 
 				break;

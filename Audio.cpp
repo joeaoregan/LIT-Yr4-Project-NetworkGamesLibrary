@@ -3,13 +3,14 @@
 
 Audio* Audio::s_pInstance;									// Singleton so only one instance of Audio exists in the game, for easy access
 
-const int NUM_SOUND_FX = 1;									// Number of sound effects in array
+const int NUM_SOUND_FX = 2;									// Number of sound effects in array
 
 /*
 	2D Array of sound effects, with path to file, ID, and description for error messages
 */
 std::string arrSoundEffects[NUM_SOUND_FX][3] = {
-	{ "Assets/Effects/scratch.wav", "laserFX", "Laser Fire Effect" }
+	{ "Assets/Effects/scratch.wav", "laserFX", "Laser Fire Effect" },
+	{ "Assets/Effects/button1.wav", "buttonFX", "Button Select Effect" }
 };
 
 /*

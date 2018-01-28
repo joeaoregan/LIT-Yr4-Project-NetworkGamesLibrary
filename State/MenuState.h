@@ -30,7 +30,9 @@ enum buttonMove {BUTTON_UP, BUTTON_DOWN};								// Enum to make gamepad / keybo
 
 class MenuState : public GameState {
 public:    
-    virtual ~MenuState() {}
+	virtual ~MenuState() {
+		//btnTimer = 0;
+	}
 	
 	void setCurrentBtn(int a) {
 		if (a == BUTTON_UP) currentBtn--;							// Highligh button higher up
@@ -43,7 +45,7 @@ public:
 	virtual void handleInput() {}
 
 	virtual void update() {
-		if (!buttonPressed()) {		
+		//if (!buttonPressed()) {		
 			if (Input::Instance()->isKeyDown(SDL_SCANCODE_UP) ||				// If up key, 
 				Input::Instance()->getAxisY(0, 1) < 0) {				// Or gamepad up pressed
 				setCurrentBtn(BUTTON_UP);						// Set the current button as up
@@ -56,7 +58,7 @@ public:
 				Audio::Instance()->playFX("buttonFX");					// Play button effect, don't loop
 				setButtonPressed();							// Disable ability to press button, and time before button can be pressed again
 			}
-		}
+		//}
 	}
     	
 	// Mark button has been pressed
@@ -87,6 +89,7 @@ protected:
 
 	virtual void highlightCurrentButton(const std::vector<GameObject *> *pObjects) {
 		if (!pObjects->empty()) {								// If list of game objects is not empty
+//		std::cout << "highlightCurrentButton()" << std::endl;
 			for (int i = 0; i < pObjects->size(); i++) {					// Go through the game objects list
 				if (dynamic_cast<MenuButton*>((*pObjects)[i])) {			// if they are of type MenuButton then assign a callback based on the id passed in from the file
 					MenuButton* pButton = dynamic_cast<MenuButton*>((*pObjects)[i]);
@@ -100,6 +103,7 @@ protected:
 				}
 			}
 		}
+//else std::cout << "highlightCurrentButton() pObjects empty" << std::endl;
 	}
 
 	std::vector<Callback> m_callbacks;

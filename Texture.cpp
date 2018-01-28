@@ -154,9 +154,11 @@ std::string texturesL1[3][3] = {
 	{ "Assets/Art/LaserGreen.png", "greenLaserID", "Green Laser" }
 };
 
-std::string texturesMenu[2][3] = {
+std::string texturesMenu[4][3] = {
 	{ "Assets/Art/Menu/Logo2720.png", "logoID", "Menu Logo" },
-	{ "Assets/Art/Menu/menuButtonPlay.png", "playBtnID", "Start Game Button" }
+	{ "Assets/Art/Menu/btnConnectToServer.png", "connectBtnID", "Connect To Server Button" },
+	{ "Assets/Art/Menu/btnReadyToStart.png", "readyBtnID", "Ready To Play Button" },
+	{ "Assets/Art/Menu/btnSinglePlayer.png", "playBtnID", "Start Game Button" }
 };
 
 /*

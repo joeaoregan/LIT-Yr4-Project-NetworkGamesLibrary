@@ -23,6 +23,7 @@ public:
 		setVel(20);
 		setAlive(true);
 		setTextureID("greenLaserID");
+		setName("Laser");
 	}	
 			
 	~Laser() {

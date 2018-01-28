@@ -31,11 +31,14 @@ enum ButtonSprite {
 	BUTTON_SPRITE_MOUSE_UP = 3,
 };
 
-enum mainMenuButtons { STORY, GAME_1PLAYER, GAME_2PLAYER, GO_TO_SETTINGS, MENU_TO_HIGH_SCORES, QUIT };
+//enum mainMenuButtons { STORY, GAME_1PLAYER, GAME_2PLAYER, GO_TO_SETTINGS, MENU_TO_HIGH_SCORES, QUIT };
+enum mainMenuButtons { BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6 };
 
 class MenuButton : public GameObject {
 public:    
 	MenuButton();
+	MenuButton(int callback);
+	void SetParameters();
 
 	virtual ~MenuButton() {}
 

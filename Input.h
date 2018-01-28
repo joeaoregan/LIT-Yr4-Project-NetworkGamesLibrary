@@ -21,7 +21,7 @@
 #include <iostream>
 #include <vector>
 
-//#include "Vector2D.h"
+#include "Vector2D.h"
 
 enum mouse_buttons { LEFT = 0, MIDDLE, RIGHT };
 
@@ -55,10 +55,11 @@ public:
     
 	// mouse events
 	bool getMouseButtonState(int buttonNumber) const{ return m_mouseButtonStates[buttonNumber]; }
-	//Vector2D* getMousePosition() const { return m_mousePosition; }
-    SDL_Event* getEvent(){ return &event; }
+	Vector2D* getMousePosition() const { return m_mousePosition; }
+	SDL_Event* getEvent(){ return &event; }
 
-    SDL_Event event;
+	SDL_Event event;
+
 private:
     
 	Input();
@@ -88,7 +89,7 @@ private:
 	const Uint8* m_keystates;					// keyboard specific
     
 	// joystick specific
-//	std::vector<std::pair<Vector2D*, Vector2D*>> m_joystickValues;
+	std::vector< std::pair<Vector2D*, Vector2D*> > m_joystickValues;
 	std::vector<SDL_Joystick*> m_joysticks;
 	std::vector<std::vector<bool> > m_buttonStates;
 	bool m_bJoysticksInitialised;
@@ -96,7 +97,7 @@ private:
     
 	// mouse specific
 	std::vector<bool> m_mouseButtonStates;
-//	Vector2D* m_mousePosition;
+	Vector2D* m_mousePosition;
 	
 	static Input* s_pInstance;					// singleton
 };
