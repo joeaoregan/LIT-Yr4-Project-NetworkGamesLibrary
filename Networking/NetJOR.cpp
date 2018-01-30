@@ -17,7 +17,7 @@
 #endif
 
 #include "NetJOR.h"
-#include "Socket.h"
+#include "Socket.h"								// createUDPSocket()
 #include <iostream>
 
 NetJOR* NetJOR::s_pInstance = 0;						// Networking singleton
@@ -29,18 +29,20 @@ bool NetJOR::init(){
 	bool success;
 
 	std::cout << "Init Server" << std::endl;
-
-	success = createUDPSocket("localhost", "socket test" );			// *** CHANGE TO BOOLEAN for return type
+	
+	success = createUDPSocket("localhost", "socket test" );			// Socket.h - *** CHANGE TO BOOLEAN for return type
 
 	return success;
 }
 
 void NetJOR::update(){
 	// Update server?
+/*
 	if (SDL_GetTicks() >= lastTime + 1000) {				// Every second
 		lastTime = SDL_GetTicks();					// Reset the time
 		std::cout << "NetJOR update(): Count 1 second" << std::endl;	// Will update stuff at time intervals later
 	}
+*/
 }
 
 void NetJOR::render(){
@@ -61,6 +63,15 @@ void NetJOR::sendString(const char* sendStr) {
 }
 void NetJOR::sendText(char* sendStr) {
 	sendData(sockfd, p, sendStr);
+}
+char* msg;
+
+char* NetJOR::recvSrvMsg() {
+	//char msg[100] = recvFromServer();
+	msg = recvFromServer();
+	std::cout << "NetJOR recvSrvMsg(): " << msg << std::endl;
+
+	return msg;
 }
 
 void NetJOR::receiveNetID(){

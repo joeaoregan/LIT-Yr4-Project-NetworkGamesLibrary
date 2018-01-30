@@ -172,9 +172,42 @@ void MainMenuState::startGame() {
 	Game::Instance()->getStateMachine()->changeState(new PlayState());				// Start the game
 }
 
+bool doOnce = true;
+
+// Server assigns an integer identifier used for communicating
 void MainMenuState::connectToServer() {
-	std::cout << "MainMenuState ConnectToServer() button pressed" << std::endl;
-	NetJOR::Instance()->sendString("0");								// Test new player connection on server
+	while (doOnce) {
+
+
+		std::cout << "MainMenuState ConnectToServer() button pressed" << std::endl;
+		NetJOR::Instance()->sendString("0");							// Test new player connection on server
+
+		//std::cout << "MainMenuState connectToServer() Test" << std::endl;
+
+		char* input = NetJOR::Instance()->recvSrvMsg();
+
+		// Parse NetID
+		int playerID;
+		char discard[100];	// don't need this bit
+
+		sscanf(input, "%d %s", &playerID, &(*discard));	// parse
+
+		char msg[100];
+		//char* msg2 = "Server has designated you Player";
+		snprintf(msg, 40, "Server has designated you as Player%d",playerID);
+
+
+		SDL_Color textColor = { 255, 0, 0 };
+		//if( !playerNetIDTexture.loadFromRenderedText( "Server has designated you Player", textColor )) {
+		if( !playerNetIDTexture.loadFromRenderedText( msg, textColor )) {
+			printf( "Failed to load player net id text texture!\n" );
+		}
+
+		//std::cout << "MainMenuState connectToServer()" << output << std::endl;
+		//std::cout << "MainMenuState connectToServer() Test" << std::endl;
+		
+		doOnce = false;
+	}
 }
 
 void MainMenuState::readyToStart() {

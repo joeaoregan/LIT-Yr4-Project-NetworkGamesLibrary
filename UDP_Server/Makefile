@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = GameServer.cpp Main.cpp
+OBJS = GameServer.cpp Main.cpp ../Networking/NetJOR.cpp
 #CC specifies which compiler we're using
 CC = g++
 

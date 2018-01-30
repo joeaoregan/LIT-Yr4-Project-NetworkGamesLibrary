@@ -15,9 +15,15 @@
 #include <sys/types.h>
 #include <iostream>
 #include <string.h>
+#include "../Networking/NetJOR.h"
+#include <sstream>										// 20180130 Updating text
+//#include <string>	// to_string()
+
+std::stringstream numPlayersText;
 
 bool GameServer::init() {
 	numPlayers = 0;										// Start the game with 0 players (up to MAX_PLAYERS)
+	parseType = -1;
 
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC; 								// set to AF_INET to force IPv4
@@ -63,34 +69,40 @@ void GameServer::addPlayers() {
 	std::cout << "Waitin on player connections..." << std::endl;
 
 	while (getNumPlayers() < getMaxNetPlayers()){	// While the number of players is less than the maximum number of players
-		//numPlayers++;
-		//std::cout << "Player " << getNumPlayers() << " has connected" << std::endl;
-
-		playerConnect = getInput();		
+		playerConnect = getInput();	
+	
+		std::cout << "playerConnect msg: " << playerConnect << std::endl;			// TEST: check the message received
+	
 		sscanf(playerConnect, "%d %s", &parseType, &(*parseString));
+
 		if (parseType == 0) {
 			std::cout << "New Player Connection" << std::endl;
 			numPlayers++;
 			std::cout << "Player " << getNumPlayers() << " is ready to start" << std::endl;
-		}
+
+			numPlayersText.str("");
+			numPlayersText << getNumPlayers() << " playerID";
+
+			//std::cout << numPlayersText.str().c_str() << std::endl;
+			
+			//std::cout << "Test1" << std::endl;
+			//NetJOR::Instance()->sendString(to_string(getNumPlayers()));				// Test new player connection on server
+			// Need to send to client not server
+			//NetJOR::Instance()->sendString(numPlayersText.str().c_str());				// Test new player connection on server
+			addr_len = sizeof their_addr;
+			sendto(sockfd, numPlayersText.str().c_str(), strlen(numPlayersText.str().c_str()), 0, (struct sockaddr *) &their_addr, addr_len);
+
+			//std::cout << "Test2" << std::endl;
+		}		
 	}
 	
 	if (getNumPlayers() == getMaxNetPlayers())
-		std::cout << "Ready to start" << std::endl;
+		std::cout << "All Players Ready To Start" << std::endl;
 }
 
 void GameServer::update() {
 	char* input;
-/*
-	addr_len = sizeof their_addr;
-	if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
-		perror("recvfrom");
-		exit(1);
-	}
-
-	//printf("%d bytes received from %s\n", numbytes, inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
-	buf[numbytes] = '\0';
-	
+/*	
 	// Parse the recieved string buffer
 	//sscanf(buf, "%d %s", &parseType, &(*parseString));							// Use integer value at start of string to decide how the received data is handled/parsed
 */

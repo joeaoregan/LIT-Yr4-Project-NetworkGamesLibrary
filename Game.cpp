@@ -130,7 +130,7 @@ void Game::close() {
 void Game::update() {
 	m_pGameStateMachine->update();												// Update the current state
 #ifdef	__NETWORKING_JOE_O_REGAN												// Check for Windows version of game that Network Library is present
-	NetJOR::Instance()->update();												// Update networking stuff
+	//NetJOR::Instance()->update();												// Update networking stuff
 #endif	
 }
 

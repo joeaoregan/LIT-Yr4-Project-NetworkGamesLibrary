@@ -29,13 +29,30 @@
 #include <string.h>
 #include <sys/types.h>
 
+#define MAXBUFLEN 100
 #define UDP_PORT "1066"							// The port the game connects to
+
+char buf[MAXBUFLEN];
 
 void sendData(int fd, struct addrinfo *q, char* sendStr);
 
 // Global
-int sockfd;
+int sockfd;	// server socket
+int servfd;
 struct addrinfo *servinfo, *p;
+
+
+// 20180130 Receive from server
+socklen_t addr_len;
+char server[INET6_ADDRSTRLEN];
+
+void *get_in_addr(struct sockaddr *sa) {
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
+
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
 
 // UDP Socket
 bool createUDPSocket(char* serverName, char* msg){
@@ -85,7 +102,7 @@ bool createUDPSocket(char* serverName, char* msg){
 	}
 */
 	//sendData(sockfd, p, "Socket.h test");
-	sendData(sockfd, p, msg);
+	//sendData(sockfd, p, msg);			// 20180130
 
 	//freeaddrinfo(servinfo);
 
@@ -103,7 +120,7 @@ void sendData(int fd, struct addrinfo *q, char* sendStr) {
 		exit(1);
 	}
 
-	printf("Sent %d bytes to %s\n", byteCount, sendStr);
+	printf("Socket.h sendData() Sent %d bytes to %s\n", byteCount, sendStr);
 }
 
 void sendToServer(char* sendStr) {
@@ -114,6 +131,37 @@ void sendToServer(char* sendStr) {
 void sendToServer2(const char* sendStr) {
 	sendData(sockfd, p, (char*) sendStr);
 }
+
+char* recvFromServer() {
+	//char buf[MAXBUFLEN];
+	//char* msg = "";
+	int byteCount;
+	struct sockaddr_storage servAddr;
+	addr_len = sizeof servAddr;
+	if ((byteCount = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&servAddr, &addr_len)) == -1) {
+		perror("recvfrom");
+		exit(1);
+	}
+	//if ((byteCount = recvfrom(sockfd, msg, MAXBUFLEN-1 , 0, p->ai_addr, &p->ai_addrlen)) == -1) {
+	//	perror("recvFromServer() recvfrom");
+	//	exit(1);
+	//}
+	printf("%d bytes received from %s\n", byteCount, inet_ntop(servAddr.ss_family, get_in_addr((struct sockaddr *)&servAddr), server, sizeof server));
+	//printf("%d bytes received from %s\n", byteCount, inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)&p), server, sizeof server));
+	buf[byteCount] = '\0';
+	printf("Socket.h recvFromServer() Message From Server: \"%s\"\n", buf);
+	//msg = buf;
+	//strcpy(msg, buf);
+	//snprintf(msg, strlen(buf), buf);
+
+	//printf("test");
+	//std::cout << "msg: " << msg << std::endl;
+	//printf("msg: %s\n", msg);
+
+	return buf;						// Return the string received
+}
+
+
 
 // Moved from createUDPSocket(), call when game closes
 void closeSocketStuff(){

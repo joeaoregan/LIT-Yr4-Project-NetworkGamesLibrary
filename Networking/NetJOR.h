@@ -43,6 +43,9 @@ public:
 
 	void receiveNetID(); 
 
+
+	char* recvSrvMsg();
+
 private:
 	static NetJOR* s_pInstance;				// Networking singleton instance
 };

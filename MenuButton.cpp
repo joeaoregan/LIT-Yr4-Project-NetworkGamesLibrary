@@ -129,19 +129,19 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 
 			case SDL_MOUSEBUTTONDOWN:
 				//setButtonSprite(BUTTON_SPRITE_MOUSE_DOWN);					// Set sprite mouse down 2 2017/03/24 Use setter method
-				std::cout << "MenuButton.cpp handleEvents() Mouse Button Down" << std::endl;
 
 				//if (getTextureID() != "playBtnID")
 				//	setTextureID("playBtnID");
 
-				
-				setCurrentFrame(2);
-				setButtonSelected(true);							// The button has been selected
-
+				if (!getButtonSelected()) {
+					std::cout << "MenuButton.cpp handleEvents() Mouse Button Down" << std::endl;
+					setCurrentFrame(2);
+					setButtonSelected(true);							// The button has been selected
+				}
 				if(m_callback != 0)  {
 					m_callback();
 				}
- 
+ /*
 				// Handle Main Menu Buttons
 				if (buttonSelected == BUTTON1) {
 					std::cout << "MenuButton.cpp handleEvents() Selected: Start Game!" << std::endl;
@@ -152,7 +152,7 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 				else if (buttonSelected == BUTTON3) {
 					std::cout << "MenuButton.cpp handleEvents() Selected: Ready To Start!" << std::endl;
 				}
-
+*/
 				break;
 
 			case SDL_MOUSEBUTTONUP:

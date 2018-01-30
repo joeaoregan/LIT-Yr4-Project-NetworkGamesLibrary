@@ -2,7 +2,7 @@
 # Project: Networked Games Library
 ### Joe O'Regan
 ### K00203642
-#### 27/01/2018 (Moved Server text functions to Text.h)
+#### 30/01/2018 (Changed server to C++ from C (not much difference). Server sends player ID when game connects)
 #### Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. The Network functionality still needs some work to be compatible with Windows (winsock2)
 
 ## Features:
@@ -40,6 +40,12 @@ Using UDP to communicate Player position and indicate shots fired, from Game Cli
 
 Game Client sends data to Server via UDP. Player coordinates update for X and Y, shots fired indicated
 
+###### 30/01/2018
+
+![Server Assigns ID To Players](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/3ServerAssignsID.jpg "Player ID Assigned By Server")
+Player ID Assigned By The Server, And Used To Identify Each Player In The Game
+
+---
 
 ###### Tutorials used in creating the game:
 
