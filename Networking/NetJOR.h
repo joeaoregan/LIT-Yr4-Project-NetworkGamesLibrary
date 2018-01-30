@@ -41,6 +41,8 @@ public:
 	void sendString(const char* sendStr);
 	void sendText(char* sendStr);
 
+	void receiveNetID(); 
+
 private:
 	static NetJOR* s_pInstance;				// Networking singleton instance
 };

@@ -58,7 +58,7 @@ public:
 	int getCallbackID() { return m_callbackID; }
 	void setCallbackID(int set) { m_callbackID = set;}
 
-	void testcase();
+	//void testcase();
 
 	bool selected;							// The button has been selected by keyboard / gamepad
 	bool m_bReleased;						// Mouse over selected or not

@@ -62,3 +62,7 @@ void NetJOR::sendString(const char* sendStr) {
 void NetJOR::sendText(char* sendStr) {
 	sendData(sockfd, p, sendStr);
 }
+
+void NetJOR::receiveNetID(){
+	std::cout << "Receive net id from server" << std::endl;
+}

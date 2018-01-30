@@ -67,6 +67,8 @@ public:
 
 	GameStateMachine* getStateMachine() { return m_pGameStateMachine; }	// Get the game state machine
 
+	int getAssignedNetID() { return choosePlayer; }				// The network assigns a number to each player on connecting
+
 private:
 	static Game* s_pInstance;						// Game singleton instance
 
@@ -85,6 +87,9 @@ private:
 	int scrollingOffset;
 
 	//int prevX, prevY;
+
+	// Network stuff
+	int choosePlayer;
 };
 
 #endif	/* __GAME_H */

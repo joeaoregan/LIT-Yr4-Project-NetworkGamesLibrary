@@ -16,17 +16,15 @@ MenuButton::MenuButton(int callbackID) : GameObject(), m_callback(0), m_bRelease
 }
 
 void MenuButton::SetParameters() {
-	setX(0);
-	setY(0);
+//	setX(0);
+//	setY(0);
 //	mPosition.x = 0;
 //	mPosition.y = 0;
 	setWidth(400);
 	setHeight(100);
-	setCurrentFrame(0);
-	setTextureID("playBtnID");
-	setButtonSelected(false);	// The button has not been selected yet
-	m_currentFrame = MOUSE_OUT;
-	selected = false;
+	setCurrentFrame(0);		// Sets int m_currentFrame. The current animation frame
+//	setTextureID("playBtnID");
+	setButtonSelected(false);	// Sets bool selected. The button has not been selected yet
 }
 
 
@@ -76,7 +74,7 @@ void MenuButton::update() {
 		m_currentFrame = MOUSE_OUT;
     	}
 */
-	if (selected) m_currentFrame = CLICKED;
+	if (selected) m_currentFrame = MOUSE_OVER;
 
 }
 
@@ -84,9 +82,9 @@ void MenuButton::clean() {
 	 GameObject::clean();
 }
 
-void MenuButton::testcase() {
-	m_currentFrame = MOUSE_OVER;
-}
+//void MenuButton::testcase() {
+//	m_currentFrame = MOUSE_OVER;
+//}
 
 void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 	SDL_Color textColorOne = { 255, 255, 255 };	//If mouse event happened	
@@ -94,9 +92,7 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 	//std::cout << "Texture ID: " << getTextureID() << std::endl;
 	
 	if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP) {
-	//std::cout << "test1" << std::endl;
 		//Get mouse position
-		//MainMenu menu;
 		int x, y;											// Mouse coordinates
 		SDL_GetMouseState(&x, &y);									// Get the mouse cursor position
 
@@ -114,7 +110,7 @@ void MenuButton::handleEvents(SDL_Event* e, int buttonSelected) {
 		//else if (y > getY() + BUTTON_HEIGHT) inside = false;						// Mouse below the button	
 		else if (y > getY() + getHeight()) inside = false;						// Mouse below the button
 
-		//Mouse is outside button
+		// Mouse is outside button
 		if (!inside) {
 			//setButtonSprite(BUTTON_SPRITE_MOUSE_OUT);						// Sprite 0
 			setCurrentFrame(0);

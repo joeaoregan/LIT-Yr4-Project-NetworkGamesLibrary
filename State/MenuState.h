@@ -45,7 +45,7 @@ public:
 	virtual void handleInput() {}
 
 	virtual void update() {
-		//if (!buttonPressed()) {		
+		if (buttonPressed()) {		
 			if (Input::Instance()->isKeyDown(SDL_SCANCODE_UP) ||				// If up key, 
 				Input::Instance()->getAxisY(0, 1) < 0) {				// Or gamepad up pressed
 				setCurrentBtn(BUTTON_UP);						// Set the current button as up
@@ -58,27 +58,22 @@ public:
 				Audio::Instance()->playFX("buttonFX");					// Play button effect, don't loop
 				setButtonPressed();							// Disable ability to press button, and time before button can be pressed again
 			}
-		//}
+		}
 	}
     	
 	// Mark button has been pressed
 	void setButtonPressed() {
 		btnTimer = SDL_GetTicks();								// Set The timer to the current game time
-		//pressed = true;									// Set the button pressed to true
 
 		std::cout << "currentButton " << currentBtn << std::endl;
 	}
 
 	bool buttonPressed() {
-		//std::cout << "button pressed 1" << std::endl;
-		
 		if (SDL_GetTicks() > btnTimer + TIME_BETWEEN_BUTTON_PRESSES) {				// If time since last button pressed is 1/4 of a second
 			btnTimer = SDL_GetTicks();							// Reset time between button presses
 
 			return false;									// OK to accept button press
 		}
-
-		//std::cout << "button pressed 2" << std::endl;
 
 		return true;										// Not OK to accept button press
 	}

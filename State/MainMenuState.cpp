@@ -9,12 +9,17 @@
 
 #include "../Networking/ServerUDP/Text.h"
 
+#ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present, 20180123 Communicate with Server
+#include "../Networking/NetJOR.h"
+#endif
+
 //Texture bg;
-GameObject* menuBackground;
-//GameObject* menuButton1;
+//GameObject* menuBackground;
 GameObject* menuButton1;
 GameObject* menuButton2;
 GameObject* menuButton3;
+
+Texture playerNetIDTexture;
 
 bool MainMenuState::onEnter() {
 	//std::cout << "Loading Menu State" << std::endl;
@@ -39,16 +44,19 @@ bool MainMenuState::onEnter() {
 	menuButton1 = new MenuButton(1);
 	menuButton2 = new MenuButton(2);
 	menuButton3 = new MenuButton(3);
+	menuButton1->setTextureID("playBtnID");
 	menuButton2->setTextureID("connectBtnID");
 	menuButton3->setTextureID("readyBtnID");
-
+	
+	// Position buttons
+	menuButton1->setX(440);
+	menuButton1->setY(0);
+	menuButton2->setX(440);
 	menuButton2->setY(100);
+	menuButton3->setX(440);
 	menuButton3->setY(200);
-/*
-	listOfMenuButtons.push_back(menuButton1);
-	listOfMenuButtons.push_back(menuButton2);
-	listOfMenuButtons.push_back(menuButton3);
-*/
+
+
 	m_gameObjects.push_back(menuButton1);
 	m_gameObjects.push_back(menuButton2);
 	m_gameObjects.push_back(menuButton3);
@@ -67,42 +75,23 @@ bool MainMenuState::onEnter() {
 
 	printColour("Menu State: Loading Complete", 12);
 
+	// Indicate player netID
+	SDL_Color textColor = { 255, 0, 0 };
+	if( !playerNetIDTexture.loadFromRenderedText( "Player has not yet been assigned a Net ID", textColor )) {
+		printf( "Failed to render player net id texture!\n" );
+		success = false;
+	}
+
 	return success;
 }
 
-SDL_Event e;
-
 void MainMenuState::handleInput() {
-/*
-	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
-		listOfMenuButtons[index]->handleEvents((Input::Instance()->getEvent()), index);		// Update the buttons
-	}
-*/
 	for (int index = 0; index != m_gameObjects.size(); ++index) {	
 		dynamic_cast<MenuButton*>(m_gameObjects[index])->handleEvents((Input::Instance()->getEvent()), index);		// Update the input
 	}
-
-	// GameObject has no handleEvents() function
-
 }
 
 void MainMenuState::update(){	
-/*
-	// Update objects
-	for (int index = 0; index != listOfMenuObjects.size(); ++index) {	
-		listOfMenuObjects[index]->update();	
-	}
-
-	// Update buttons
-	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
-		listOfMenuButtons[index]->update();							// Update the game objects
-
-		if (listOfMenuButtons[index]->getButtonSelected() && currentBtn == 0)  {
-			listOfMenuButtons[index]->setButtonSelected(false);				// Reset the button for when the menu is entered again
-			startGame();
-		}
-	}
-*/
 	if (!buttonPressed()) {
 		MenuState::update();									// Up and down buttons
 
@@ -127,48 +116,40 @@ void MainMenuState::update(){
 			if (m_gameObjects[i] != 0) {
 				m_gameObjects[i]->update();						// Run update function for each object in m_gameObjects list
 			}
+		}
+	}
+//	else std::cout << "MainMenuState -> update() -> buttonPressed()" << std::endl;
+
+	highlightCurrentButton(&m_gameObjects);								// Select the current button for keyboard / gamepad
+
+	//if (Game::Instance()->getAssignedNetID() == 0)
+	//	std::cout << "Waiting on netID" << std::endl;
+}
+
+void MainMenuState::render() {
+	SDL_SetRenderDrawColor( Game::Instance()->getRenderer(), 0x00, 0x00, 0x00, 0xFF );		// Set clear colour
+	SDL_RenderClear( Game::Instance()->getRenderer() );						// Clear screen
+
+	if(m_loadingComplete && !m_gameObjects.empty()) {
+		for(int i = 0; i < m_gameObjects.size(); i++) {
+			m_gameObjects[i]->render();							// Call draw function for each object in m_gameObjects list
 /*
-			if (dynamic_cast<MenuButton*>(m_gameObjects[i])->getButtonSelected() && currentBtn == 1)  {
-				dynamic_cast<MenuButton*>(m_gameObjects[i])->setButtonSelected(false);				// Reset the button for when the menu is entered again
-				startGame();
-			}
-			if (dynamic_cast<MenuButton*>(m_gameObjects[i])->getButtonSelected() && currentBtn == 2)  {
-				dynamic_cast<MenuButton*>(m_gameObjects[i])->setButtonSelected(false);				// Reset the button for when the menu is entered again
-				connectToServer();
-			}
-			if (dynamic_cast<MenuButton*>(m_gameObjects[i])->getButtonSelected() && currentBtn == 3)  {
-				dynamic_cast<MenuButton*>(m_gameObjects[i])->setButtonSelected(false);				// Reset the button for when the menu is entered again
-				readyToStart();
-			}
+			std::cout << "x: " << m_gameObjects[i]->getX();
+			std::cout << " y: " << m_gameObjects[i]->getY();
+			std::cout << " width: " << m_gameObjects[i]->getWidth();
+			std::cout << " height: " << m_gameObjects[i]->getHeight();
+			std::cout << " frame: " << m_gameObjects[i]->getCurrentFrame() << std::endl;
 */
 		}
 	}
 
-//	else std::cout << "MainMenuState -> update() -> buttonPressed()" << std::endl;
-
-	highlightCurrentButton(&m_gameObjects);								// Select the current button for keyboard / gamepad
-}
-
-void MainMenuState::render() {
-/*
-	for (int index = 0; index != listOfMenuObjects.size(); ++index) {	
-		listOfMenuObjects[index]->render();							// Render the game object
-	}
-
-	for (int index = 0; index != listOfMenuButtons.size(); ++index) {	
-		listOfMenuButtons[index]->render();							// Render the game object
-	}
-*/
-									
-    if(m_loadingComplete && !m_gameObjects.empty()) {
-        for(int i = 0; i < m_gameObjects.size(); i++) {
-            m_gameObjects[i]->render();									// Call draw function for each object in m_gameObjects list
-        }
-    }
+	playerNetIDTexture.render((SCREEN_WIDTH - playerNetIDTexture.getWidth())/2,((SCREEN_HEIGHT-600-playerNetIDTexture.getHeight())/ 2)+600);
 }
 
 bool MainMenuState::onExit() {
 	std::cout << "Exit Menu State" << std::endl;
+
+	playerNetIDTexture.free();
 
 	return true;
 }
@@ -186,11 +167,14 @@ void MainMenuState::setCallbacks(const std::vector<Callback>& callbacks) {
 }
 
 void MainMenuState::startGame() {
+	// Assign netID to player as they connect to server
+
 	Game::Instance()->getStateMachine()->changeState(new PlayState());				// Start the game
 }
 
 void MainMenuState::connectToServer() {
 	std::cout << "MainMenuState ConnectToServer() button pressed" << std::endl;
+	NetJOR::Instance()->sendString("0");								// Test new player connection on server
 }
 
 void MainMenuState::readyToStart() {
