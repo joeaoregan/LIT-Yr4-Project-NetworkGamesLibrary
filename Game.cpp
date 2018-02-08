@@ -123,7 +123,8 @@ void Game::close() {
 	SDL_Quit();
 
 #ifdef	__NETWORKING_JOE_O_REGAN												// Check for Windows version of game that Network Library is present
-	NetJOR::Instance()->close();												// Close networking stuff
+	//NetJOR::Instance()->close();												// Close networking stuff
+	NetJOR::Instance()->close(getAssignedNetID());										// 20180208 Close networking stuff
 #endif
 }
 

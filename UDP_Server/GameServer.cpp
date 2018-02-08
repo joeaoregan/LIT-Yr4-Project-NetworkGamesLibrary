@@ -129,11 +129,17 @@ void GameServer::update() {
 
 	//if (!strcmp(buf, "exit")) break;									// exit the while loop
 	else if (type == 3) {											// If the message type is 3
-		printColour("Client has terminated connection", 5);						// Display exit message and
+		printColour("Player 1 has quit the game", 12);							// Display exit message and
 		//break;											// exit the while loop
 	}
 	else if (type == 4){
-		printColour("Laser Desroyed", 12);
+		printColour("Player 2 has quit the game", 5);
+	}
+	else if (type == 5){
+		printColour("Player 1 Laser Destroyed", 12);
+	}
+	else if (type == 6){
+		printColour("Player 2 Laser Destroyed", 5);
 	}
 }
 
@@ -144,7 +150,7 @@ char* GameServer::getInput() {
 		exit(1);
 	}
 
-	//printf("%d bytes received from %s\n", numbytes, inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
+	//printf("%d bytes received from %s\n", numbytes, inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));	// Already declared in Socket.h
 	buf[numbytes] = '\0';
 	
 	return buf;	

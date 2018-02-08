@@ -49,8 +49,14 @@ void NetJOR::render(){
 	// Display networking information in game window?
 }
 
-void NetJOR::close(){
-	sendToServer("3 exit");							// Let the server know to exit
+//void NetJOR::close(){
+void NetJOR::close(int id){
+	// Identify the player that is leaving the game
+	if (id == 1)
+		sendToServer("3 exit");						// Let the server know player 1 has left the game
+	else if (id == 2)
+		sendToServer("4 exit");						// Let the server know player 2 has left the game
+
 	closeSocketStuff();
 }
 

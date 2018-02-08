@@ -30,7 +30,8 @@ public:
 	void update();						// Update the networking
 	void render();						// Draw the networking to screen
 
-	void close();						// Close socket stuff
+	//void close();						// Close socket stuff
+	void close(int id);					// Close socket stuff, 20180208 identify which player has left game
 
 	void handleEvents();
 
