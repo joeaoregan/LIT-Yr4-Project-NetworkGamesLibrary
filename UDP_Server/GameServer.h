@@ -46,7 +46,7 @@ private:
 	// socket stuff;
 	int sockfd, rv, numbytes;			// 20180118 Decide what function is used to parse the string received from the game client
 	struct addrinfo hints, *servinfo, *p;
-	struct sockaddr_storage their_addr;
+	struct sockaddr_storage their_addr, p1Addr, p2Addr;
 	char buf[MAXBUFLEN], parseString[MAXBUFLEN];	// 20180118 Added parse string, to separate received data from game client
 	socklen_t addr_len;
 	char s[INET6_ADDRSTRLEN];

@@ -2,8 +2,11 @@
 # Project: Networked Games Library
 ### Joe O'Regan
 ### K00203642
-#### 30/01/2018 (Changed server to C++ from C (not much difference). Server sends player ID when game connects)
-#### Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. The Network functionality still needs some work to be compatible with Windows (winsock2)
+#### 08/02/2018 
+##### * Server tells 2 connected players apart
+##### * Changed server to C++ from C (not much difference). Server sends player ID when game connects
+##### * Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. 
+##### * The Network functionality still needs some work to be compatible with Windows (winsock2)
 
 ## Features:
 ##### Netork Library:
@@ -49,9 +52,11 @@ Player ID Assigned By The Server, And Used To Identify Each Player In The Game
 
 ###### Tutorials used in creating the game:
 
-[LazyFoo SDL2 Tutorials](http://lazyfoo.net/tutorials/SDL/)
-[Install instructions for SDL2](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)
-[SDL2 Extension Libraries (sdl_image png etc., sdl_ttf fonts, sdl_mixer audio) ](http://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/linux/index.php)
+* [LazyFoo SDL2 Tutorials](http://lazyfoo.net/tutorials/SDL/)
+
+* [Install instructions for SDL2](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)
+
+* [SDL2 Extension Libraries (sdl_image png etc., sdl_ttf fonts, sdl_mixer audio) ](http://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/linux/index.php)
 
 ---
 

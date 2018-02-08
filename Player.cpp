@@ -62,7 +62,8 @@ void Player::handleInput(){
 	// Fire weapons
         if(Input::Instance()->isKeyDown(SDL_SCANCODE_SPACE) && SDL_GetTicks() >= lastFire + fireInterval) {
 		//PlayState::Instance()->spawnLaser();
-		LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20);
+		//LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20);
+		LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20, getNetID());				// 30/01/2018 Added player ID to send string
 		lastFire = SDL_GetTicks();
         }
 }

@@ -15,7 +15,8 @@ public:
 		return s_pInstance;
 	}
     
-	void addLaser(int x, int y, int v);			// X position, Y position, and Velocity
+	//void addLaser(int x, int y, int v);				// X position, Y position, and Velocity
+	void addLaser(int x, int y, int v, int id);			// X position, Y position, Velocity, and Player ID
     
 	void update();
 	void render();

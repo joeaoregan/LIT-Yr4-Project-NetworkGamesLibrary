@@ -21,6 +21,15 @@
 
 std::stringstream numPlayersText;
 
+// get sockaddr, IPv4 or IPv6:
+void *get_in_addr1(struct sockaddr *sa) {		 					// Already declared in Socket.h
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
+
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
 bool GameServer::init() {
 	numPlayers = 0;										// Start the game with 0 players (up to MAX_PLAYERS)
 	parseType = -1;
@@ -66,12 +75,12 @@ bool GameServer::init() {
 void GameServer::addPlayers() {
 	char* playerConnect;
 
-	std::cout << "Waitin on player connections..." << std::endl;
+	std::cout << "Waiting on player connections..." << std::endl;
 
-	while (getNumPlayers() < getMaxNetPlayers()){	// While the number of players is less than the maximum number of players
+	while (getNumPlayers() < getMaxNetPlayers()){								// While the number of players is less than the maximum number of players
 		playerConnect = getInput();	
 	
-		std::cout << "playerConnect msg: " << playerConnect << std::endl;			// TEST: check the message received
+		std::cout << "playerConnect msg: " << playerConnect << std::endl;				// TEST: check the message received
 	
 		sscanf(playerConnect, "%d %s", &parseType, &(*parseString));
 
@@ -114,7 +123,9 @@ void GameServer::update() {
 	if (type == 0)
 		parseCoordinates(input);									// 20180118 Parse the coordinates from the string buffer to integers
 	else if (type == 1)
-		printColour("Player Fired Laser", 12);
+		printColour("Player 1 Fired Laser", 12);
+	else if (type == 2)
+		printColour("Player 2 Fired Laser", 5);
 
 	//if (!strcmp(buf, "exit")) break;									// exit the while loop
 	else if (type == 3) {											// If the message type is 3
@@ -152,21 +163,26 @@ int GameServer::receivedMsgType(char* input) {
 }
 
 void GameServer::parseCoordinates(char* input) {
-	char name[20];
-	int discard,x,y;
+	//char name[20];
+	int discard,id,x,y;
 
 	// Type of message, name, x coordinate, y coordinate
-	sscanf(input, "%d %s %d %d", &discard, &(*name), &x, &y);		// Parse string data received from Game containing player name, and x and y coordinates
-	printCoords(name, x, y);
-}
+	//sscanf(input, "%d %s %d %d", &discard, &(*name), &x, &y);	// Parse string data received from Game containing player name, and x and y coordinates
+	sscanf(input, "%d %d %d %d", &discard, &id, &x, &y);		// Parse string data received from Game containing player name, and x and y coordinates
+	//printCoords(name, x, y);					// Text.h
+	printCoords(id, x, y);						// Text.h
 
-/*
-// get sockaddr, IPv4 or IPv6:
-void *get_in_addr(struct sockaddr *sa) {
-	if (sa->sa_family == AF_INET) {
-		return &(((struct sockaddr_in*)sa)->sin_addr);
+	if (id == 1) {
+		p1Addr = their_addr;
+		// Send player 1 coords to player 2
+		//addr_len = sizeof p2Addr;
+		//sendto(sockfd, numPlayersText.str().c_str(), strlen(numPlayersText.str().c_str()), 0, (struct sockaddr *) &p2Addr, addr_len);
+	} else if (id == 2) {
+		p2Addr = their_addr;
+		// Send player 2 coords to player 1
+		//addr_len = sizeof p2Addr;
+		//sendto(sockfd, numPlayersText.str().c_str(), strlen(numPlayersText.str().c_str()), 0, (struct sockaddr *) &p1Addr, addr_len);		
 	}
-
-	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
-*/
+
+

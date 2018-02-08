@@ -37,7 +37,6 @@
 
 class Game {
 public:	
-
 	// Game Singleton
 	static Game* Instance() {
 		if (s_pInstance == 0) {						// If there is no instance of Game
@@ -68,6 +67,7 @@ public:
 	GameStateMachine* getStateMachine() { return m_pGameStateMachine; }	// Get the game state machine
 
 	int getAssignedNetID() { return choosePlayer; }				// The network assigns a number to each player on connecting
+	void setAssignedNetID(int set) { choosePlayer = set; }			// Store the ID assigned by the server
 
 private:
 	static Game* s_pInstance;						// Game singleton instance

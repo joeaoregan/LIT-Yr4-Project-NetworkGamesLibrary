@@ -177,8 +177,6 @@ bool doOnce = true;
 // Server assigns an integer identifier used for communicating
 void MainMenuState::connectToServer() {
 	while (doOnce) {
-
-
 		std::cout << "MainMenuState ConnectToServer() button pressed" << std::endl;
 		NetJOR::Instance()->sendString("0");							// Test new player connection on server
 
@@ -203,8 +201,12 @@ void MainMenuState::connectToServer() {
 			printf( "Failed to load player net id text texture!\n" );
 		}
 
+		Game::Instance()->setAssignedNetID(playerID);						// Store value to be accessed in play state
+
 		//std::cout << "MainMenuState connectToServer()" << output << std::endl;
 		//std::cout << "MainMenuState connectToServer() Test" << std::endl;
+
+		// Set the button as grey
 		
 		doOnce = false;
 	}

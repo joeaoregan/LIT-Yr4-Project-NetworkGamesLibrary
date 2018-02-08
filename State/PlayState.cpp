@@ -28,6 +28,7 @@ std::vector<GameObject*> listOfGameObjects;				// List of game objects
 
 GameObject* background;	 						// Scrolling background
 GameObject* player;							// The Player that will be moving around on the screen	
+GameObject* playerServer;						// The Player that will moved by coordinates received from the Server
 
 // UI textures
 Texture gTextTexture;
@@ -62,10 +63,25 @@ bool PlayState::onEnter() {
 	// Create player and background, and add to game object list
 	background = new Background();
 	player = new Player();
+	playerServer = new Player();
+	player->setNetID(Game::Instance()->getAssignedNetID());									// Set the Players ID for network play
+
+	std::cout << "PLAYER NET ID: " << Game::Instance()->getAssignedNetID() << std::endl;
+
+	// TEST *** need to have this assigned elsewhere
+	if(player->getNetID() == 1)												// Two player test
+		playerServer->setNetID(2);											// Set the Server Players ID for network play
+	else
+		playerServer->setNetID(1);			
+
+	std::cout << "PLAYER NET ID: " << Game::Instance()->getAssignedNetID() << std::endl;
+
 	listOfGameObjects.push_back(background);
 	listOfGameObjects.push_back(player);
+	listOfGameObjects.push_back(playerServer);
 
 	player->spawn(0,(SCREEN_HEIGHT - player->getHeight() - 120)/2, player->getVel());					// Center of play area
+	playerServer->spawn(0,(SCREEN_HEIGHT - playerServer->getHeight() - 120)/2, playerServer->getVel());			// Center of play area
 	std::cout << "Spawn Player" << std::endl;
 
 	return success;
@@ -83,14 +99,15 @@ void PlayState::update(){
 	}
 
 	updateText.str("");													// 20180117			
-	updateText << "0 Player1 " << player->getX() << " " << player->getY();							// 20180118 Send name/ID, x coord, y coord  -  to server
+	//updateText << "0 Player1 " << player->getX() << " " << player->getY();						// 20180118 Send name/ID, x coord, y coord  -  to server
+	updateText << "0 " << player->getNetID() << " " << player->getX() << " " << player->getY();				// 20180118 Send name/ID, x coord, y coord  -  to server
 
 	if (player->getX() != prevX || player->getY() != prevY) {								// Only send update if position changes
 	#ifdef	__NETWORKING_JOE_O_REGAN											// Check for Windows version of game that Network Library is present
 		NetJOR::Instance()->sendString(updateText.str().c_str());
 	#endif
 		prevX = player->getX();
-		prevY = player->getY();
+ 		prevY = player->getY();
 	}
 
 	LaserManager::Instance()->update();

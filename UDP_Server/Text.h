@@ -30,10 +30,12 @@
 #endif
 
 
-void printCoords(char* name, int x, int y){
+//void printCoords(char* name, int x, int y){
+void printCoords(int id, int x, int y){
 #if defined __linux__
 	// Format output for Linux terminal
-	printf("%sPlayer:%s\t%s\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, name, BLUE, NORM, x, BLUE, NORM, y);	// Display Coordinates
+	//printf("%sPlayer:%s\t%s\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, name, BLUE, NORM, x, BLUE, NORM, y);	// Display Coordinates
+	printf("%sPlayer:%s\t%d\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, id, BLUE, NORM, x, BLUE, NORM, y);	// Display Coordinates
 
 #elif defined _WIN32 || defined _WIN64
 	// Format output for Windows command prompt
@@ -43,7 +45,8 @@ void printCoords(char* name, int x, int y){
 	SetConsoleTextAttribute(hConsole, BLUE);
 	printf("Player:\t");
 	SetConsoleTextAttribute(hConsole, NORM);
-	printf(name);
+	//printf(name);
+	printf(id);
 	SetConsoleTextAttribute(hConsole, BLUE);
 	printf("\tX:\t");
 	SetConsoleTextAttribute(hConsole, NORM);

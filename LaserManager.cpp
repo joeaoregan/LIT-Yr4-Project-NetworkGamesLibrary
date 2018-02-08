@@ -13,7 +13,7 @@ LaserManager::LaserManager()
 {
 }
 
-void LaserManager::addLaser(int x, int y, int v) {
+void LaserManager::addLaser(int x, int y, int v, int id) {
 //	Mix_PlayChannel( -1, laserFX, 0 );											// 20180120 Sound effects not playing now ???
 	std::cout << "Laser Fired" << std::endl;
 
@@ -24,7 +24,11 @@ void LaserManager::addLaser(int x, int y, int v) {
 	m_Lasers.push_back(pLaser);
 
 #ifdef	__NETWORKING_JOE_O_REGAN												// Check for Windows version of game that Network Library is present
-	NetJOR::Instance()->sendText("1 Player_Laser_Fired");									// Sends char* string to server
+	char msg[100];
+	snprintf(msg, 40, "%d Player_Laser_Fired",id);
+
+	//NetJOR::Instance()->sendText("1 Player_Laser_Fired");									// Sends char* string to server
+	NetJOR::Instance()->sendText(msg);											// Sends char* string to server
 #endif	
 }
 
