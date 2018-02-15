@@ -30,7 +30,7 @@
 #include "State/MainMenuState.h"
 #include "State/PlayState.h"
 #ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present
-#include "Networking/NetJOR.h"
+#include "../Networking/NetJOR.h"
 #endif
 
 Game* Game::s_pInstance = 0;						// Game singleton

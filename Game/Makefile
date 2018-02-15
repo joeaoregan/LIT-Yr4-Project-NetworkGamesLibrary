@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = Game.cpp GameObject.cpp Main.cpp Texture.cpp Player.cpp Laser.cpp Input.cpp Audio.cpp State/MainMenuState.cpp State/GameStateMachine.cpp MenuButton.cpp State/PlayState.cpp Networking/NetJOR.cpp LaserManager.cpp 
+OBJS = Game.cpp GameObject.cpp Main.cpp Texture.cpp Player.cpp Laser.cpp Input.cpp Audio.cpp State/MainMenuState.cpp State/GameStateMachine.cpp MenuButton.cpp State/PlayState.cpp ../Networking/NetJOR.cpp LaserManager.cpp 
 #CC specifies which compiler we're using
 CC = g++
 

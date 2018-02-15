@@ -27,7 +27,7 @@
 #include <string>
 #include "State/GameStateMachine.h"
 
-#include "Networking/NetJOR.h"
+#include "../Networking/NetJOR.h"
 
 #define SCREEN_WIDTH 1280							// Screen Width
 #define SCREEN_HEIGHT 720							// Screen Height
