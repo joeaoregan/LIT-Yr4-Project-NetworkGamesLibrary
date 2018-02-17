@@ -7,8 +7,8 @@
 #include "../MenuButton.h"
 #include "../Input.h"
 
-#include "../../Networking/ServerUDP/Text.h"
-
+// Networking
+#include "../../Networking/Text.h"					// Debugging text, with different colours
 #ifdef	__NETWORKING_JOE_O_REGAN					// Check for Windows version of game that Network Library is present, 20180123 Communicate with Server
 #include "../../Networking/NetJOR.h"
 #endif

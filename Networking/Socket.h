@@ -29,8 +29,12 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "Error.h"
+
 #define MAXBUFLEN 100
 #define UDP_PORT "1066"							// The port the game connects to
+
+//socklen_t ADDR_SIZE = sizeof(struct sockaddr_in);			// Length of sockaddr_in address structure, used for sending and receiving data
 
 char buf[MAXBUFLEN];
 
@@ -97,8 +101,7 @@ bool createUDPSocket(char* serverName, char* msg){
 	}
 /*
 	if ((numbytes = sendto(sockfd, argv[2], strlen(argv[2]), 0, p->ai_addr, p->ai_addrlen)) == -1) {
-		perror("talker: sendto");
-		exit(1);
+		errorEx("talker: sendto", 1);
 	}
 */
 	//sendData(sockfd, p, "Socket.h test");
@@ -116,8 +119,7 @@ void sendData(int fd, struct addrinfo *q, char* sendStr) {
 	int byteCount;
 
 	if ((byteCount = sendto(fd, sendStr, strlen(sendStr), 0, q->ai_addr, q->ai_addrlen)) == -1) {
-		perror("talker: sendto");
-		exit(1);
+		errorEx("sendData: sendto()", 1);
 	}
 
 	printf("Socket.h sendData() Sent %d bytes to %s\n", byteCount, sendStr);
@@ -139,12 +141,10 @@ char* recvFromServer() {
 	struct sockaddr_storage servAddr;
 	addr_len = sizeof servAddr;
 	if ((byteCount = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&servAddr, &addr_len)) == -1) {
-		perror("recvfrom");
-		exit(1);
+		errorEx("recvfrom()", 1);
 	}
 	//if ((byteCount = recvfrom(sockfd, msg, MAXBUFLEN-1 , 0, p->ai_addr, &p->ai_addrlen)) == -1) {
-	//	perror("recvFromServer() recvfrom");
-	//	exit(1);
+	//	errorEx("recvFromServer() recvfrom", 1);
 	//}
 	printf("%d bytes received from %s\n", byteCount, inet_ntop(servAddr.ss_family, get_in_addr((struct sockaddr *)&servAddr), server, sizeof server));
 	//printf("%d bytes received from %s\n", byteCount, inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)&p), server, sizeof server));

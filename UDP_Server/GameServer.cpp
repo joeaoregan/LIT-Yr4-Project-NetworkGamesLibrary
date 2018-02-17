@@ -67,7 +67,7 @@ bool GameServer::init() {
 
 	freeaddrinfo(servinfo);
 
-	printColour("Server Running\nWaiting on connections...", 9);
+	printColour("Server Running\nWaiting On Player Connections...", 9);					// Display text in blue font
 
 	return true;
 }
@@ -75,7 +75,7 @@ bool GameServer::init() {
 void GameServer::addPlayers() {
 	char* playerConnect;
 
-	std::cout << "Waiting on player connections..." << std::endl;
+	//std::cout << "Waiting on player connections..." << std::endl;
 
 	while (getNumPlayers() < getMaxNetPlayers()){								// While the number of players is less than the maximum number of players
 		playerConnect = getInput();	
@@ -115,32 +115,24 @@ void GameServer::update() {
 	// Parse the recieved string buffer
 	//sscanf(buf, "%d %s", &parseType, &(*parseString));							// Use integer value at start of string to decide how the received data is handled/parsed
 */
-	input = getInput();
+	input = getInput();///////////////////////////////////////////////////////////////////////////////
 
 	int type = receivedMsgType(input);									// Check the type of message received from the player
 
 	//parseCoordinates(input);										// 20180118 Parse the coordinates from the string buffer to integers
-	if (type == 0)
-		parseCoordinates(input);									// 20180118 Parse the coordinates from the string buffer to integers
-	else if (type == 1)
-		printColour("Player 1 Fired Laser", 12);
-	else if (type == 2)
-		printColour("Player 2 Fired Laser", 5);
-
+	if (type == 0) parseCoordinates(input);									// 20180118 Parse the coordinates from the string buffer to integers
+	else if (type == 1) printColour("Player 1 Fired Laser", 12);
+	else if (type == 2) printColour("Player 2 Fired Laser", 5);
 	//if (!strcmp(buf, "exit")) break;									// exit the while loop
 	else if (type == 3) {											// If the message type is 3
 		printColour("Player 1 has quit the game", 12);							// Display exit message and
 		//break;											// exit the while loop
 	}
-	else if (type == 4){
-		printColour("Player 2 has quit the game", 5);
-	}
-	else if (type == 5){
-		printColour("Player 1 Laser Destroyed", 12);
-	}
-	else if (type == 6){
-		printColour("Player 2 Laser Destroyed", 5);
-	}
+	else if (type == 4) printColour("Player 2 has quit the game", 5);
+	else if (type == 5) printColour("Player 1 Laser Destroyed", 12);
+	else if (type == 6) printColour("Player 2 Laser Destroyed", 5);
+
+	// updateCoords();
 }
 
 char* GameServer::getInput() {
