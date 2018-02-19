@@ -8,13 +8,14 @@
 */
 
 #include <sys/types.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <stdlib.h>					// exit()
+#include <unistd.h>					// close()
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
 #include <netdb.h>
-#include <stdio.h>
+#include <stdio.h>					// memset()
+//#include <sys/time.h> 				// select()
 
 #include <arpa/inet.h>					// client only
 

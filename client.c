@@ -5,6 +5,8 @@
 	16/02/2018
 
 	UDP client sends and receives messages from server
+
+	Default port 8888
 */
 
 #include "socket.h"								// Includes, definitions, functions, and variables common to both client and server
@@ -19,7 +21,7 @@ int main(int argc, char *argv[]) {
 		errorEx("Usage: server port [Optional]\n", 1);
 	}
 
-	if ((sock= socket(AF_INET, SOCK_DGRAM, 0)) < 0) error("socket");	// Create the socket
+	if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) error("socket");	// Create the socket
 
 	srvAddr.sin_family = AF_INET;
 	hp = gethostbyname((argc >= 2) ? argv[1] : SERV_ADDR);			// If an IP address is entered (parameter 2) use that, otherwise use default value
@@ -28,17 +30,19 @@ int main(int argc, char *argv[]) {
 	bcopy((char *)hp->h_addr, (char *)&srvAddr.sin_addr, hp->h_length);
 	srvAddr.sin_port = htons((argc == 3) ? atoi(argv[2]) : UDP_PORT);	// If a port number is entered (parameter 3) use that, otherwise use default value
 
-	printf("Enter Message: ");
-	bzero(buf, BUFLEN);							// Clear the buffer
-	fgets(buf, BUFLEN-1, stdin);						// Get input from keyboard
+	while (1) {
+		printf("Enter Message: ");
+		bzero(buf, BUFLEN);											// Clear the buffer
+		fgets(buf, BUFLEN-1, stdin);										// Get input from keyboard
 
-	if ((numbytes = sendto(sock, buf, strlen(buf),0,(const struct sockaddr *) &srvAddr, ADDR_SIZE)) < 0)
-		error("sendto()");
+		if ((numbytes = sendto(sock, buf, strlen(buf),0,(const struct sockaddr*) &srvAddr, ADDR_SIZE)) < 0)
+			error("sendto()");
 
-	if ((numbytes = recvfrom(sock,buf,BUFLEN,0,(struct sockaddr *) &inAddr, &ADDR_SIZE)) < 0)
-		error("recvfrom()");
+		if ((numbytes = recvfrom(sock,buf,BUFLEN,0,(struct sockaddr *) &inAddr, &ADDR_SIZE)) < 0)
+			error("recvfrom()");
 
-	printf("Server Response: %s", buf);
+		printf("Server %s:%u Replied: %s",inet_ntoa(inAddr.sin_addr), ntohs(inAddr.sin_port), buf);		// print received message
+	}
 
 	close(sock);
 	return 0;

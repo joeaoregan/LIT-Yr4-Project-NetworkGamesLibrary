@@ -5,6 +5,8 @@
 	16/02/2018
 
  	Server with bidirectional communication over UDP
+
+	Default port 8888
 */
 
 #include "socket.h"				// Includes, definitions, functions, and variables common to both client and server
@@ -24,14 +26,16 @@ int main(int argc, char *argv[]) {
 	if (bind(sock,(struct sockaddr *) &srvAddr, ADDR_SIZE) < 0) error("Binding to socket");
 
 	while (1) {
-		numbytes = recvfrom(sock,buf,BUFLEN,0,(struct sockaddr *) &inAddr, &ADDR_SIZE);			// Recieve a message
-		if (numbytes < 0) error("recvfrom()");
+		bzero(buf, BUFLEN);										// Clear the buffer
 
-		printf("Received: %s", buf);									// Display the message received
+		numbytes = recvfrom(sock,buf,BUFLEN,0,(struct sockaddr *) &inAddr, &ADDR_SIZE);			// Recieve a message
+		if (numbytes < 0) error("Server: recvfrom()");
+
+		printf("Received From %s:%u: %s\n", inet_ntoa(inAddr.sin_addr), ntohs(inAddr.sin_port),buf);	// Display received message with client details
 				
 		sprintf(obuf, "Message Received: %s\n", buf);
-		numbytes = sendto(sock, obuf, strlen(obuf), 0,(struct sockaddr *) &inAddr, ADDR_SIZE);
-		if (numbytes < 0) error("sendto()");
+		numbytes = sendto(sock, obuf, strlen(obuf), 0,(struct sockaddr *) &inAddr, ADDR_SIZE);		// Echo the message received back to the client
+		if (numbytes < 0) error("Server: sendto()");
 	}
 
 	return 0;
