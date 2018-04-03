@@ -29,7 +29,6 @@ void GameStateMachine::render() {
 }
 
 
-
 /*
 	Push pState into the states array, and call onEnter()
 */
@@ -74,7 +73,6 @@ void GameStateMachine::changeState(GameState* pState) {
 	} 
 	
 	m_gameStates.push_back(pState);						// Push back new state
-
 	m_gameStates.back()->onEnter();						// Initialise 
 }
 

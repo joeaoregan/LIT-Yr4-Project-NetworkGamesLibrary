@@ -30,6 +30,8 @@ GameObject* menuButton3;
 
 Texture playerNetIDTexture;
 
+bool checkButtonCoords = true;
+
 bool MainMenuState::onEnter() {
 	//std::cout << "Loading Menu State" << std::endl;
 	printColour("Loading Menu State", 12);
@@ -48,23 +50,8 @@ bool MainMenuState::onEnter() {
 	//menuBackground = new Background();
 	//menuBackground->setTextureID("logoID");
 	//listOfMenuObjects.push_back(menuBackground);
-/*
-	menuButton1 = new MenuButton(1);
-	menuButton2 = new MenuButton(2);
-	menuButton3 = new MenuButton(3);
-	menuButton1->setTextureID("playBtnID");									// Specify texture to use
-	menuButton2->setTextureID("connectBtnID");
-	menuButton3->setTextureID("readyBtnID");
-	
-	// Position buttons
-	menuButton1->setX(440);
-	menuButton1->setY(0);
-	menuButton2->setX(440);
-	menuButton2->setY(100);
-	menuButton3->setX(440);
-	menuButton3->setY(200);
-*/
-	menuButton1 = new MenuButton(1, 440, 0, "playBtnID");
+
+	menuButton1 = new MenuButton(1, 440, 0, "playBtnID");							// Set callback, position, and texture
 	menuButton2 = new MenuButton(2, 440, 100, "connectBtnID");
 	menuButton3 = new MenuButton(3, 440, 200, "readyBtnID");
 
@@ -80,8 +67,6 @@ bool MainMenuState::onEnter() {
 
 	setCallbacks(m_callbacks);										// Set the callbacks for menu items
 
-	m_loadingComplete = true;
-
 	highlightCurrentButton(&m_gameObjects);									// Highlight the current button
 
 	printColour("Menu State: Loading Complete", 12);
@@ -92,6 +77,8 @@ bool MainMenuState::onEnter() {
 		printf( "Failed to render player net id texture!\n" );
 		success = false;
 	}
+
+	m_loadingComplete = true;
 
 	return success;
 }
@@ -133,8 +120,7 @@ void MainMenuState::update(){
 
 	highlightCurrentButton(&m_gameObjects);									// Select the current button for keyboard / gamepad
 
-	//if (Game::Instance()->getAssignedNetID() == 0)
-	//	std::cout << "Waiting on netID" << std::endl;
+	//if (Game::Instance()->getAssignedNetID() == 0) std::cout << "Waiting on netID" << std::endl;
 }
 
 void MainMenuState::render() {
@@ -145,16 +131,22 @@ void MainMenuState::render() {
 		for(int i = 0; i < m_gameObjects.size(); i++) {
 			m_gameObjects[i]->render();								// Call draw function for each object in m_gameObjects list
 /*
-			std::cout << "x: " << m_gameObjects[i]->getX();
-			std::cout << " y: " << m_gameObjects[i]->getY();
+			std::cout << "x: " << m_gameObjects[i]->getX() << " y: " << m_gameObjects[i]->getY();
 			std::cout << " width: " << m_gameObjects[i]->getWidth();
 			std::cout << " height: " << m_gameObjects[i]->getHeight();
 			std::cout << " frame: " << m_gameObjects[i]->getCurrentFrame() << std::endl;
 */
 		}
 	}
-	else std::cout << "Render problem" << std::endl;
-
+	//else std::cout << "Render problem" << std::endl;
+/*
+	if (checkButtonCoords) {
+		std::cout << "Button1 X: " << menuButton1->getX() << " Y: " << menuButton1->getY();
+		std::cout << "\nButton2 X: " << menuButton2->getX() << " Y: " << menuButton2->getY();
+		std::cout << "\nButton3 X: " << menuButton3->getX() << " Y: " << menuButton3->getY() << std::endl;
+		checkButtonCoords = false;
+	}
+*/
 	playerNetIDTexture.render((SCREEN_WIDTH - playerNetIDTexture.getWidth())/2,((SCREEN_HEIGHT-600-playerNetIDTexture.getHeight())/ 2)+600);
 }
 
@@ -180,7 +172,6 @@ void MainMenuState::setCallbacks(const std::vector<Callback>& callbacks) {
 
 void MainMenuState::startGame() {
 	// Assign netID to player as they connect to server
-
 	Game::Instance()->getStateMachine()->changeState(new PlayState());					// Start the game
 }
 
@@ -211,7 +202,6 @@ void MainMenuState::connectToServer() {
 		//char* msg2 = "Server has designated you Player";
 		snprintf(msg, 40, "Server has designated you as Player%d",playerID);
 
-
 		SDL_Color textColor = { 255, 0, 0 };
 		//if( !playerNetIDTexture.loadFromRenderedText( "Server has designated you Player", textColor )) {
 		if( !playerNetIDTexture.loadFromRenderedText( msg, textColor )) {
@@ -222,7 +212,6 @@ void MainMenuState::connectToServer() {
 
 		//std::cout << "MainMenuState connectToServer()" << output << std::endl;
 		//std::cout << "MainMenuState connectToServer() Test" << std::endl;
-
 		// Set the button as grey
 		
 		doOnce = false;

@@ -63,7 +63,6 @@ void Player::handleInput(){
 	// Fire weapons
         if(Input::Instance()->isKeyDown(SDL_SCANCODE_SPACE) && SDL_GetTicks() >= lastFire + fireInterval) {
 		//PlayState::Instance()->spawnLaser();
-		//LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20);
 		LaserManager::Instance()->addLaser(getX() + 65, getY() + 30, 20, getNetID());				// 30/01/2018 Added player ID to send string
 		lastFire = SDL_GetTicks();
         }
@@ -76,10 +75,8 @@ void Player::handleEvent( SDL_Event& e ) {
         switch( e.key.keysym.sym ) {
             case SDLK_UP: setVelY(-getVel()); break;
             case SDLK_DOWN: setVelY(getVel()); break;
-
             case SDLK_LEFT: setVelX(-getVel()); break;
             case SDLK_RIGHT: setVelX(getVel()); break;
-
 	    case SDLK_SPACE: Game::Instance()->spawnLaser();
         }
     }
@@ -89,7 +86,6 @@ void Player::handleEvent( SDL_Event& e ) {
         switch( e.key.keysym.sym ) {
             case SDLK_UP: setVelY(0); break;
             case SDLK_DOWN: setVelY(0); break;
-
             case SDLK_LEFT: setVelX(0); break;
             case SDLK_RIGHT: setVelX(0); break;
         }

@@ -31,55 +31,56 @@ enum LoadData{
 // Texture wrapper class
 class Texture {
 public:	
-	static Texture* Instance() {														// Single instance of Textures used throughout Game
+	static Texture* Instance() {							// Single instance of Textures used throughout Game
 		if (s_pInstance == 0) {
 			s_pInstance = new Texture();
 			return s_pInstance;
 		}
 
-		return s_pInstance;														// Make sure the texture manager only exists once
+		return s_pInstance;							// Make sure the texture manager only exists once
 	}
 	
-	Texture();																// Initializes variables	
-	~Texture();																// Deallocates memory
+	Texture();									// Initializes variables	
+	~Texture();									// Deallocates memory
 
 	//bool loadTextures();
 	bool loadTextures(int select);
 
-	SDL_Texture* getTexture(std::string id) { return m_TextureMap[id]; }									// Get a texture from the map using ID
+	SDL_Texture* getTexture(std::string id) { return m_TextureMap[id]; }		// Get a texture from the map using ID
 
-	bool load(std::string fileName, std::string id);											// Load an image to the texture map given its path, assigning an ID
-	bool loadFromFile( std::string path );													// Loads image at specified path
+	bool load(std::string fileName, std::string id);				// Load an image to the texture map given its path, assigning an ID
+	bool loadFromFile( std::string path );						// Loads image at specified path
 	
 	#ifdef _SDL_TTF_H	
-	bool loadFromRenderedText( std::string textureText, SDL_Color textColor );								// Creates image from font string
+	bool loadFromRenderedText( std::string textureText, SDL_Color textColor );	// Creates image from font string
 	#endif
 	
-	void free();																// Deallocates texture
+	void free();									// Deallocates texture
 	
-	void setColor( Uint8 red, Uint8 green, Uint8 blue );											// Set color modulation
+	void setColor( Uint8 red, Uint8 green, Uint8 blue );				// Set color modulation
 
-	void setBlendMode( SDL_BlendMode blending );												// Set blending
+	void setBlendMode( SDL_BlendMode blending );					// Set blending
 	
-	void setAlpha( Uint8 alpha );														// Set alpha modulation
+	void setAlpha( Uint8 alpha );							// Set alpha modulation
 		
-	void render( int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );// Renders texture at given point
+	void render( int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, 
+		SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );	// Renders texture at given point
 
 
-	//TTF_Font *gFont = NULL;														// Globally used font
+	//TTF_Font *gFont = NULL;							// Globally used font
 
 	// Gets image dimensions
-	int getWidth() { return mWidth; }													// Return the texture width
-	int getHeight() { return mHeight; }													// Return the texture height
+	int getWidth() { return mWidth; }						// Return the texture width
+	int getHeight() { return mHeight; }						// Return the texture height
 
 private:
-	static Texture* s_pInstance;														// Single Instance of Texture class used in Game
+	static Texture* s_pInstance;							// Single Instance of Texture class used in Game
 
-	std::map<std::string, SDL_Texture*> m_TextureMap;											// Map to store textures
+	std::map<std::string, SDL_Texture*> m_TextureMap;				// Map to store textures
 	
-	SDL_Texture* mTexture;															// The hardware texture
+	SDL_Texture* mTexture;								// The hardware texture
 
-	int mWidth, mHeight;															// Image dimensions
+	int mWidth, mHeight;								// Image dimensions
 };
 
 #endif	/* __TEXTURE_H */

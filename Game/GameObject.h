@@ -93,7 +93,7 @@ private:
 	std::string m_TextureID;					// ID for the texture associated with the object
 	std::string m_Name;						// Name for object, to be used for debugging/networking
 //	int m_CurrentFrame;						// The current animation frame in the sprite sheet
-	int m_CurrentAnimationRow;					// The current animation row in the sprite sheet
+	int m_CurrentAnimationRow = 0;					// The current animation row in the sprite sheet 		03/04/2018 Fixed buttons not rendering - init to 0
 	int m_Alpha;							// Alpha value for Texture
 
 	// Network stuff
