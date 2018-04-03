@@ -7,6 +7,7 @@
 	Main networking header file
 	Using singleton pattern to access variables and functionality
 */
+
 #ifndef	__NETWORKING_JOE_O_REGAN
 #define	__NETWORKING_JOE_O_REGAN
 
@@ -37,10 +38,9 @@ public:
 
 	void netDestroyGameObject();				// Notify server an object has been destroyed
 
-
 	// String stream requires const char* value
-	void sendString(const char* sendStr);
-	void sendText(char* sendStr);
+	void sendString(const char* sendStr);			// Sent the string
+	void sendText(char* sendStr);				// Send text
 
 	void receiveNetID(); 
 

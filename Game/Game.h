@@ -7,14 +7,15 @@
 	Cross-platform main game header file
 	Using singleton pattern to access variables and functionality
 */
+
 #ifndef	__GAME_H
 #define	__GAME_H
 
 // Unix (Ubuntu)
 #if defined __linux__
-#include <SDL2/SDL_mixer.h>							// Audio
+#include <SDL2/SDL_mixer.h>							// SDL Audio
 #include <SDL2/SDL_ttf.h>							// True type fonts
-#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_image.h>							// Images (PNG etc.)
 // Windows
 #elif defined _WIN32 || defined _WIN64
 #include <SDL_mixer.h>

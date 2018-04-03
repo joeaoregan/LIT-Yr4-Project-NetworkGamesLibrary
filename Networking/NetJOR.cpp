@@ -70,8 +70,12 @@ void NetJOR::sendString(const char* sendStr) {
 void NetJOR::sendText(char* sendStr) {
 	sendData(sockfd, p, sendStr);
 }
-char* msg;
 
+char* msg;	// needs to be outside function
+
+/*
+	MainMenuState connectToServer()
+*/
 char* NetJOR::recvSrvMsg() {
 	//char msg[100] = recvFromServer();
 	msg = recvFromServer();

@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Audio.cpp
+
+	Cross-platform class for managing game music and sound effects
+*/
+
 #include "Audio.h"
 #include <string>										// return a string from string array of sound effect locations, names, and error description
 

@@ -1,5 +1,10 @@
 /*
+	Joe O'Regan
+	K00203642
+
 	MenuButton.cpp
+
+	Cross-platfrom button class
 */
 
 #include "Texture.h"
@@ -13,6 +18,14 @@ MenuButton::MenuButton() : GameObject(), m_callback(0), m_bReleased(true) {
 MenuButton::MenuButton(int callbackID) : GameObject(), m_callback(0), m_bReleased(true) {
 	SetParameters();
 	setCallbackID(callbackID);
+}
+
+MenuButton::MenuButton(int callbackID, int x, int y, std::string texture) : GameObject(), m_callback(0), m_bReleased(true) {
+	SetParameters();
+	setCallbackID(callbackID);
+	setX(x);
+	setY(y);
+	setTextureID(texture);
 }
 
 void MenuButton::SetParameters() {
@@ -41,11 +54,12 @@ void MenuButton::render() {
 	GameObject::renderAnimation();
 	
 }
-
+/*
 void MenuButton::render(Texture &texture, SDL_Rect *currentClip) {
-	texture.render(mPosition.x, mPosition.y, currentClip);								// Show current button spriteCHANGED - RENDERER IS ADDED
+	//texture.render(mPosition.x, mPosition.y, currentClip);								// Show current button spriteCHANGED - RENDERER IS ADDED
+	//texture.render(getX(), getY(), currentClip);								// Show current button spriteCHANGED - RENDERER IS ADDED
 }
-
+*/
 
 void MenuButton::update() {
 

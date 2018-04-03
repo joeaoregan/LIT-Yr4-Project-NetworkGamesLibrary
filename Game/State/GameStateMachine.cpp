@@ -1,3 +1,10 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	GameStateMachine.cpp
+*/
+
 #include "GameStateMachine.h"
 #include <iostream>
 

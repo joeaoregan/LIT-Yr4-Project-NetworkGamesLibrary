@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	LaserManager.h
+
+	Manage lasers
+*/
+
 #ifndef LASER_MANAGER_H
 #define LASER_MANAGER_H
 

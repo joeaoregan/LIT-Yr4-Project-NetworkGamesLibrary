@@ -6,6 +6,7 @@
 
 	Cross-platform base class for game objects
 */
+
 #ifndef GAME_OBJECTS_H
 #define GAME_OBJECTS_H
 
@@ -60,10 +61,12 @@ public:
 	void setWidth(int w) { m_width = w; }				// Set width
 	void setHeight(int h) { m_height = h; }				// Set height
 	void setAlive(bool a) { m_Alive = a; }				// Set the object active
+
 	void setTextureID( std::string t) { 				// Set texture to render
 		std::cout << "Texture set to: " << t << std::endl;
 		m_TextureID = t; 
 	}
+
 	void setCurrentFrame(int f) { m_currentFrame = f; }		// Set the current frame of animation in the sprite sheet
 	void setAnimRow(int f) { m_CurrentAnimationRow = f; }		// Set the current row of animation in the sprite sheet
 	void setAlpha(int a) { m_Alpha = a; }				// Set the texture alpha value

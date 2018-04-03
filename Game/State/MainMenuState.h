@@ -4,6 +4,7 @@
 
 	MainMenuState.h
 */
+
 #ifndef MAIN_MENU_STATE_H
 #define MAIN_MENU_STATE_H
 
@@ -19,17 +20,17 @@ public:
 	virtual void update();
 	virtual void render();
 		
-	virtual bool onEnter();
-	virtual bool onExit();
+	virtual bool onEnter();							// Initialise the scene
+	virtual bool onExit();							// Leave the scene
 
-	virtual int getStateID() const { return MENU; };
+	virtual int getStateID() const { return MENU; };			// State identifier
 
 private:    
 	virtual void setCallbacks(const std::vector<Callback>& callbacks);
 
-	std::vector<GameObject*> m_gameObjects;
-//	std::vector<GameObject*> listOfMenuObjects;								// List of game objects
-//	std::vector<MenuButton*> listOfMenuButtons;								// List of menu button objects
+	std::vector<GameObject*> m_gameObjects;					// List of game objects
+//	std::vector<GameObject*> listOfMenuObjects;				// List of game objects
+//	std::vector<MenuButton*> listOfMenuButtons;				// List of menu button objects
 
 	static void connectToServer();
 	static void readyToStart();

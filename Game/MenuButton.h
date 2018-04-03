@@ -6,6 +6,7 @@
 
 	Cross-platfrom button class
 */
+
 #ifndef MENU_BUTTON_H
 #define MENU_BUTTON_H
 
@@ -38,6 +39,8 @@ class MenuButton : public GameObject {
 public:    
 	MenuButton();
 	MenuButton(int callback);
+	MenuButton(int callback, int x, int y, std::string texture);
+
 	void SetParameters();
 
 	virtual ~MenuButton() {}
@@ -47,7 +50,7 @@ public:
 	SDL_Point mPosition;
 
 	virtual void render();
-	void render(Texture &texture, SDL_Rect *currentClip);		// Rendering function
+	//void render(Texture &texture, SDL_Rect *currentClip);		// Rendering function
 	virtual void update();
 	virtual void clean();
 	

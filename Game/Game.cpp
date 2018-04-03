@@ -136,7 +136,8 @@ void Game::update() {
 }
 
 void Game::render() {	
-	SDL_SetRenderDrawColor( Game::Instance()->getRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );					// Set clear colour
+	//SDL_SetRenderDrawColor( Game::Instance()->getRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );					// Set clear colour (white)
+	SDL_SetRenderDrawColor( Game::Instance()->getRenderer(), 0x00, 0x00, 0x00, 0xFF );					// Set clear colour (black)
 	SDL_RenderClear( Game::Instance()->getRenderer() );									// Clear screen
 
 	m_pGameStateMachine->render();												// Render the current state

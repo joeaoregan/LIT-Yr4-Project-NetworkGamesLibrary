@@ -8,6 +8,7 @@
 	UDP socket functions
 	Cross platform functions to create sockets and send data to game server
 */
+
 #ifndef	SOCKET_H
 #define	SOCKET_H
 
@@ -134,6 +135,10 @@ void sendToServer2(const char* sendStr) {
 	sendData(sockfd, p, (char*) sendStr);
 }
 
+
+/*
+	MainMenuState connectToServer()
+*/
 char* recvFromServer() {
 	//char buf[MAXBUFLEN];
 	//char* msg = "";

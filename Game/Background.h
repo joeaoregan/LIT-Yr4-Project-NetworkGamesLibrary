@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Background.h
+
+	Scrolling background game object
+*/
+
 #ifndef _BACKGROUND_H
 #define _BACKGROUND_H
 

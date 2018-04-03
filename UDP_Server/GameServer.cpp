@@ -72,6 +72,9 @@ bool GameServer::init() {
 	return true;
 }
 
+/*
+	Send the number of players as a string to the connecting client, and use this as the ID for the client
+*/
 void GameServer::addPlayers() {
 	char* playerConnect;
 
@@ -133,6 +136,13 @@ void GameServer::update() {
 	else if (type == 6) printColour("Player 2 Laser Destroyed", 5);
 
 	// updateCoords();
+	//updateClients();
+}
+
+void GameServer::updateClients() {
+	printf("GameServer updateClients()");
+	//sendto(sockfd, numPlayersText.str().c_str(), strlen(numPlayersText.str().c_str()), 0, (struct sockaddr *) &their_addr, addr_len);
+	sendto(sockfd, "test", 5, 0, (struct sockaddr *) &their_addr, addr_len);
 }
 
 char* GameServer::getInput() {

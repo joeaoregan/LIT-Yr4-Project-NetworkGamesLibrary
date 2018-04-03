@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	GameObject.cpp
+
+	Cross-platform base class for game objects
+*/
+
 #include "GameObject.h"
 
 void GameObject::update() {

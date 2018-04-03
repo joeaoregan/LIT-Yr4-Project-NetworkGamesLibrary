@@ -12,10 +12,10 @@
 
 // Unix (Ubuntu)
 #if defined __linux__
-#include <SDL2/SDL.h>						// SDL
+#include <SDL2/SDL.h>						// SDL File Location Linux
 // Windows
 #elif defined _WIN32 || defined _WIN64
-#include <SDL.h>
+#include <SDL.h>						// SDL File Location Windows
 #endif
 
 #include "GameState.h"

@@ -98,6 +98,7 @@ void PlayState::update(){
 		listOfGameObjects[index]->update();										// Move/Update the game objects
 	}
 
+// SEND
 	updateText.str("");													// 20180117			
 	//updateText << "0 Player1 " << player->getX() << " " << player->getY();						// 20180118 Send name/ID, x coord, y coord  -  to server
 	updateText << "0 " << player->getNetID() << " " << player->getX() << " " << player->getY();				// 20180118 Send name/ID, x coord, y coord  -  to server
@@ -111,6 +112,11 @@ void PlayState::update(){
 	}
 
 	LaserManager::Instance()->update();
+
+// RECV
+	//printf("PlayState update() recvfrom()");
+	//char* input = NetJOR::Instance()->recvSrvMsg();	// recvfrom()
+	//printf("test\n");
 }
 
 void PlayState::render() {

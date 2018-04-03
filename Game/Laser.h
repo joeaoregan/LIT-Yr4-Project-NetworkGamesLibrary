@@ -6,6 +6,7 @@
 
 	Functionality for laser objects
 */
+
 #ifndef LASER_H
 #define LASER_H
 

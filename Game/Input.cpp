@@ -1,3 +1,12 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	Input.cpp
+
+	Cross-platform class for managing input from keyboard, mouse, and gamepad
+*/
+
 #include "Input.h"
 #include "Game.h"
 #include <iostream>

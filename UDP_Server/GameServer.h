@@ -34,7 +34,9 @@ public:
 	void update();
 	void close_gs();
 
-	char* getInput();
+	char* getInput();				// Get input from connected clients (recvfrom())
+	void updateClients();				// Send updated coordinates
+
 	void parseCoordinates(char* input);
 	int receivedMsgType(char* input);
 	

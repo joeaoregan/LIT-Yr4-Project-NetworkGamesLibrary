@@ -29,14 +29,16 @@
 #define NORM 15
 #endif
 
-
+/*
+	Format text based depending on platform
+*/
 void printCoords(char* name, int x, int y){
+// Format output for Linux terminal
 #if defined __linux__
-	// Format output for Linux terminal
 	printf("%sPlayer:%s\t%s\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, name, BLUE, NORM, x, BLUE, NORM, y);	// Display Coordinates
 
+// Format output for Windows command prompt
 #elif defined _WIN32 || defined _WIN64
-	// Format output for Windows command prompt
 	HANDLE  hConsole;
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -55,6 +57,9 @@ void printCoords(char* name, int x, int y){
 #endif
 }
 
+/*
+	Display output message with colour
+*/
 void printColour(char* msg, int colour){
 	//printf("colour: %d\n", colour);
 #if defined __linux__
@@ -74,10 +79,10 @@ void printColour(char* msg, int colour){
 #elif defined _WIN32 || defined _WIN64	
 	// Format output for Windows command prompt
 	HANDLE  hConsole;
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);	// Standard output device
 
-	SetConsoleTextAttribute(hConsole, colour);
+	SetConsoleTextAttribute(hConsole, colour);	// SetConsoleTextAttribute() sets foreground (text) and background colour for characters in the console
 	printf("%s\n", msg);				// Display message in single colour
-	SetConsoleTextAttribute(hConsole, NORM);
+	SetConsoleTextAttribute(hConsole, NORM);	// Reset to original colour scheme
 #endif
 }

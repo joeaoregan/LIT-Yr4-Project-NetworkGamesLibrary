@@ -1,3 +1,7 @@
+/*
+	Vector2D.h
+*/
+
 #ifndef __VECTOR_2D
 #define __VECTOR_2D
 

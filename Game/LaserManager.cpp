@@ -1,3 +1,11 @@
+/*
+	Joe O'Regan
+	K00203642
+
+	LaserManager.cpp 
+
+	Manage lasers
+*/
 
 #include "LaserManager.h"
 #include "Game.h"
