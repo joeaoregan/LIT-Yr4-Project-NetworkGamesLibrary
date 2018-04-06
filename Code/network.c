@@ -8,7 +8,8 @@ struct sockaddr_in server_sock_addr(char *ip) {
     if (ip == NULL) {
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     } else {
-        inet_aton(ip, &serv_addr.sin_addr);
+		//inet_aton(ip, &serv_addr.sin_addr);
+		inet_pton(AF_INET, ip, &serv_addr.sin_addr);	// JOR Replace inet_aton with inet_pton
     }
     serv_addr.sin_port = htons(1234);
     return serv_addr;

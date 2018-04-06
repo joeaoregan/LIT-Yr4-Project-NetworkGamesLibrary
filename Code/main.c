@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <pthread.h>
+
+#include <SDL_thread.h>	// JOR SDL Thread in place of pthread
+
 #include <time.h>
 #include <stdint.h>
 #include "objects.h"
@@ -63,7 +65,6 @@ void check_if_its_new_player(int id){
     }
 }
 
-
 void* client_loop(void *arg) {
     int socket = *((int *) arg);
     int16_t tab[BUF_MAX];
@@ -87,7 +88,11 @@ void* client_loop(void *arg) {
             memcpy(bullets_client, tab + 1, sizeof(int16_t) * 2 * bullets_in_array);
             bullets_number = bullets_in_array;
         }
-        usleep(50);
+#if defined __linux__
+		usleep(50);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(50);
+#endif
     }
 }
 
@@ -95,6 +100,16 @@ int main(){
     struct sockaddr_in server_addr, client_addr;
     int sock_server, sock_client;
     char *server_ip_addr = NULL;
+
+#if defined _WIN32 || defined _WIN64
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+	printf("Initialised Winsock.\n");
+#endif
 
     char menu = 's';
     SDL_Window *window;
@@ -107,13 +122,7 @@ int main(){
     TTF_Font *font;
     font = TTF_OpenFont("resources/m5x7.ttf", 24);
     init_players();
-    window = SDL_CreateWindow(
-            "game",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            640,
-            480,
-            0);
+    window = SDL_CreateWindow( "SDL UDP Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);	// JOR Changed window title, added screen_width & screen_height
 
     if (window == NULL) {
         printf("Could not create window: %s\n", SDL_GetError());
@@ -138,28 +147,38 @@ int main(){
         server_ip_addr = malloc(16 * sizeof(char));
         ask_for_ip(renderer, font, server_ip_addr);
     }
-    pthread_t thread_id_server, thread_id_client, thread_id_server_send;
+
+	SDL_Thread* thread_id_server = NULL;				// JOR SDL threads replacing pthread
+	SDL_Thread* thread_id_client = NULL;
+	SDL_Thread* thread_id_server_send = NULL;
+
     server_addr = server_sock_addr(server_ip_addr);
     client_addr = client_sock_addr();
     if(menu == 's') {
         prepare_server(&sock_server, &server_addr);
-        pthread_create(&thread_id_server, NULL, server_receive_loop, &sock_server);
-        pthread_create(&thread_id_server_send, NULL, server_send_loop, &sock_server);
+        //pthread_create(&thread_id_server, NULL, server_receive_loop, &sock_server);
+        //pthread_create(&thread_id_server_send, NULL, server_send_loop, &sock_server);
+		thread_id_server = SDL_CreateThread(server_receive_loop, "ServerReceiveThread", &sock_server);	// JOR SDL Thread replaces Pthread
+		thread_id_server_send = SDL_CreateThread(server_send_loop, "ServerSendThread", &sock_server);
     }
     prepare_client(&sock_client, &client_addr);
-    pthread_create(&thread_id_client, NULL, client_loop, &sock_client);
+    //pthread_create(&thread_id_client, NULL, client_loop, &sock_client);
+	thread_id_client = SDL_CreateThread(client_loop, "ClientThread", &sock_client);						// JOR SDL Thread replaces Pthread
 
     while (my_id < 0) {
         send_to_server(sock_client, server_addr, my_id, 0);
-        usleep(100);
+#if defined __linux__
+		usleep(100);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(100);
+#endif
     }
 
     SDL_Rect bullet_pos;
     bullet_pos.w = BULLET_HEIGHT;
     bullet_pos.h = BULLET_HEIGHT;
 
-
-    SDL_Event e;
+	SDL_Event e;
 
     while (1) {
         if (SDL_PollEvent(&e)) {
@@ -169,24 +188,28 @@ int main(){
             resolve_keyboard(e, &players[my_id]);
         }
         send_to_server(sock_client, server_addr, my_id, key_state_from_player(&players[my_id]));
-        usleep(30);
+#if defined __linux__
+		usleep(30);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(30);
+#endif
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, map, NULL, NULL);
         for (i = 0; i <= number_of_players; i++) {
             SDL_RenderCopy(renderer, tex, NULL, &players[i].position);
         }
 
-        disp_text(renderer, "kills", font, 400, 10);
+        disp_text(renderer, "Kills:", font, 400, 10);
         for (i = 0; i <= number_of_players; i++) {
-            char kills[10] = {};
-            sprintf(kills, "%d", players[i].kills);
+            char kills[10] = "";
+            snprintf(kills, 3, "%d", players[i].kills);
             disp_text(renderer, kills, font, 400, 30 + i * 20);
         }
 
-        disp_text(renderer, "deaths", font, 460, 10);
+        disp_text(renderer, "Deaths:", font, 460, 10);
         for (i = 0; i <= number_of_players; i++) {
-            char deaths[10] = {};
-            sprintf(deaths, "%d", players[i].deaths);
+            char deaths[10] = "";
+            snprintf(deaths, 3, "%d", players[i].deaths);
             disp_text(renderer, deaths, font, 460, 30 + i * 20);
         }
 
@@ -200,9 +223,9 @@ int main(){
 
     close(sock_client);
     close(sock_server);
-    pthread_cancel(thread_id_client);
-    pthread_cancel(thread_id_server);
-    pthread_cancel(thread_id_server_send);
+	SDL_WaitThread(thread_id_server, NULL);			// JOR SDL Thread replaces pthread
+	SDL_WaitThread(thread_id_client, NULL);			// Make sure thread finishes before application closes
+	SDL_WaitThread(thread_id_server_send, NULL);
     SDL_DestroyTexture(tex);
     SDL_DestroyTexture(bullet);
     SDL_DestroyTexture(map);

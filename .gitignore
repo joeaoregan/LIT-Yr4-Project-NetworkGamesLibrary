@@ -1,3 +1,11 @@
+
+/Debug/
+*.dll
+*.user
+*.vcxproj
+*.filters
+
+
 .*.swp
 *.swp
 

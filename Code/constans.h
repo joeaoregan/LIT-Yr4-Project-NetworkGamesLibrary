@@ -3,6 +3,9 @@
 
 #include "stdbool.h"
 
+#define ADDR_LEN sizeof(struct sockaddr)
+#define SERV_PORT 8887
+
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define FRAME_TIME 16666

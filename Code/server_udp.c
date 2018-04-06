@@ -5,7 +5,13 @@
 #include "physic.h"
 #include "constans.h"
 #include "time.h"
+#if defined __linux__
 #include "sys/time.h"
+#elif defined _WIN32 || defined _WIN64
+#include <WinSock2.h>							// Windows sockets
+#include <ws2tcpip.h>							// getaddrinfo()
+#include <Windows.h>
+#endif
 
 struct sockaddr_in clients_addresses[MAX_PLAYERS];
 struct Player players_server[MAX_PLAYERS];
@@ -80,7 +86,11 @@ void* server_receive_loop(void *arg) {
             tab[1] = client_pos;
             send_data(socket, clients_addresses[client_pos], tab, 3);
         }
-        usleep(50);
+#if defined __linux__
+		usleep(50);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(50);
+#endif
     }
 }
 
@@ -107,11 +117,13 @@ int get_bullet_array(struct node *list, int16_t **array) {
 void* server_send_loop(void *arg) {
     int socket = *((int *) arg);
     int16_t tab[3];
-    struct timeval start, stop;
+    //struct timeval start, stop;
+	Uint32 start, stop;				// JOR Replace struct timeval with Uint32 for SDL_GetTicks()
     double time_interval;
     int killer;
     while (1) {
-        gettimeofday(&start, NULL);
+        //gettimeofday(&start, NULL);
+		start = SDL_GetTicks();
         int i, j;
         move_bullets(&bullets_server);
         for (i = 0; i < number_of_connected_clients; i++) {
@@ -133,21 +145,43 @@ void* server_send_loop(void *arg) {
                 tab[3] = players_server[j].kills;
                 tab[4] = players_server[j].deaths;
                 send_data(socket, clients_addresses[i], tab, 5);
-                usleep(20);
+#if defined __linux__
+				usleep(20);
+#elif defined _WIN32 || defined _WIN64
+				Sleep(20);
+#endif
             }
             send_data(socket, clients_addresses[i], bullet_array, 1 + (bullets_n * 2));
-            usleep(20);
+#if defined __linux__
+			usleep(20);
+#elif defined _WIN32 || defined _WIN64
+			Sleep(20);
+#endif
         }
         free(bullet_array);
+		/*
         gettimeofday(&stop, NULL);
         time_interval = (double) (stop.tv_usec - start.tv_usec);
         if ((double) (stop.tv_usec - start.tv_usec) > 0) {
             time_interval = (double) (stop.tv_usec - start.tv_usec);
         }
-        usleep(FRAME_TIME - time_interval);
+		*/
+
+        //usleep(FRAME_TIME - time_interval);
+
+		stop = SDL_GetTicks();										// JOR Replace gettimeofday - start, stop
+		time_interval = (double)(stop - start);
+		if ((double)(stop - start) > 0) {
+			time_interval = (double)(stop - start);
+		}
+
+#if defined __linux__
+		usleep(FRAME_TIME - time_interval);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(FRAME_TIME - time_interval);
+#endif
     }
 }
-
 
 int its_an_old_client(int client_pos) {
     return (client_pos < number_of_connected_clients && client_pos >= 0);

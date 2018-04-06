@@ -2,7 +2,7 @@
 #include "constans.h"
 
 void prepare_client(int *sock, struct sockaddr_in *client_addr) {
-    if ((*sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if ((*sock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("client socket failed");
     }
 

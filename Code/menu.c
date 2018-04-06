@@ -1,5 +1,7 @@
-#include <menu.h>
-
+#include "menu.h"
+#if defined _WIN32 || defined _WIN64
+#include <Windows.h>
+#endif
 
 void server_or_client(SDL_Renderer *renderer, char *menu, TTF_Font *font){
     SDL_Event e;
@@ -16,13 +18,16 @@ void server_or_client(SDL_Renderer *renderer, char *menu, TTF_Font *font){
                 }
             }
         }
-        usleep(200);
+#if defined __linux__
+		usleep(200);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(200);
+#endif
         SDL_RenderClear(renderer);
         disp_text(renderer, "[s]erver or [c]lient?", font, 240, 200);
         SDL_RenderPresent(renderer);
     }
 }
-
 
 void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
     memset(ip, ' ', 15);
@@ -52,9 +57,14 @@ void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
                 }
             }
         }
-        usleep(200);
+#if defined __linux__
+		usleep(200);
+#elif defined _WIN32 || defined _WIN64
+		Sleep(200);
+#endif
         SDL_RenderClear(renderer);
-        disp_text(renderer, "ip addres", font, 240, 200);
+        //disp_text(renderer, "ip addres", font, 240, 200);
+		disp_text(renderer, "Enter Server IP Address:", font, 240, 200);	// JOR Clearer instruction
         disp_text(renderer, ip, font, 240, 230);
         SDL_RenderPresent(renderer);
     }
