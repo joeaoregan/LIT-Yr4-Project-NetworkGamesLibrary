@@ -63,7 +63,8 @@ void check_if_its_new_player(int id){
     }
 }
 
-void* client_loop(void *arg) {
+//void* client_loop(void *arg) {
+int client_loop(void *arg) {
     int socket = *((int *) arg);
     int16_t tab[BUF_MAX];
     int strLen;
@@ -100,11 +101,12 @@ void* client_loop(void *arg) {
 #endif
 
     }
+	return 0;	// Changed function return type to remove incompatible pointer type warning
 }
 
 int main(int argc, char* argv[]) {							// Add formal parameter list
-    struct sockaddr_in server_addr, client_addr;
-    int sock_server, sock_client;
+    struct sockaddr_in srvAddr, cliAddr;
+    int srvSock, cliSock;
     char *server_ip_addr = NULL;
 
 #if defined _WIN32 || defined _WIN64
@@ -125,7 +127,7 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
     SDL_Texture *map = NULL;
     TTF_Init();
     TTF_Font *font;
-    font = TTF_OpenFont("resources/m5x7.ttf", 24);
+    font = TTF_OpenFont("../resources/m5x7.ttf", 24);
     init_players();
     window = SDL_CreateWindow( "SDL UDP Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);	// JOR Changed window title, added screen_width & screen_height
 
@@ -144,8 +146,8 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
     }
 
     map = get_map_texture(renderer);
-    tex = load_texture(renderer, "resources/player.bmp");
-    bullet = load_texture(renderer, "resources/bullet.bmp");
+    tex = load_texture(renderer, "../resources/player.bmp");
+    bullet = load_texture(renderer, "../resources/bullet.bmp");
     int i;
     server_or_client(renderer, &menu, font);
     if (menu == 'c') {
@@ -157,19 +159,19 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
 	SDL_Thread* thread_id_client = NULL;
 	SDL_Thread* thread_id_server_send = NULL;
 
-    server_addr = server_sock_addr(server_ip_addr);
-    client_addr = client_sock_addr();
+    srvAddr = server_sock_addr(server_ip_addr);
+    cliAddr = client_sock_addr();
     if(menu == 's') {
-        prepare_server(&sock_server, &server_addr);
-		thread_id_server = SDL_CreateThread(server_receive_loop, "ServerReceiveThread", &sock_server);	// JOR SDL Thread replaces Pthread
-		thread_id_server_send = SDL_CreateThread(server_send_loop, "ServerSendThread", &sock_server);
+        prepare_server(&srvSock, &srvAddr);
+		thread_id_server = SDL_CreateThread(server_receive_loop, "ServerReceiveThread", &srvSock);	// JOR SDL Thread replaces Pthread
+		thread_id_server_send = SDL_CreateThread(server_send_loop, "ServerSendThread", &srvSock);
     }
-    initClientUDPSock(&sock_client, &client_addr);
-	thread_id_client = SDL_CreateThread(client_loop, "ClientThread", &sock_client);						// JOR SDL Thread replaces Pthread
+    initClientUDPSock(&cliSock, &cliAddr);
+	thread_id_client = SDL_CreateThread(client_loop, "ClientThread", &cliSock);						// JOR SDL Thread replaces Pthread
 
     while (clientID < 0) {
 		//printf("This one -> ");
-        srvSendTo(sock_client, server_addr, clientID, 0);
+        srvSendTo(cliSock, srvAddr, clientID, 0);
 		
 #if defined __linux__
 		usleep(100);
@@ -184,15 +186,16 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
     bullet_pos.h = BULLET_HEIGHT;
 
 	SDL_Event e;
+	int quit = 0;
 
-    while (1) {
+    while (quit == 0) {
         if (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                break;
-            }
+            //if (e.type == SDL_QUIT) { break; }
+            if (e.type == SDL_QUIT) { quit = 1; }
+
             resolve_keyboard(e, &players[clientID]);
         }
-        srvSendTo(sock_client, server_addr, clientID, key_state_from_player(&players[clientID]));
+        srvSendTo(cliSock, srvAddr, clientID, key_state_from_player(&players[clientID]));
 		
 #if defined __linux__
 		usleep(30);
@@ -202,11 +205,13 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, map, NULL, NULL);
+
         for (i = 0; i <= number_of_players; i++) {
             SDL_RenderCopy(renderer, tex, NULL, &players[i].position);
         }
 
         disp_text(renderer, "Kills:", font, 400, 10);
+
         for (i = 0; i <= number_of_players; i++) {
             char kills[10] = "";
             snprintf(kills, 3, "%d", players[i].kills);
@@ -214,6 +219,7 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
         }
 
         disp_text(renderer, "Deaths:", font, 460, 10);
+
         for (i = 0; i <= number_of_players; i++) {
             char deaths[10] = "";
             snprintf(deaths, 3, "%d", players[i].deaths);
@@ -225,15 +231,16 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
             bullet_pos.y = bullets_client[i*2 + 1];
             SDL_RenderCopy(renderer, bullet, NULL, &bullet_pos);
         }
+
         SDL_RenderPresent(renderer);
-    }
+    } // End while
 
 #if defined __linux__
-	close(sock_client);
-	close(sock_server);
+	close(cliSock);
+	close(srvSock);
 #elif defined _WIN32 || defined _WIN64
-	closesocket(sock_client);						// Close the client socket
-	closesocket(sock_server);						// Close the server socket
+	closesocket(cliSock);							// Close the client socket
+	closesocket(srvSock);							// Close the server socket
 	WSACleanup();									// Terminate use of Winsock 2 DLL
 #endif
 	SDL_WaitThread(thread_id_server, NULL);			// JOR SDL Thread replaces pthread

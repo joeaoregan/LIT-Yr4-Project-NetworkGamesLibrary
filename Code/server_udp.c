@@ -50,8 +50,8 @@ void init_players_tab() {
     }
 }
 
-void* server_receive_loop(void *arg) {
-//int server_receive_loop(void *arg) {
+//void* server_receive_loop(void *arg) {
+int server_receive_loop(void *arg) {
     int socket = *((int *) arg);
     int client_pos = 0;
     struct sockaddr_in client_addr;
@@ -118,8 +118,8 @@ int get_bullet_array(struct node *list, int16_t **array) {
     return n;
 }
 
-void* server_send_loop(void *arg) {
-//int server_send_loop(void *arg) {
+//void* server_send_loop(void *arg) {
+int server_send_loop(void *arg) {
     int socket = *((int *) arg);
     int16_t tab[3];
     //struct timeval start, stop;
@@ -187,6 +187,7 @@ void* server_send_loop(void *arg) {
 
 
     }	// while(1)
+	return 0;
 }
 
 int its_an_old_client(int client_pos) {
