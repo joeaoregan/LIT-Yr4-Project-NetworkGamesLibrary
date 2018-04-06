@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
-
 #include <SDL_thread.h>	// JOR SDL Thread in place of pthread
-
 #include <time.h>
 #include <stdint.h>
 #include "objects.h"
@@ -11,13 +9,13 @@
 #include "server_udp.h"
 #include "network.h"
 #include "physic.h"
-#include "constans.h"
+#include "Definitions.h"
 #include "font.h"
 #include "menu.h"
 
 struct Player players[MAX_PLAYERS];
 int number_of_players = 0;
-int16_t my_id = -1;
+int16_t clientID = -1;
 int16_t bullets_client[256];
 int bullets_number = 0;
 
@@ -53,62 +51,69 @@ void init_players() {
 }
 
 void receive_new_id(int id) {
-    my_id = id;
+    clientID = id;
     number_of_players = id;
-    printf("my_id is now: %d\n", my_id);
+	printf("Client ID is now: %d\n", clientID);
 }
 
 void check_if_its_new_player(int id){
     if (id > number_of_players) {
         number_of_players = id;
-        printf("new max player, now %d\n", number_of_players + 1);
+		printf("Maximum number of playser is now %d\n", number_of_players + 1);
     }
 }
 
 void* client_loop(void *arg) {
     int socket = *((int *) arg);
     int16_t tab[BUF_MAX];
-    int length;
+    int strLen;
     int id, bullets_in_array;
     while (1) {
-        length = client_listen(socket, tab);
-        id = tab[0];
+        strLen = cliRecvfrom(socket, tab);
+
+        id = tab[0];							// first int = id
         if (id == -1) {
-            receive_new_id(tab[1]);
+            receive_new_id(tab[1]);				// Set an id for the connected player
         }
+
+		printf("got this far - before id > 0 ID: %d\n", id);
+
         if (id >= 0) {
-            check_if_its_new_player(id);
-            players[id].position.x = tab[1];
-            players[id].position.y = tab[2];
-            players[id].kills = tab[3];
-            players[id].deaths = tab[4];
+			printf("got this far - id > 0 ID: %d\n", id);
+            check_if_its_new_player(id);		// Increase number of players if new player added
+            players[id].position.x = tab[1];	// Player x position
+            players[id].position.y = tab[2];	// Player y position
+            players[id].kills = tab[3];			// Number of kills
+            players[id].deaths = tab[4];		// Number of times died
         }
+
         if (id == -2) {
-            bullets_in_array = (length - sizeof(int16_t)) / (sizeof(int16_t) * 2);
+            bullets_in_array = (strLen - sizeof(int16_t)) / (sizeof(int16_t) * 2);
             memcpy(bullets_client, tab + 1, sizeof(int16_t) * 2 * bullets_in_array);
             bullets_number = bullets_in_array;
         }
+		
 #if defined __linux__
 		usleep(50);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(50);
+		Sleep(5/1000);
 #endif
+
     }
 }
 
-int main(){
+int main(int argc, char* argv[]) {							// Add formal parameter list
     struct sockaddr_in server_addr, client_addr;
     int sock_server, sock_client;
     char *server_ip_addr = NULL;
 
 #if defined _WIN32 || defined _WIN64
 	WSADATA wsa;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-	{
-		printf("Failed. Error Code : %d", WSAGetLastError());
-		exit(EXIT_FAILURE);
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {				// If winsock doesn't initialise
+		printf("Failed. Error Code : %d", WSAGetLastError());	// Display an error message
+		exit(EXIT_FAILURE);										// And exit with the specified error code
 	}
-	printf("Initialised Winsock.\n");
+	printf("Initialised Winsock.\n");							// Otherwise indicate winsock has initialised
 #endif
 
     char menu = 's';
@@ -129,8 +134,7 @@ int main(){
         return 1;
     }
 
-    renderer = SDL_CreateRenderer(window, -1,
-            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (renderer == NULL) {
         SDL_DestroyWindow(window);
@@ -138,6 +142,7 @@ int main(){
         SDL_Quit();
         return 1;
     }
+
     map = get_map_texture(renderer);
     tex = load_texture(renderer, "resources/player.bmp");
     bullet = load_texture(renderer, "resources/bullet.bmp");
@@ -156,22 +161,22 @@ int main(){
     client_addr = client_sock_addr();
     if(menu == 's') {
         prepare_server(&sock_server, &server_addr);
-        //pthread_create(&thread_id_server, NULL, server_receive_loop, &sock_server);
-        //pthread_create(&thread_id_server_send, NULL, server_send_loop, &sock_server);
 		thread_id_server = SDL_CreateThread(server_receive_loop, "ServerReceiveThread", &sock_server);	// JOR SDL Thread replaces Pthread
 		thread_id_server_send = SDL_CreateThread(server_send_loop, "ServerSendThread", &sock_server);
     }
-    prepare_client(&sock_client, &client_addr);
-    //pthread_create(&thread_id_client, NULL, client_loop, &sock_client);
+    initClientUDPSock(&sock_client, &client_addr);
 	thread_id_client = SDL_CreateThread(client_loop, "ClientThread", &sock_client);						// JOR SDL Thread replaces Pthread
 
-    while (my_id < 0) {
-        send_to_server(sock_client, server_addr, my_id, 0);
+    while (clientID < 0) {
+		//printf("This one -> ");
+        srvSendTo(sock_client, server_addr, clientID, 0);
+		
 #if defined __linux__
 		usleep(100);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(100);
+		Sleep(10/1000);
 #endif
+
     }
 
     SDL_Rect bullet_pos;
@@ -185,14 +190,16 @@ int main(){
             if (e.type == SDL_QUIT) {
                 break;
             }
-            resolve_keyboard(e, &players[my_id]);
+            resolve_keyboard(e, &players[clientID]);
         }
-        send_to_server(sock_client, server_addr, my_id, key_state_from_player(&players[my_id]));
+        srvSendTo(sock_client, server_addr, clientID, key_state_from_player(&players[clientID]));
+		
 #if defined __linux__
 		usleep(30);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(30);
+		Sleep(3/1000);
 #endif
+
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, map, NULL, NULL);
         for (i = 0; i <= number_of_players; i++) {
@@ -221,8 +228,14 @@ int main(){
         SDL_RenderPresent(renderer);
     }
 
-    close(sock_client);
-    close(sock_server);
+#if defined __linux__
+	close(sock_client);
+	close(sock_server);
+#elif defined _WIN32 || defined _WIN64
+	closesocket(sock_client);						// Close the client socket
+	closesocket(sock_server);						// Close the server socket
+	WSACleanup();									// Terminate use of Winsock 2 DLL
+#endif
 	SDL_WaitThread(thread_id_server, NULL);			// JOR SDL Thread replaces pthread
 	SDL_WaitThread(thread_id_client, NULL);			// Make sure thread finishes before application closes
 	SDL_WaitThread(thread_id_server_send, NULL);

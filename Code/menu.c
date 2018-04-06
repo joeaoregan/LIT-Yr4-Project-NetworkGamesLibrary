@@ -21,7 +21,7 @@ void server_or_client(SDL_Renderer *renderer, char *menu, TTF_Font *font){
 #if defined __linux__
 		usleep(200);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(200);
+		Sleep(200/1000);
 #endif
         SDL_RenderClear(renderer);
         disp_text(renderer, "[s]erver or [c]lient?", font, 240, 200);
@@ -60,7 +60,7 @@ void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
 #if defined __linux__
 		usleep(200);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(200);
+		Sleep(200/1000);
 #endif
         SDL_RenderClear(renderer);
         //disp_text(renderer, "ip addres", font, 240, 200);

@@ -1,27 +1,36 @@
 #include "network.h"
-#include "constans.h"
+#include "Definitions.h"
 
 struct sockaddr_in server_sock_addr(char *ip) {
-    struct sockaddr_in serv_addr;
-    memset(&serv_addr, 0, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
+    struct sockaddr_in srvAddr;
+    memset(&srvAddr, 0, sizeof(srvAddr));
+    srvAddr.sin_family = AF_INET;
+
+	// If the IP address was not entered from a client set to INADDR_ANY
     if (ip == NULL) {
-        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+		//srvAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		//srvAddr.sin_addr.s_addr = INADDR_ANY;
+		inet_pton(AF_INET, SERV_ADDR, &srvAddr.sin_addr);	// Specify the address as 127.0.0.1
     } else {
-		//inet_aton(ip, &serv_addr.sin_addr);
-		inet_pton(AF_INET, ip, &serv_addr.sin_addr);	// JOR Replace inet_aton with inet_pton
+		inet_pton(AF_INET, ip, &srvAddr.sin_addr);		// JOR Replace inet_aton with inet_pton
     }
-    serv_addr.sin_port = htons(1234);
-    return serv_addr;
+
+    srvAddr.sin_port = htons(SERV_PORT);
+
+	char str[INET6_ADDRSTRLEN];
+	inet_ntop(AF_INET, &(srvAddr.sin_addr), str, INET6_ADDRSTRLEN);
+	printf("server_sock_addr Server Address: %s:%d\n", str, ntohs(srvAddr.sin_port));
+
+    return srvAddr;
 }
 
 struct sockaddr_in client_sock_addr() {
-    struct sockaddr_in client_addr;
-    memset(&client_addr, 0, sizeof(struct sockaddr));
-    client_addr.sin_family = AF_INET;
-    client_addr.sin_addr.s_addr = INADDR_ANY;
-    client_addr.sin_port = 0;
-    return client_addr;
+    struct sockaddr_in cliAddr;
+    memset(&cliAddr, 0, sizeof(struct sockaddr));
+    cliAddr.sin_family = AF_INET;
+    cliAddr.sin_addr.s_addr = INADDR_ANY;
+    cliAddr.sin_port = 0;
+    return cliAddr;
 }
 
 

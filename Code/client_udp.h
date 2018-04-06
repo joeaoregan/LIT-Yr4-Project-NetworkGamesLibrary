@@ -19,8 +19,8 @@
 #include <string.h>
 #include <stdint.h>
 
-void prepare_client(int *sock, struct sockaddr_in *client_addr);
-void send_to_server(int sock, struct sockaddr_in serv_addr, int16_t id, int16_t keys);
-int client_listen(int sock, int16_t *tab);
+void initClientUDPSock(int *sock, struct sockaddr_in *client_addr);
+void srvSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys);
+int cliRecvfrom(int sock, int16_t *tab);
 
 #endif

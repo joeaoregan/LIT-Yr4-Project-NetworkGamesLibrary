@@ -1,10 +1,11 @@
-#ifndef CONSTANS_H
-#define CONSTANS_H
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
 
 #include "stdbool.h"
 
-#define ADDR_LEN sizeof(struct sockaddr)
-#define SERV_PORT 8887
+#define ADDR_LEN sizeof(struct sockaddr)	// Added Address length definition
+#define SERV_PORT 8887						// Server port number
+#define SERV_ADDR "127.0.0.1"  				// IP address of udp server (localhost)
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480

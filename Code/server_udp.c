@@ -3,7 +3,7 @@
 #include "objects.h"
 #include "list.h"
 #include "physic.h"
-#include "constans.h"
+#include "Definitions.h"
 #include "time.h"
 #if defined __linux__
 #include "sys/time.h"
@@ -51,6 +51,7 @@ void init_players_tab() {
 }
 
 void* server_receive_loop(void *arg) {
+//int server_receive_loop(void *arg) {
     int socket = *((int *) arg);
     int client_pos = 0;
     struct sockaddr_in client_addr;
@@ -86,12 +87,15 @@ void* server_receive_loop(void *arg) {
             tab[1] = client_pos;
             send_data(socket, clients_addresses[client_pos], tab, 3);
         }
+		
 #if defined __linux__
 		usleep(50);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(50);
+		Sleep(50/1000);
 #endif
+
     }
+	return 0;	// Changed function return type to int
 }
 
 int get_bullet_array(struct node *list, int16_t **array) {
@@ -115,6 +119,7 @@ int get_bullet_array(struct node *list, int16_t **array) {
 }
 
 void* server_send_loop(void *arg) {
+//int server_send_loop(void *arg) {
     int socket = *((int *) arg);
     int16_t tab[3];
     //struct timeval start, stop;
@@ -135,8 +140,10 @@ void* server_send_loop(void *arg) {
                 players_server[killer].kills++;
             }
         }
+
         int16_t *bullet_array = NULL;
         int bullets_n = get_bullet_array(bullets_server, &bullet_array);
+
         for (i = 0; i < number_of_connected_clients; i++) {
             for (j = 0; j < number_of_connected_clients; j++) {
                 tab[0] = j;
@@ -145,29 +152,26 @@ void* server_send_loop(void *arg) {
                 tab[3] = players_server[j].kills;
                 tab[4] = players_server[j].deaths;
                 send_data(socket, clients_addresses[i], tab, 5);
+				
 #if defined __linux__
 				usleep(20);
 #elif defined _WIN32 || defined _WIN64
-				Sleep(20);
+				Sleep(20/ 1000);
 #endif
-            }
+
+            } // for number_of_clients j
+
             send_data(socket, clients_addresses[i], bullet_array, 1 + (bullets_n * 2));
+			
 #if defined __linux__
 			usleep(20);
 #elif defined _WIN32 || defined _WIN64
-			Sleep(20);
+			Sleep(20 / 1000);
 #endif
-        }
-        free(bullet_array);
-		/*
-        gettimeofday(&stop, NULL);
-        time_interval = (double) (stop.tv_usec - start.tv_usec);
-        if ((double) (stop.tv_usec - start.tv_usec) > 0) {
-            time_interval = (double) (stop.tv_usec - start.tv_usec);
-        }
-		*/
 
-        //usleep(FRAME_TIME - time_interval);
+        } // for number_of_clients i
+
+        free(bullet_array);
 
 		stop = SDL_GetTicks();										// JOR Replace gettimeofday - start, stop
 		time_interval = (double)(stop - start);
@@ -178,9 +182,11 @@ void* server_send_loop(void *arg) {
 #if defined __linux__
 		usleep(FRAME_TIME - time_interval);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(FRAME_TIME - time_interval);
+		Sleep((DWORD)((FRAME_TIME - time_interval)/1000));
 #endif
-    }
+
+
+    }	// while(1)
 }
 
 int its_an_old_client(int client_pos) {
