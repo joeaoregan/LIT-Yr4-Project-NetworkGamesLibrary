@@ -43,8 +43,8 @@ void resolve_player_key_up(int key, struct Player* player) {
 void resolve_keyboard(SDL_Event e, struct Player* player) {
     if (e.type == SDL_KEYDOWN) {
         resolve_player_key_down(e.key.keysym.sym, player);
-		if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;
-		else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
+		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;			// Not needed, player->flip is now sent back from server
+		//else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
     } 
     if (e.type == SDL_KEYUP) {
         resolve_player_key_up(e.key.keysym.sym, player);
@@ -58,11 +58,7 @@ void set_player_pos(struct Player* player, float x, float y) {
 
 struct Bullet init_bullet(int x, int y, int face) {
     struct Bullet b;
-	b.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);
-    //b.position.x = x;
-    //b.position.y = y;
-    //b.position.w = BULLET_WIDTH;
-    //b.position.h = BULLET_HEIGHT;
+	b.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);			// Init bullet position SDL_Rect
     b.face = face;
     return b;
 }

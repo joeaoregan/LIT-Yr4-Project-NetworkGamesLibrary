@@ -22,10 +22,10 @@ int16_t arrBullets[256];				// Array of bullet objects
 int totalBulletsOnScreen = 0;			// Current bullet
 
 SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
-    SDL_Surface *bitmap = NULL;
-    SDL_Texture *texture = NULL;
-    bitmap = SDL_LoadBMP(file);
-    texture = SDL_CreateTextureFromSurface(renderer, bitmap);
+    //SDL_Surface *bitmap = NULL;
+    //SDL_Texture *texture = NULL;
+	SDL_Surface *bitmap = SDL_LoadBMP(file);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, bitmap);
     SDL_FreeSurface(bitmap);
     return texture;
 }
@@ -34,11 +34,7 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
 void initPlayerList() {
     int i;
     for (i = 0; i < MAX_PLAYERS; i++) {
-		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);
-        //players[i].position.x = SPAWN_X;
-        //players[i].position.y = SPAWN_Y;
-		//players[i].position.w = PLAYER_WIDTH;
-        //players[i].position.h = PLAYER_HEIGHT;
+		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);			// Init player position SDL_Rect
         players[i].left_key = SDLK_LEFT;
         players[i].right_key = SDLK_RIGHT;
         players[i].up_key = SDLK_UP;
@@ -72,8 +68,7 @@ void checkIfNewPlayer(int id){
 int client_loop(void *arg) {
     int socket = *((int *) arg);																	// cliSock passed in as argument
     int16_t arrData[BUF_MAX];																		// Data to receive from server
-	int numBytes;																					// Number of bytes received 
-	int id, bulletsInArray;																			// clientID, Active bullets
+	int numBytes, id, bulletsInArray;																// Number of bytes received , clientID, Active bullets
 	bool idSet = false;																				// The client ID has not been set yet
 
     while (1) {
@@ -86,12 +81,14 @@ int client_loop(void *arg) {
 			idSet = true;																			// Stops the ID being set more than once
         }
 
+		// Client data from Server
         if (id >= 0) {
             checkIfNewPlayer(id);																	// Increase number of players if new player added
             players[id].position.x = arrData[1];													// Player x position
             players[id].position.y = arrData[2];													// Player y position
             players[id].kills = arrData[3];															// Number of kills
             players[id].deaths = arrData[4];														// Number of times died
+			players[id].flip = arrData[5];															// Client flip (sprite direction)
         }
 
         if (id == -2) {																				// Bullet data
@@ -113,23 +110,14 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
     int srvSock, cliSock;																			// Server and client sockets
     char *srvIPAddr = NULL;																			// Server IP Address entered from client menu select option								
 
-#if defined _WIN32 || defined _WIN64
-	WSADATA wsa;																					// Windows sockets implementation structure
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {													// If winsock doesn't initialise
-		printf("Failed. Error Code : %d", WSAGetLastError());										// Display an error message
-		exit(EXIT_FAILURE);																			// And exit with the specified error code
-	}
-	printf("Initialised Winsock.\n");																// Otherwise indicate winsock has initialised
-#endif
+	initWinsock();																					// Initialise winsock
 
     char menu = 's';																				// Default game type is server
     SDL_Window *window;																				// Game window
     SDL_Renderer *renderer;																			// Game renderer
     SDL_Init(SDL_INIT_VIDEO);																		// Initialise video only
 	SDL_Texture *imgPlayer1 = NULL;
-	SDL_Texture *imgPlayer2 = NULL;
-	//SDL_Texture *imgPlayer3 = NULL;
-	//SDL_Texture *imgPlayer4 = NULL;
+	SDL_Texture *imgPlayer2 = NULL;																	// Additional Player colour
     SDL_Texture *imgBullet = NULL;
     SDL_Texture *imgMap = NULL;
     TTF_Init();
@@ -156,7 +144,7 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
     imgMap = get_map_texture(renderer);
 	imgPlayer1 = load_texture(renderer, "../resources/player1.bmp");
 	imgPlayer2 = load_texture(renderer, "../resources/player2.bmp");
-    imgBullet = load_texture(renderer, "../resources/bullet.bmp");
+    imgBullet = load_texture(renderer, "../resources/bullet1.bmp");
 
     int i;
     selectServerOrClient(renderer, &menu, font);													// Set the game as the Client or Server
@@ -192,13 +180,10 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
 	bullet_pos.h = BULLET_HEIGHT;
 
 	SDL_Event e;
-	int quit = 0;
 
-    while (quit == 0) {
+    while (1) {
         if (SDL_PollEvent(&e)) {
-            //if (e.type == SDL_QUIT) { break; }
-            if (e.type == SDL_QUIT) { quit = 1; }
-
+            if (e.type == SDL_QUIT) { break; }														// Exit the while loop and close the game
             resolve_keyboard(e, &players[clientID]);
         }
 
@@ -208,44 +193,28 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, imgMap, NULL, NULL);
-
-		SDL_RendererFlip flip = 0;
-
+		
         for (i = 0; i <= numPlayers; i++) {
-
-			//printf("Player %d flip: %d\n", i, players[i].flip);
-			//if (players[i].face == -1) flip = 1;
-			//SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
-			//if (players[i].face == -1) flip = 1;
-			//else flip = 0;
-
-			//SDL_RenderCopy(renderer, imgPlayer1, NULL, &players[i].position);
-			//if(players[i].face == 1)
-			//SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, (players[i].face == 1) ? 0 : 1);
-			//else
-			//SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, 1);
-			if (i == 1)
-				//SDL_RenderCopyEx(renderer, imgPlayer2, NULL, &players[i].position, 0, NULL, flip);	// Red for player 2
+			if (i == clientID)
 				SDL_RenderCopyEx(renderer, imgPlayer2, NULL, &players[i].position, 0, NULL, players[i].flip);	// Red for player 2
 			else
-				//SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, flip);	// Blue for player 1
 				SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, players[i].flip);	// Blue for player 1
         }
 
-        disp_text(renderer, "Kills:", font, 400, 10);
+        displayText(renderer, "Kills:", font, 400, 10);
 
         for (i = 0; i <= numPlayers; i++) {
             char kills[10] = "";
             snprintf(kills, 3, "%d", players[i].kills);
-            disp_text(renderer, kills, font, 400, 30 + i * 20);
+            displayText(renderer, kills, font, 400, 30 + i * 20);
         }
 
-        disp_text(renderer, "Deaths:", font, 460, 10);
+        displayText(renderer, "Deaths:", font, 460, 10);
 
         for (i = 0; i <= numPlayers; i++) {
             char deaths[10] = "";
             snprintf(deaths, 3, "%d", players[i].deaths);
-            disp_text(renderer, deaths, font, 460, 30 + i * 20);
+            displayText(renderer, deaths, font, 460, 30 + i * 20);
         }
 
         for (i = 0; i < totalBulletsOnScreen; i++) {

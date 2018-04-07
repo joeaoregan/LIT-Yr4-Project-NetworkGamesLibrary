@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include "objects.h"
 
+void initWinsock();								// Init windows networking functionality
 struct sockaddr_in intServerAddr(char *ip);
 struct sockaddr_in initClientAddr();
 int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in registeredClientsList[], int size);

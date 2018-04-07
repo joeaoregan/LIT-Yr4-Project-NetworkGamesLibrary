@@ -1,10 +1,20 @@
+## Joe O'Regan
+## Modified Gitignore file
+## 07/04/2018
 
+# Include:
+!/[Cc]ode/
+!/[Rr]esources/
+!/[Ss]creenshots/
+
+# Visual Studio Stuff:
 /Debug/
 *.dll
 *.user
 *.vcxproj
 *.filters
 
+# Previous Gitignore file:
 
 .*.swp
 *.swp

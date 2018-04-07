@@ -52,11 +52,7 @@ void srvSendto(int sock, struct sockaddr_in client, int16_t data[], int size) {
 void initConnectedPlayersList() {
     int i;
     for (i = 0; i < MAX_PLAYERS; i++) {
-		listOfPlayers[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);// Initialise each player 
-        //listOfPlayers[i].position.w = PLAYER_WIDTH;
-        //listOfPlayers[i].position.h = PLAYER_HEIGHT;
-        //listOfPlayers[i].position.x = SPAWN_X;
-        //listOfPlayers[i].position.y = SPAWN_Y;
+		listOfPlayers[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);// Initialise each players position
     }
 }
 
@@ -77,12 +73,8 @@ int serverInputLoop(void *arg) {
 
             if(listOfPlayers[curClient].shoot && !listOfPlayers[curClient].reloading) {		// If the player has fired, and isn't reloading
                 struct Bullet bullet;														// Create a bullet
-				bullet.position = makeRect(listOfPlayers[curClient].position.x, 
-					listOfPlayers[curClient].position.y, BULLET_WIDTH, BULLET_HEIGHT);
-                //bullet.position.x = listOfPlayers[curClient].position.x;
-                //bullet.position.y = listOfPlayers[curClient].position.y;
-                //bullet.position.w = BULLET_WIDTH;
-                //bullet.position.h = BULLET_HEIGHT;
+				bullet.position = makeRect(listOfPlayers[curClient].position.x,				
+					listOfPlayers[curClient].position.y, BULLET_WIDTH, BULLET_HEIGHT);		// Init the player position SDL_Rect
                 bullet.face = listOfPlayers[curClient].face;								// Aim the bullet in the direction the player is facing
 
                 if (bullet.face == 1) {														// Offset starting position for bullet (place bullet on left or right of player)
@@ -147,9 +139,9 @@ int serverOutputLoop(void *arg) {
         updateBullets(&listOfBullets);
 
         for (i = 0; i < totalNumClients; i++) {
-            updatePlayer(&listOfPlayers[i]);
+            updatePlayer(&listOfPlayers[i]);												// --- UPDATE PLAYER ---
 			
-            if (check_if_player_dies(&listOfPlayers[i], &listOfBullets, &killerID)) {
+            if (check_if_player_dies(&listOfPlayers[i], &listOfBullets, &killerID)) {		// --- PLAYER DEAD ---
                 listOfPlayers[i].position.x = SPAWN_X;										// Respawn shot player at Spawn position
                 listOfPlayers[i].position.y = SPAWN_Y;
                 listOfPlayers[i].deaths++;													// Increment death count for shot player
@@ -166,8 +158,10 @@ int serverOutputLoop(void *arg) {
                 arrData[1] = listOfPlayers[j].position.x;									// Client X position
                 arrData[2] = listOfPlayers[j].position.y;									// Client Y position
                 arrData[3] = listOfPlayers[j].kills;										// Client Kills
-                arrData[4] = listOfPlayers[j].deaths;										// Client deaths
-                srvSendto(socket, listOfClientAddresses[i], arrData, 5);					// Send to all clients
+				arrData[4] = listOfPlayers[j].deaths;										// Client deaths
+				arrData[5] = listOfPlayers[j].flip;											// Client flip (sprite direction)
+				//srvSendto(socket, listOfClientAddresses[i], arrData, 5);					// Send to all clients
+				srvSendto(socket, listOfClientAddresses[i], arrData, 6);					// Send to all clients
 
 				sleepCrossPlatform(20);														// Sleep for 20 microseconds
             } // for number_of_clients j
