@@ -12,6 +12,7 @@
 #include "Definitions.h"
 #include "font.h"
 #include "menu.h"
+//#include "Time.h"		// Handle system time on different platforms
 
 struct Player players[MAX_PLAYERS];
 int number_of_players = 0;
@@ -93,12 +94,14 @@ int client_loop(void *arg) {
             memcpy(bullets_client, tab + 1, sizeof(int16_t) * 2 * bullets_in_array);
             bullets_number = bullets_in_array;
         }
-		
+/*		
 #if defined __linux__
 		usleep(50);
 #elif defined _WIN32 || defined _WIN64
 		Sleep(5/1000);
 #endif
+*/
+		sleepCrossPlatform(50);
 
     }
 	return 0;	// Changed function return type to remove incompatible pointer type warning
@@ -149,10 +152,10 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
     tex = load_texture(renderer, "../resources/player.bmp");
     bullet = load_texture(renderer, "../resources/bullet.bmp");
     int i;
-    server_or_client(renderer, &menu, font);
+    selectServerOrClient(renderer, &menu, font);
     if (menu == 'c') {
         server_ip_addr = malloc(16 * sizeof(char));
-        ask_for_ip(renderer, font, server_ip_addr);
+        enterServerIP(renderer, font, server_ip_addr);
     }
 
 	SDL_Thread* thread_id_server = NULL;				// JOR SDL threads replacing pthread
@@ -162,7 +165,7 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
     srvAddr = server_sock_addr(server_ip_addr);
     cliAddr = client_sock_addr();
     if(menu == 's') {
-        prepare_server(&srvSock, &srvAddr);
+        createUDPServer(&srvSock, &srvAddr);
 		thread_id_server = SDL_CreateThread(server_receive_loop, "ServerReceiveThread", &srvSock);	// JOR SDL Thread replaces Pthread
 		thread_id_server_send = SDL_CreateThread(server_send_loop, "ServerSendThread", &srvSock);
     }
@@ -170,15 +173,15 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
 	thread_id_client = SDL_CreateThread(client_loop, "ClientThread", &cliSock);						// JOR SDL Thread replaces Pthread
 
     while (clientID < 0) {
-		//printf("This one -> ");
         srvSendTo(cliSock, srvAddr, clientID, 0);
-		
+	/*	
 #if defined __linux__
 		usleep(100);
 #elif defined _WIN32 || defined _WIN64
-		Sleep(10/1000);
+		Sleep(100/1000);
 #endif
-
+*/
+		sleepCrossPlatform(100);
     }
 
     SDL_Rect bullet_pos;
@@ -196,12 +199,14 @@ int main(int argc, char* argv[]) {							// Add formal parameter list
             resolve_keyboard(e, &players[clientID]);
         }
         srvSendTo(cliSock, srvAddr, clientID, key_state_from_player(&players[clientID]));
-		
+		/*
 #if defined __linux__
 		usleep(30);
 #elif defined _WIN32 || defined _WIN64
 		Sleep(3/1000);
 #endif
+*/
+		sleepCrossPlatform(30);
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, map, NULL, NULL);

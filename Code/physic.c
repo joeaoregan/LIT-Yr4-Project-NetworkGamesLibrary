@@ -63,8 +63,11 @@ int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
         return 1;
     }
 }
- 
-void move_bullets(struct node **bullets) {
+
+/*
+	Update the bullet object movement
+*/
+void updateBullets(struct node **bullets) {
     struct node *next = *bullets;
     struct Bullet *b = NULL;
     int i = 0;
@@ -101,9 +104,10 @@ int check_if_player_dies(struct Player *player, struct node **bullets, int *kill
     return false;
 }
 
-
-
-void move_player(struct Player *player) {
+/*
+	Update the player objects movement
+*/
+void updatePlayer(struct Player *player) {
     int x_movement = 0;
     int y_movement = 0;
     if (player->left) {

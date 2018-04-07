@@ -49,8 +49,8 @@ void resolve_keyboard(SDL_Event e, struct Player* player) {
 }
 
 void set_player_pos(struct Player* player, float x, float y) {
-    player->position.x = x;
-    player->position.y = y;
+    player->position.x = (int) x;
+    player->position.y = (int) y;
 }
 
 struct Bullet init_bullet(int x, int y, int face) {
