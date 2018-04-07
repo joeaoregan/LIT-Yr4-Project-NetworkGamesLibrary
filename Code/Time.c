@@ -1,4 +1,7 @@
 #include "Time.h"
+#if defined __linux__
+#include <unistd.h>							// usleep()
+#endif
 
 /*
 	Function to handle sleep for both Windows and Linux

@@ -19,13 +19,9 @@ int map[15][20] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
 
 int sign(int a) {
-    if (a < 0) {
-        return -1;
-    } else if (a > 0) {
-        return 1;
-    } else {
-        return 0;
-    }
+    if (a < 0) { return -1;  } 
+	else if (a > 0) { return 1; } 
+	else { return 0; }
 }
 
 void decrement_abs(int *a) {
@@ -48,17 +44,12 @@ int check_collisions(SDL_Rect *rect) {
 int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
     SDL_Rect temp = *position;
 
-    if (axis == X_AXIS) {
-        temp.x += sign(mov);
-    }
+    if (axis == X_AXIS) { temp.x += sign(mov); }
+    if (axis == Y_AXIS) { temp.y += sign(mov); }
 
-    if (axis == Y_AXIS) {
-        temp.y += sign(mov);
-    }
-
-    if (check_collisions(&temp)) {
-        return 0;
-    } else {
+    if (check_collisions(&temp)) { 
+		return 0; } 
+	else {
         *position = temp;
         return 1;
     }
@@ -86,17 +77,17 @@ void updateBullets(struct node **bullets) {
 
 int check_if_player_dies(struct Player *player, struct node **bullets, int *killer) {
     struct node *next = *bullets;
-    struct SDL_Rect b; 
-    struct SDL_Rect p = player->position;
+    struct SDL_Rect tmpBullet; 
+    struct SDL_Rect tmpPlayer = player->position;
     int i = 0;
     while (next != NULL) {
-        b = ((struct Bullet*) next->data)->position;
-        if (p.x < (b.x + b.w) &&
-                (p.x + p.w) > b.x &&
-                p.y < (b.y + b.h) &&
-                (p.y + p.h) > b.y) {
-            *killer = ((struct Bullet*) next->data)->player_id;
-            erase_element(bullets, i);
+        tmpBullet = ((struct Bullet*) next->data)->position;
+        if (tmpPlayer.x < (tmpBullet.x + tmpBullet.w) &&
+                (tmpPlayer.x + tmpPlayer.w) > tmpBullet.x &&
+                tmpPlayer.y < (tmpBullet.y + tmpBullet.h) &&
+                (tmpPlayer.y + tmpPlayer.h) > tmpBullet.y) {
+            *killer = ((struct Bullet*) next->data)->player_id;			// Identify the player who got the kill
+            erase_element(bullets, i);									// Clear the bullet from the list of bullets
             return true;
         }
         next = next->next;

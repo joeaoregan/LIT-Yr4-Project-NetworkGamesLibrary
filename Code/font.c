@@ -1,4 +1,5 @@
 #include "font.h"
+#include "SDLFunctions.h"
 
 void disp_text(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y) {
     SDL_Surface *surface;
@@ -7,10 +8,11 @@ void disp_text(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y)
     SDL_Color color = {255, 255, 255};
     surface = TTF_RenderText_Solid(font, text, color);
     texture = SDL_CreateTextureFromSurface(renderer, surface);
-    pos.w = surface->w;
-    pos.h = surface->h;
-    pos.x = x;
-    pos.y = y;
+	pos = makeRect(x, y, surface->w, surface->h);
+    //pos.w = surface->w;
+    //pos.h = surface->h;
+    //pos.x = x;
+    //pos.y = y;
     SDL_FreeSurface(surface);
     SDL_RenderCopy(renderer, texture, NULL, &pos);
 }

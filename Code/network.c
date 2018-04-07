@@ -9,8 +9,11 @@ struct sockaddr_in intServerAddr(char *ip) {
 	// If the IP address was not entered from a client set to INADDR_ANY
     if (ip == NULL) {
 		//srvAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-		//srvAddr.sin_addr.s_addr = INADDR_ANY;
-		inet_pton(AF_INET, SERV_ADDR, &srvAddr.sin_addr);	// Specify the address as 127.0.0.1
+#if defined __linux__
+		srvAddr.sin_addr.s_addr = INADDR_ANY;				// Linux Server: listen on any local address
+#elif defined _WIN32 || defined _WIN64
+		inet_pton(AF_INET, SERV_ADDR, &srvAddr.sin_addr);	// Windows Server: Specify the address as 127.0.0.1
+#endif
     } else {
 		inet_pton(AF_INET, ip, &srvAddr.sin_addr);			// JOR Replace inet_aton with inet_pton
     }

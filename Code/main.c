@@ -13,6 +13,7 @@
 #include "font.h"
 #include "menu.h"
 #include "Time.h"						// Handle system time on different platforms
+#include "SDLFunctions.h"
 
 struct Player players[MAX_PLAYERS];
 int numPlayers = 0;						// Number of players currently in the game
@@ -29,13 +30,15 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
     return texture;
 }
 
+
 void initPlayerList() {
     int i;
     for (i = 0; i < MAX_PLAYERS; i++) {
-        players[i].position.x = SPAWN_X;
-        players[i].position.y = SPAWN_Y;
-        players[i].position.w = PLAYER_WIDTH;
-        players[i].position.h = PLAYER_HEIGHT;
+		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);
+        //players[i].position.x = SPAWN_X;
+        //players[i].position.y = SPAWN_Y;
+		//players[i].position.w = PLAYER_WIDTH;
+        //players[i].position.h = PLAYER_HEIGHT;
         players[i].left_key = SDLK_LEFT;
         players[i].right_key = SDLK_RIGHT;
         players[i].up_key = SDLK_UP;
@@ -175,7 +178,7 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
 		threadServerInput = SDL_CreateThread(serverInputLoop, "ServerReceiveThread", &srvSock);		// JOR SDL Thread replaces Pthread
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", &srvSock);
     }
-    initClientUDPSock(&cliSock, &cliAddr);
+    createClientUDPSock(&cliSock, &cliAddr);
 	threadClient = SDL_CreateThread(client_loop, "ClientThread", &cliSock);							// JOR SDL Thread replaces Pthread
 
     while (clientID < 0) {
@@ -211,9 +214,7 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
         for (i = 0; i <= numPlayers; i++) {
 
 			//printf("Player %d flip: %d\n", i, players[i].flip);
-
 			//if (players[i].face == -1) flip = 1;
-
 			//SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 			//if (players[i].face == -1) flip = 1;
 			//else flip = 0;
@@ -224,9 +225,11 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
 			//else
 			//SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, 1);
 			if (i == 1)
-				SDL_RenderCopyEx(renderer, imgPlayer2, NULL, &players[i].position, 0, NULL, flip);	// Red for player 2
+				//SDL_RenderCopyEx(renderer, imgPlayer2, NULL, &players[i].position, 0, NULL, flip);	// Red for player 2
+				SDL_RenderCopyEx(renderer, imgPlayer2, NULL, &players[i].position, 0, NULL, players[i].flip);	// Red for player 2
 			else
-				SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, flip);	// Blue for player 1
+				//SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, flip);	// Blue for player 1
+				SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, players[i].flip);	// Blue for player 1
         }
 
         disp_text(renderer, "Kills:", font, 400, 10);
@@ -246,8 +249,8 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
         }
 
         for (i = 0; i < totalBulletsOnScreen; i++) {
-            bullet_pos.x = arrBullets[i*2];		// Even numbers
-            bullet_pos.y = arrBullets[i*2 + 1];	// Odd numbers
+            bullet_pos.x = arrBullets[i*2];								// Even numbers
+            bullet_pos.y = arrBullets[i*2 + 1];							// Odd numbers
             SDL_RenderCopy(renderer, imgBullet, NULL, &bullet_pos);
         }
 
