@@ -10,7 +10,7 @@ struct Player {
     int can_jump, y_speed;
     int face, shoot, reloading;
     int left_key, right_key, up_key, down_key, attack_key;
-    int kills, deaths;
+    int kills, deaths, flip;
 };
 
 struct Bullet {
@@ -18,7 +18,6 @@ struct Bullet {
     int face;
     int player_id;
 };
-
 
 void resolve_player_key_up(int key, struct Player* player);
 void resolve_player_key_down(int key, struct Player* player);

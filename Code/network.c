@@ -1,7 +1,7 @@
 #include "network.h"
 #include "Definitions.h"
 
-struct sockaddr_in server_sock_addr(char *ip) {
+struct sockaddr_in intServerAddr(char *ip) {
     struct sockaddr_in srvAddr;
     memset(&srvAddr, 0, sizeof(srvAddr));
     srvAddr.sin_family = AF_INET;
@@ -12,7 +12,7 @@ struct sockaddr_in server_sock_addr(char *ip) {
 		//srvAddr.sin_addr.s_addr = INADDR_ANY;
 		inet_pton(AF_INET, SERV_ADDR, &srvAddr.sin_addr);	// Specify the address as 127.0.0.1
     } else {
-		inet_pton(AF_INET, ip, &srvAddr.sin_addr);		// JOR Replace inet_aton with inet_pton
+		inet_pton(AF_INET, ip, &srvAddr.sin_addr);			// JOR Replace inet_aton with inet_pton
     }
 
     srvAddr.sin_port = htons(SERV_PORT);
@@ -24,7 +24,7 @@ struct sockaddr_in server_sock_addr(char *ip) {
     return srvAddr;
 }
 
-struct sockaddr_in client_sock_addr() {
+struct sockaddr_in initClientAddr() {
     struct sockaddr_in cliAddr;
     memset(&cliAddr, 0, sizeof(struct sockaddr));
     cliAddr.sin_family = AF_INET;
@@ -33,15 +33,15 @@ struct sockaddr_in client_sock_addr() {
     return cliAddr;
 }
 
-
-int addr_pos_in_tab(struct sockaddr_in new_addr, struct sockaddr_in old_addr_tab[], int size) {
+int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in registeredClientsList[], int totalConnectedClients) {
     int i;
-    for (i = 0; i < size; i++) {
-        if(compare_addr(&new_addr, &old_addr_tab[i])) {
-            return i;
+    for (i = 0; i < totalConnectedClients; i++) {
+        if (compare_addr(&newCliAddr, &registeredClientsList[i])) {		// If the address matches and address in the existing clients
+            return i;														
         }
     }
-    return size;
+
+    return totalConnectedClients;
 }
 
 int compare_addr(struct sockaddr_in *a, struct sockaddr_in *b) {
@@ -55,6 +55,7 @@ int compare_addr(struct sockaddr_in *a, struct sockaddr_in *b) {
 }
 
 int16_t key_state_from_player(struct Player *player) {
+	//printf("key_state from player\n");
     int16_t key_state = 0;
     if (player->left) {
         key_state = key_state | LEFT_KEY;
@@ -75,13 +76,18 @@ int16_t key_state_from_player(struct Player *player) {
 }
 
 void player_from_key_state(struct Player *player, int16_t key_state) {
+	
+	//printf("player from key state\n");
     if (key_state & LEFT_KEY) {
         player->left = true;
+		//player->flip = 1;
+		//printf("test\n");
     } else {
         player->left = false;
     }
     if (key_state & RIGHT_KEY) {
         player->right = true;
+		//player->flip = 0;
     } else {
         player->right = false;
     }

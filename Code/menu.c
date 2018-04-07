@@ -2,6 +2,7 @@
 #if defined _WIN32 || defined _WIN64
 #include <Windows.h>
 #endif
+#include "Time.h"
 
 void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font){
     SDL_Event e;
@@ -11,10 +12,10 @@ void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font){
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_c) {
-                    *menu = 'c';
+                    *menu = 'c';								// Set game instance to client
                     pressed = true;
                 } else if (e.key.keysym.sym == SDLK_s) {
-                    *menu = 's';
+                    *menu = 's';								// Set game instance to server
                     pressed = true;
                 }
             }

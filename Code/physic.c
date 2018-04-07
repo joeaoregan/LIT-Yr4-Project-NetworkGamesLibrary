@@ -71,9 +71,10 @@ void updateBullets(struct node **bullets) {
     struct node *next = *bullets;
     struct Bullet *b = NULL;
     int i = 0;
+
     while (next != NULL) {
         b = (struct Bullet*) next->data;
-        b->position.x += PLAYER_SPEED * b->face * 1;
+        b->position.x += BULLET_SPEED * b->face * 1;
         next = next->next;
         if (check_collisions(&b->position)) {
             erase_element(bullets, i);
@@ -110,13 +111,18 @@ int check_if_player_dies(struct Player *player, struct node **bullets, int *kill
 void updatePlayer(struct Player *player) {
     int x_movement = 0;
     int y_movement = 0;
+
     if (player->left) {
         x_movement -= PLAYER_SPEED;
         player->face = -1;
+		player->flip = 1;
+		//printf("test flip: %d\n", player->flip);
     }
     if (player->right) {
         x_movement += PLAYER_SPEED;
         player->face = 1;
+		player->flip = 0;
+		//printf("test flip: %d\n", player->flip);
     }
     if (player->up) {
         if (player->can_jump) {
@@ -178,4 +184,3 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
     return map_texture;
 }
     
-

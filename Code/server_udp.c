@@ -12,6 +12,7 @@
 #include <ws2tcpip.h>							// getaddrinfo()
 #include <Windows.h>
 #endif
+#include "Time.h"
 
 struct sockaddr_in listOfClientAddresses[MAX_PLAYERS];
 struct Player listOfPlayers[MAX_PLAYERS];
@@ -28,15 +29,16 @@ void createUDPServer(int *sock, struct sockaddr_in *server_sock) {
     }
 }
 
-struct sockaddr_in receive_data(int sock, int16_t data[]) {
+struct sockaddr_in srvRecvfrom(int sock, int16_t data[]) {
     struct sockaddr_in addr;
     socklen_t addr_size = sizeof(struct sockaddr);
     recvfrom(sock, data, sizeof(int16_t) * 4, 0, (struct sockaddr*)&addr, &addr_size);
     return addr;
 }
 
-void send_data(int sock, struct sockaddr_in client, int16_t data[], int size) {
+void srvSendto(int sock, struct sockaddr_in client, int16_t data[], int size) {
     socklen_t addr_size = sizeof(struct sockaddr);
+
     sendto(sock, data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);
 }
 
@@ -51,48 +53,57 @@ void initConnectedPlayersList() {
 }
 
 //void* server_receive_loop(void *arg) {
-int server_receive_loop(void *arg) {
-    int socket = *((int *) arg);
-    int curClient = 0;
-    struct sockaddr_in cliAddr;
-    int16_t arrData[4];
-    initConnectedPlayersList();
+int serverInputLoop(void *arg) {
+    int socket = *((int *) arg);																	// Socket passed in as argument
+    int curClient = 0;																				// Clients position in the list of connected clients
+    struct sockaddr_in cliAddr;																		// Address of the current client connection
+    int16_t arrData[4];																				// Array of data received from the client
+    initConnectedPlayersList();																		// Initialise the list of connected players
+
     while (1) {
-        cliAddr = receive_data(socket, arrData);
-        curClient = addr_pos_in_tab(cliAddr, listOfClientAddresses, totalNumClients);
-        if (existingClient(curClient)) {
-            int16_t keys = arrData[1];
+        cliAddr = srvRecvfrom(socket, arrData);														// Receive data from client (save client address)
+        curClient = findClientIDNumber(cliAddr, listOfClientAddresses, totalNumClients);			// client address, array of addresses, connected clients
+        if (existingClient(curClient)) {															// If the client is an existing client
+            int16_t keys = arrData[1];																// Key pressed is the 2nd position in the data array
             player_from_key_state(&listOfPlayers[curClient], keys);
-            if(listOfPlayers[curClient].shoot && !listOfPlayers[curClient].reloading) {
-                struct Bullet temp;
-                temp.position.x = listOfPlayers[curClient].position.x;
-                temp.position.y = listOfPlayers[curClient].position.y;
-                temp.position.w = BULLET_WIDTH;
-                temp.position.h = BULLET_HEIGHT;
-                temp.face = listOfPlayers[curClient].face;
-                if (temp.face == 1) {
-                    temp.position.x += PLAYER_WIDTH;
+
+            if(listOfPlayers[curClient].shoot && !listOfPlayers[curClient].reloading) {				// If the player has fired, and isn't reloading
+                struct Bullet bullet;																// Create a bullet
+                bullet.position.x = listOfPlayers[curClient].position.x;
+                bullet.position.y = listOfPlayers[curClient].position.y;
+                bullet.position.w = BULLET_WIDTH;
+                bullet.position.h = BULLET_HEIGHT;
+                bullet.face = listOfPlayers[curClient].face;
+
+                if (bullet.face == 1) {																// Offset starting position for bullet (place bullet on left or right of player)
+                    bullet.position.x += PLAYER_WIDTH;
                 } else {
-                    temp.position.x -= BULLET_WIDTH;
+                    bullet.position.x -= BULLET_WIDTH;
                 }
-                temp.player_id = curClient;
-                push_element(&listOfBullets, &temp, sizeof(struct Bullet));
+
+                bullet.player_id = curClient;														// Set the bullet id
+                push_element(&listOfBullets, &bullet, sizeof(struct Bullet));						// Add bullet to the bullet list
             }
-            listOfPlayers[curClient].reloading = listOfPlayers[curClient].shoot;
+
+            listOfPlayers[curClient].reloading = listOfPlayers[curClient].shoot;					// Set player as reloading
         }
+
         if (arrData[0] == -1 && curClient < MAX_PLAYERS) {
             addClientAddrToList(curClient, &cliAddr);
             int16_t tab[3];
             tab[0] = -1;
             tab[1] = curClient;
-            send_data(socket, listOfClientAddresses[curClient], tab, 3);
+            srvSendto(socket, listOfClientAddresses[curClient], tab, 3);
         }
 		
+		/*
 #if defined __linux__
 		usleep(50);
 #elif defined _WIN32 || defined _WIN64
 		Sleep(50/1000);
 #endif
+*/
+		sleepCrossPlatform(50);
 
     }
 	return 0;	// Changed function return type to int
@@ -118,7 +129,7 @@ int get_bullet_array(struct node *list, int16_t **array) {
     return n;
 }
 
-int server_send_loop(void *arg) {
+int serverOutputLoop(void *arg) {
     int socket = *((int *) arg);
     int16_t arrData[3];				// Data to send to the client
 	Uint32 start, stop;				// JOR Replace struct timeval with Uint32 for SDL_GetTicks()
@@ -132,41 +143,48 @@ int server_send_loop(void *arg) {
 
         for (i = 0; i < totalNumClients; i++) {
             updatePlayer(&listOfPlayers[i]);
+			
             if (check_if_player_dies(&listOfPlayers[i], &listOfBullets, &killer)) {
-                listOfPlayers[i].position.x = SPAWN_X;
+                listOfPlayers[i].position.x = SPAWN_X;						// Repspawn shot player
                 listOfPlayers[i].position.y = SPAWN_Y;
-                listOfPlayers[i].deaths++;
-                listOfPlayers[killer].kills++;
+                listOfPlayers[i].deaths++;									// Increment death count for shot player
+                listOfPlayers[killer].kills++;								// Increment kill count for shooting player
             }
         }
 
         int16_t *bullet_array = NULL;
-        int bullets_n = get_bullet_array(listOfBullets, &bullet_array);
+        int bulletCount = get_bullet_array(listOfBullets, &bullet_array);
 
         for (i = 0; i < totalNumClients; i++) {
             for (j = 0; j < totalNumClients; j++) {
-                arrData[0] = j;
-                arrData[1] = listOfPlayers[j].position.x;
-                arrData[2] = listOfPlayers[j].position.y;
-                arrData[3] = listOfPlayers[j].kills;
-                arrData[4] = listOfPlayers[j].deaths;
-                send_data(socket, listOfClientAddresses[i], arrData, 5);
-				
+                arrData[0] = j;												// Client ID
+                arrData[1] = listOfPlayers[j].position.x;					// Client X position
+                arrData[2] = listOfPlayers[j].position.y;					// Client Y position
+                arrData[3] = listOfPlayers[j].kills;						// Client Kills
+                arrData[4] = listOfPlayers[j].deaths;						// Client deaths
+                srvSendto(socket, listOfClientAddresses[i], arrData, 5);	// Send to all clients
+				/*
 #if defined __linux__
 				usleep(20);
 #elif defined _WIN32 || defined _WIN64
 				Sleep(20/ 1000);
 #endif
+*/
+				sleepCrossPlatform(20);
 
             } // for number_of_clients j
 
-            send_data(socket, listOfClientAddresses[i], bullet_array, 1 + (bullets_n * 2));
-			
+			//printf("bullets %d\n", bulletCount);
+            srvSendto(socket, listOfClientAddresses[i], bullet_array, 1 + (bulletCount * 2));
+
+			/*
 #if defined __linux__
 			usleep(20);
 #elif defined _WIN32 || defined _WIN64
 			Sleep(20 / 1000);
 #endif
+*/
+			sleepCrossPlatform(20);
 
         } // for number_of_clients i
 
@@ -177,14 +195,14 @@ int server_send_loop(void *arg) {
 		if ((double)(stop - start) > 0) {
 			time_interval = (double)(stop - start);
 		}
-
+		/*
 #if defined __linux__
 		usleep(FRAME_TIME - time_interval);
 #elif defined _WIN32 || defined _WIN64
 		Sleep((DWORD)((FRAME_TIME - time_interval)/1000));
 #endif
-
-
+*/
+		sleepCrossPlatform((int) (FRAME_TIME - time_interval));
     }	// while(1)
 
 	return 0;

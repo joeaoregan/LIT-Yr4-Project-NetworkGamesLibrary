@@ -15,6 +15,7 @@
 #define MAX_VERTICAL_SPEED 25
 #define PLAYER_JUMP_POWER 25
 #define PLAYER_SPEED 4
+#define BULLET_SPEED 5						// Speed of the bullets
 #define PLAYER_WIDTH 16
 #define PLAYER_HEIGHT 16
 #define BULLET_HEIGHT 8
