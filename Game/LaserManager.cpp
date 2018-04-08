@@ -59,7 +59,7 @@ void LaserManager::update() {
 }
 
 void LaserManager::render() {
-    for (int p = 0; p < m_Lasers.size(); p++) {
+    for (unsigned int p = 0; p < m_Lasers.size(); p++) {
         m_Lasers[p]->render();
     }
 }

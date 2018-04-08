@@ -20,8 +20,9 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #elif defined _WIN32 || defined _WIN64
-#include <WinSock2.h>							// Windows sockets
-#include <ws2tcpip.h>							// getaddrinfo()
+#pragma comment(lib, "Ws2_32.lib")
+#include <WinSock2.h>																					// Windows sockets
+#include <ws2tcpip.h>																					// getaddrinfo()
 #endif
 
 #include <stdio.h>
@@ -33,9 +34,9 @@
 #include "Error.h"
 
 #define MAXBUFLEN 100
-#define UDP_PORT "1066"							// The port the game connects to
+#define UDP_PORT "1066"																					// The port the game connects to
 
-//socklen_t ADDR_SIZE = sizeof(struct sockaddr_in);			// Length of sockaddr_in address structure, used for sending and receiving data
+//socklen_t ADDR_SIZE = sizeof(struct sockaddr_in);														// Length of sockaddr_in address structure, used for sending and receiving data
 
 char buf[MAXBUFLEN];
 
@@ -46,10 +47,21 @@ int sockfd;	// server socket
 int servfd;
 struct addrinfo *servinfo, *p;
 
-
 // 20180130 Receive from server
 socklen_t addr_len;
 char server[INET6_ADDRSTRLEN];
+
+
+void initWinsock() {
+#if defined _WIN32 || defined _WIN64
+	WSADATA wsa;																						// Windows sockets implementation structure
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {														// If winsock doesn't initialise
+		printf("Failed. Error Code : %d", WSAGetLastError());											// Display an error message
+		exit(EXIT_FAILURE);																				// And exit with the specified error code
+	}
+	printf("Initialised Winsock.\n");																	// Otherwise indicate winsock has initialised
+#endif
+}
 
 void *get_in_addr(struct sockaddr *sa) {
 	if (sa->sa_family == AF_INET) {
@@ -65,7 +77,8 @@ bool createUDPSocket(char* serverName, char* msg){
 
 	printf ("Connecting To Server: %s\n", serverName);
 
-	int rv, numbytes;
+	int	rv;
+	//int numbytes;
 	struct addrinfo hints;
 /*
 	if (argc == 1) {
@@ -135,7 +148,6 @@ void sendToServer2(const char* sendStr) {
 	sendData(sockfd, p, (char*) sendStr);
 }
 
-
 /*
 	MainMenuState connectToServer()
 */
@@ -151,8 +163,10 @@ char* recvFromServer() {
 	//if ((byteCount = recvfrom(sockfd, msg, MAXBUFLEN-1 , 0, p->ai_addr, &p->ai_addrlen)) == -1) {
 	//	errorEx("recvFromServer() recvfrom", 1);
 	//}
-	printf("%d bytes received from %s\n", byteCount, inet_ntop(servAddr.ss_family, get_in_addr((struct sockaddr *)&servAddr), server, sizeof server));
-	//printf("%d bytes received from %s\n", byteCount, inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)&p), server, sizeof server));
+	printf("%d bytes received from %s\n", byteCount, inet_ntop(servAddr.ss_family, 
+		get_in_addr((struct sockaddr *)&servAddr), server, sizeof server));
+	//printf("%d bytes received from %s\n", byteCount, inet_ntop(p->ai_family, 
+	//	get_in_addr((struct sockaddr *)&p), server, sizeof server));
 	buf[byteCount] = '\0';
 	printf("Socket.h recvFromServer() Message From Server: \"%s\"\n", buf);
 	//msg = buf;
@@ -171,7 +185,12 @@ char* recvFromServer() {
 // Moved from createUDPSocket(), call when game closes
 void closeSocketStuff(){
 	freeaddrinfo(servinfo);
-	close(sockfd);
+#if defined __linux__
+	close(sockfd);																						// Close the client socket (Linux)
+#elif defined _WIN32 || defined _WIN64
+	closesocket(sockfd);																				// Close the client socket (Winsock)
+	WSACleanup();																						// Terminate use of Winsock 2 DLL
+#endif
 	printf("Socket.h: close socket, and free memory used to store address\n");
 }
 

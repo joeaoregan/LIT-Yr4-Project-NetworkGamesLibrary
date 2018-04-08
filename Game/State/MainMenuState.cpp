@@ -110,7 +110,7 @@ void MainMenuState::update(){
 
 	// Update buttons
 	if (!m_gameObjects.empty()) {										// If the game object list isn't empty
-		for (int i = 0; i < m_gameObjects.size(); i++) {
+		for (unsigned int i = 0; i < m_gameObjects.size(); i++) {
 			if (m_gameObjects[i] != 0) {
 				m_gameObjects[i]->update();							// Run update function for each object in m_gameObjects list
 			}
@@ -128,7 +128,7 @@ void MainMenuState::render() {
 	//SDL_RenderClear( Game::Instance()->getRenderer() );							// Clear screen
 
 	if(m_loadingComplete && !m_gameObjects.empty()) {
-		for(int i = 0; i < m_gameObjects.size(); i++) {
+		for(unsigned int i = 0; i < m_gameObjects.size(); i++) {
 			m_gameObjects[i]->render();								// Call draw function for each object in m_gameObjects list
 /*
 			std::cout << "x: " << m_gameObjects[i]->getX() << " y: " << m_gameObjects[i]->getY();
@@ -160,7 +160,7 @@ bool MainMenuState::onExit() {
 
 void MainMenuState::setCallbacks(const std::vector<Callback>& callbacks) {
     if(!m_gameObjects.empty()) {										// If its not empty
-        for(int i = 0; i < m_gameObjects.size(); i++) {								// Go through the game objects list
+        for(unsigned int i = 0; i < m_gameObjects.size(); i++) {								// Go through the game objects list
             if(dynamic_cast<MenuButton*>(m_gameObjects[i])) {							// if they are of type MenuButton then assign a callback based on the id passed in from the file
                 MenuButton* pButton = dynamic_cast<MenuButton*>(m_gameObjects[i]);
                 pButton->setCallback(callbacks[pButton->getCallbackID()]);

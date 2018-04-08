@@ -37,7 +37,7 @@ Input::~Input() {
 void Input::clean() {
 	// we need to clean up after ourselves and close the joysticks we opened
 	if(m_bJoysticksInitialised) {
-		for(unsigned int i = 0; i < SDL_NumJoysticks(); i++) {
+		for(int i = 0; i < SDL_NumJoysticks(); i++) {
 			SDL_JoystickClose(m_joysticks[i]);
 		}
 	}
@@ -109,9 +109,9 @@ bool Input::isKeyDown(SDL_Scancode key) const {
 int Input::getAxisX(int joy, int stick) const {
 	if(m_joystickValues.size() > 0) {
 		if(stick == 1) {
-			return m_joystickValues[joy].first->getX();
+			return (int) m_joystickValues[joy].first->getX();
 		} else if(stick == 2) {
-			return m_joystickValues[joy].second->getX();
+			return (int) m_joystickValues[joy].second->getX();
 		}
 	}
 
@@ -121,9 +121,9 @@ int Input::getAxisX(int joy, int stick) const {
 int Input::getAxisY(int joy, int stick) const {
 	if(m_joystickValues.size() > 0) {
 		if(stick == 1) {
-			return m_joystickValues[joy].first->getY();
+			return (int) m_joystickValues[joy].first->getY();
 		} else if(stick == 2) {
-			return m_joystickValues[joy].second->getY();
+			return (int) m_joystickValues[joy].second->getY();
 		}
 	}
 
@@ -167,8 +167,8 @@ void Input::onKeyUp() {
 }
 
 void Input::onMouseMove(SDL_Event &event) {
-	m_mousePosition->setX(event.motion.x);
-	m_mousePosition->setY(event.motion.y);
+	m_mousePosition->setX((float) event.motion.x);
+	m_mousePosition->setY((float) event.motion.y);
 }
 
 void Input::onMouseButtonDown(SDL_Event &event) {

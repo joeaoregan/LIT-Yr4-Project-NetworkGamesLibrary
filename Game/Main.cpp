@@ -17,6 +17,8 @@
 
  int main (int argc, char* argv [])  {
 
+
+
 // GAME
 	srand(static_cast<unsigned int>(time(0)));			// Seed the random number
 

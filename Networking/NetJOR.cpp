@@ -10,17 +10,17 @@
 
 // Unix (Ubuntu)
 #if defined __linux__
-#include <SDL2/SDL.h>								// SDL Linux
+#include <SDL2/SDL.h>												// SDL Linux
 // Windows
 #elif defined _WIN32 || defined _WIN64
-#include <SDL.h>								// SDL Windows
+#include <SDL.h>													// SDL Windows
 #endif
 
 #include "NetJOR.h"
-#include "Socket.h"								// createUDPSocket()
+#include "Socket.h"													// createUDPSocket()
 #include <iostream>
 
-NetJOR* NetJOR::s_pInstance = 0;						// Networking singleton
+NetJOR* NetJOR::s_pInstance = 0;									// Networking singleton
 
 Uint32 lastTime;
 
@@ -29,6 +29,8 @@ bool NetJOR::init(){
 	bool success;
 
 	std::cout << "Init Server" << std::endl;
+
+	initWinsock();
 	
 	success = createUDPSocket("localhost", "socket test" );			// Socket.h - *** CHANGE TO BOOLEAN for return type
 
@@ -38,9 +40,9 @@ bool NetJOR::init(){
 void NetJOR::update(){
 	// Update server?
 /*
-	if (SDL_GetTicks() >= lastTime + 1000) {				// Every second
-		lastTime = SDL_GetTicks();					// Reset the time
-		std::cout << "NetJOR update(): Count 1 second" << std::endl;	// Will update stuff at time intervals later
+	if (SDL_GetTicks() >= lastTime + 1000) {						// Every second
+		lastTime = SDL_GetTicks();									// Reset the time
+		std::cout << "NetJOR update(): Count 1 second" << std::endl;// Will update stuff at time intervals later
 	}
 */
 }
@@ -53,9 +55,9 @@ void NetJOR::render(){
 void NetJOR::close(int id){
 	// Identify the player that is leaving the game
 	if (id == 1)
-		sendToServer("3 exit");						// Let the server know player 1 has left the game
+		sendToServer("3 exit");										// Let the server know player 1 has left the game
 	else if (id == 2)
-		sendToServer("4 exit");						// Let the server know player 2 has left the game
+		sendToServer("4 exit");										// Let the server know player 2 has left the game
 
 	closeSocketStuff();
 }
@@ -68,7 +70,7 @@ void NetJOR::sendString(const char* sendStr) {
 	sendData(sockfd, p, (char*) sendStr);
 }
 /*
-void NetJOR::sendText(char* sendStr) {				// Only using one function to send data
+void NetJOR::sendText(char* sendStr) {								// Only using one function to send data
 	sendData(sockfd, p, sendStr);
 }
 */

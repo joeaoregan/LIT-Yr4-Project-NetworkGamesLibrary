@@ -1,4 +1,10 @@
 # Keep
+!/[Aa]ssets/
+!/[Gg]ame/
+!/[Nn]etworking/
+!/[Ss]creenshots/
+!/UDP_Server
+
 !.c
 !.cpp
 !.h
@@ -7,3 +13,5 @@
 # Windows
 *.vcxproj
 *.vcxproj.filters
+/[Dd]ebug/
+/[Aa]ssets/
