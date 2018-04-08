@@ -179,6 +179,12 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 				SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, players[i].flip);	// Render blue sprite for connected players
         }
 
+		if (menu == 's') displayTextRed(renderer, "SERVER / Client 0", font, 10, 10);
+		else {
+			char cliText[12] = "";
+			snprintf(cliText, 10, "Client: %d", clientID);
+			displayTextWhite(renderer, cliText, font, 10, 10);												// HUD: Client Number
+		}
         displayTextWhite(renderer, "Kills:", font, 400, 10);													// HUD: players kills
         for (i = 0; i <= numPlayers; i++) {
             char kills[10] = "";

@@ -1,7 +1,7 @@
 #include "client_udp.h"
 #include "Definitions.h"
 
-unsigned int 
+//unsigned int sequenceNumber = 0; // track messages with sequence number
 
 /*
 	Initialise the client socket

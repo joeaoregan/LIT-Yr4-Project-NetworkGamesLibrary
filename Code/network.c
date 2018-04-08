@@ -3,12 +3,12 @@
 
 void initWinsock() {
 #if defined _WIN32 || defined _WIN64
-	WSADATA wsa;																					// Windows sockets implementation structure
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {													// If winsock doesn't initialise
-		printf("Failed. Error Code : %d", WSAGetLastError());										// Display an error message
-		exit(EXIT_FAILURE);																			// And exit with the specified error code
+	WSADATA wsa;																							// Windows sockets implementation structure
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {															// If winsock doesn't initialise
+		printf("Failed. Error Code : %d", WSAGetLastError());												// Display an error message
+		exit(EXIT_FAILURE);																					// And exit with the specified error code
 	}
-	printf("Initialised Winsock.\n");																// Otherwise indicate winsock has initialised
+	printf("Initialised Winsock.\n");																		// Otherwise indicate winsock has initialised
 #endif
 }
 
@@ -21,12 +21,12 @@ struct sockaddr_in intServerAddr(char *ip) {
     if (ip == NULL) {
 		//srvAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 #if defined __linux__
-		srvAddr.sin_addr.s_addr = INADDR_ANY;				// Linux Server: listen on any local address
+		srvAddr.sin_addr.s_addr = INADDR_ANY;																// Linux Server: listen on any local address
 #elif defined _WIN32 || defined _WIN64
-		inet_pton(AF_INET, SERV_ADDR, &srvAddr.sin_addr);	// Windows Server: Specify the address as 127.0.0.1
+		inet_pton(AF_INET, SERV_ADDR, &srvAddr.sin_addr);													// Windows Server: Specify the address as 127.0.0.1
 #endif
     } else {
-		inet_pton(AF_INET, ip, &srvAddr.sin_addr);			// JOR Replace inet_aton with inet_pton
+		inet_pton(AF_INET, ip, &srvAddr.sin_addr);															// JOR Replace inet_aton with inet_pton
     }
 
     srvAddr.sin_port = htons(SERV_PORT);
@@ -47,15 +47,17 @@ struct sockaddr_in initClientAddr() {
     return cliAddr;
 }
 
-int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in registeredClientsList[], int totalConnectedClients) {
+/*
+	Return the clients position in the list or the next position in the lists of clients for new client
+*/
+int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in clientsList[], int numClients) {
     int i;
-    for (i = 0; i < totalConnectedClients; i++) {
-        if (compare_addr(&newCliAddr, &registeredClientsList[i])) {		// If the address matches and address in the existing clients
-            return i;														
+    for (i = 0; i < numClients; i++) {
+        if (compare_addr(&newCliAddr, &clientsList[i])) {													// If the address matches and address in the existing clients
+            return i;																						// Return clients position in the list									
         }
     }
-
-    return totalConnectedClients;
+    return numClients;																						// Return next client ID number
 }
 
 int compare_addr(struct sockaddr_in *a, struct sockaddr_in *b) {
@@ -89,19 +91,15 @@ int16_t key_state_from_player(struct Player *player) {
     return key_state;
 }
 
-void player_from_key_state(struct Player *player, int16_t key_state) {
-	
+void player_from_key_state(struct Player *player, int16_t key_state) {	
 	//printf("player from key state\n");
     if (key_state & LEFT_KEY) {
         player->left = true;
-		//player->flip = 1;
-		//printf("test\n");
     } else {
         player->left = false;
     }
     if (key_state & RIGHT_KEY) {
         player->right = true;
-		//player->flip = 0;
     } else {
         player->right = false;
     }

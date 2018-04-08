@@ -3,9 +3,12 @@
 
 #include "stdbool.h"
 
-#define ADDR_LEN sizeof(struct sockaddr)	// Added Address length definition
-#define SERV_PORT 8887						// Server port number
-#define SERV_ADDR "127.0.0.1"  				// IP address of udp server (localhost)
+#define ADDR_LEN sizeof(struct sockaddr)	// JOR Added Address length definition
+#define SERV_PORT 8887						// JOR Server port number
+#define SERV_ADDR "127.0.0.1"  				// JOR IP address of udp server (localhost)
+
+// Text
+#define CENTRE_TEXT -1						// JOR If used for x coordinate centre horizonally, and y vertical
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
