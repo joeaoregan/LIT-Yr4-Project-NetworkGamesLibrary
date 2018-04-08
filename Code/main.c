@@ -14,6 +14,7 @@
 #include "menu.h"
 #include "Time.h"						// Handle system time on different platforms
 #include "SDLFunctions.h"
+#include "HUD.h"						// Heads up display
 
 struct Player players[MAX_PLAYERS];
 int numPlayers = 0;						// Number of players currently in the game
@@ -26,26 +27,6 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, bitmap);
     SDL_FreeSurface(bitmap);
     return texture;
-}
-
-void initPlayerList() {
-    int i;
-    for (i = 0; i < MAX_PLAYERS; i++) {
-		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);							// Init player position SDL_Rect
-        players[i].left_key = SDLK_LEFT;
-        players[i].right_key = SDLK_RIGHT;
-        players[i].up_key = SDLK_UP;
-        players[i].down_key = SDLK_DOWN;
-		players[i].attack_key = SDLK_SPACE;																		// Change fire to spacebar (Was SDLK_z)
-        players[i].face = 1;
-        players[i].shoot = false;
-        players[i].y_speed = 0;
-        players[i].can_jump = false;
-        players[i].reloading = false;
-        players[i].kills = 0;
-        players[i].deaths = 0;
-		players[i].flip = 0;
-	}
 }
 
 void setClientID(int id) {
@@ -72,7 +53,7 @@ int client_loop(void *arg) {
 
         id = arrData[0];																						// Parse received data, first int = id
         if (id == -1 && !idSet) {																				// Parse data when the ID is unset
-            setClientID(arrData[1]);																			// Assign an id for the connected player
+            setClientID(arrData[1]);																			// xxx Assign an id for the connected player
 			idSet = true;																						// Stops the ID being set more than once
         }
 
@@ -107,7 +88,8 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
     SDL_Init(SDL_INIT_VIDEO);																					// Initialise video only
     TTF_Init();																									// Initialise True Type Fonts
     TTF_Font *font = TTF_OpenFont("../resources/m5x7.ttf", 24);													// Font used to print text to screen
-    initPlayerList();																							// Initialise the list of players
+    //initPlayerList();																							// Initialise the list of players
+	initPlayer(&players);																						// Initialise the list of players
 
 	SDL_Window *window = SDL_CreateWindow( "Cross-Platform SDL Network UDP Game",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);						// JOR Changed game window title, added screen_width & screen_height
@@ -179,27 +161,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 				SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, players[i].flip);	// Render blue sprite for connected players
         }
 
-		if (menu == 's') displayTextRed(renderer, "SERVER / Client 0", font, 10, 10);
-		else {
-			char cliText[12] = "";
-			snprintf(cliText, 10, "Client: %d", clientID);
-			displayTextWhite(renderer, cliText, font, 10, 10);												// HUD: Client Number
-		}
-        displayTextWhite(renderer, "Kills:", font, 400, 10);													// HUD: players kills
-        for (i = 0; i <= numPlayers; i++) {
-            char kills[10] = "";
-            snprintf(kills, 3, "%d", players[i].kills);
-			if (i == clientID) displayTextRed(renderer, kills, font, 400, 30 + i * 20);							// Display the kills for the local player in red on new line
-			else displayTextWhite(renderer, kills, font, 400, 30 + i * 20);										// Display connected players in white
-        }
-
-        displayTextWhite(renderer, "Deaths:", font, 460, 10);													// HUD: player deaths
-        for (i = 0; i <= numPlayers; i++) {
-            char deaths[10] = "";
-            snprintf(deaths, 3, "%d", players[i].deaths);
-			if (i == clientID) displayTextRed(renderer, deaths, font, 460, 30 + i * 20);						// Display deaths for local player in read beside kills
-			else displayTextWhite(renderer, deaths, font, 460, 30 + i * 20);									// Display connected players in white
-        }
+		renderHUD(renderer, font, players, numPlayers, clientID, menu);											// Render game info text
 
         for (i = 0; i < totalBulletsOnScreen; i++) {															// Handle data for bullets on screen
             bullet_pos.x = arrBullets[i*2];																		// Every even number is an x coordinate

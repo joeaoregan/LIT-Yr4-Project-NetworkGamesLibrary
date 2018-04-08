@@ -3,6 +3,30 @@
 #include "Definitions.h"
 #include "SDLFunctions.h"
 
+/*
+	Initialise the list of players
+	Moved from main.c
+*/
+void initPlayer(struct Player *players) {
+	int i;
+	for (i = 0; i < MAX_PLAYERS; i++) {
+		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);							// Init player position SDL_Rect
+		players[i].left_key = SDLK_LEFT;
+		players[i].right_key = SDLK_RIGHT;
+		players[i].up_key = SDLK_UP;
+		players[i].down_key = SDLK_DOWN;
+		players[i].attack_key = SDLK_SPACE;																		// Change fire to spacebar (Was SDLK_z)
+		players[i].face = 1;
+		players[i].shoot = false;
+		players[i].y_speed = 0;
+		players[i].can_jump = false;
+		players[i].reloading = false;
+		players[i].kills = 0;
+		players[i].deaths = 0;
+		players[i].flip = 0;
+	}
+}
+
 void resolve_player_key_down(int key, struct Player* player) {
     if (key == player->left_key) {
         player->left = true;
