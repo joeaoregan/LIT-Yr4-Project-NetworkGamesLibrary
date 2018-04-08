@@ -39,8 +39,7 @@ void initPlayerList() {
         players[i].right_key = SDLK_RIGHT;
         players[i].up_key = SDLK_UP;
         players[i].down_key = SDLK_DOWN;
-		//players[i].attack_key = SDLK_z;
-		players[i].attack_key = SDLK_SPACE;														// Change fire to spacebar
+		players[i].attack_key = SDLK_SPACE;														// Change fire to spacebar (Was SDLK_z)
         players[i].face = 1;
         players[i].shoot = false;
         players[i].y_speed = 0;
@@ -116,8 +115,8 @@ int main(int argc, char* argv[]) {																	// Add formal parameter list
     SDL_Window *window;																				// Game window
     SDL_Renderer *renderer;																			// Game renderer
     SDL_Init(SDL_INIT_VIDEO);																		// Initialise video only
-	SDL_Texture *imgPlayer1 = NULL;
-	SDL_Texture *imgPlayer2 = NULL;																	// Additional Player colour
+	SDL_Texture *imgPlayer1 = NULL;																	// Sprite for connected clients
+	SDL_Texture *imgPlayer2 = NULL;																	// Additional Player colour for local player
     SDL_Texture *imgBullet = NULL;
     SDL_Texture *imgMap = NULL;
     TTF_Init();
