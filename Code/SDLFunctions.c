@@ -1,3 +1,8 @@
+/*
+	Created by:	Joe O'Regan
+				K00203642
+*/
+
 #include "SDLFunctions.h"
 
 /*

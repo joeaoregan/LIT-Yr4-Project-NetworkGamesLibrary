@@ -1,3 +1,8 @@
+/*
+	Created by:	Joe O'Regan
+				K00203642
+*/
+
 #include "Time.h"
 #if defined __linux__
 #include <unistd.h>							// usleep()

@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-void displayText(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y);
+void displayTextWhite(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y);				
+void displayTextRed(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y);
+void displayText(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y, SDL_Color color);	// Added function to set text colour
 
 #endif

@@ -30,7 +30,7 @@ void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font){
 		sleepCrossPlatform(200);
 
         SDL_RenderClear(renderer);
-        displayText(renderer, "[s]erver or [c]lient?", font, 240, 200);
+        displayTextWhite(renderer, "[s]erver or [c]lient?", font, 240, 200);
         SDL_RenderPresent(renderer);
     }
 }
@@ -105,8 +105,8 @@ void enterServerIP(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
 		sleepCrossPlatform(200);
 
         SDL_RenderClear(renderer);
-		displayText(renderer, "Enter Server IP Address:", font, 240, 200);	// JOR Clearer instruction
-        displayText(renderer, ip, font, 240, 230);
+		displayTextWhite(renderer, "Enter Server IP Address:", font, 240, 200);	// JOR Clearer instruction
+        displayTextWhite(renderer, ip, font, 240, 230);
         SDL_RenderPresent(renderer);
     }
 }
