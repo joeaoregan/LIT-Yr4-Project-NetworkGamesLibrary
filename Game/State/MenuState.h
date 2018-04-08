@@ -85,7 +85,7 @@ protected:
 	virtual void highlightCurrentButton(const std::vector<GameObject *> *pObjects) {
 		if (!pObjects->empty()) {								// If list of game objects is not empty
 //		std::cout << "highlightCurrentButton()" << std::endl;
-			for (int i = 0; i < pObjects->size(); i++) {					// Go through the game objects list
+			for (unsigned int i = 0; i < pObjects->size(); i++) {				// Go through the game objects list
 				if (dynamic_cast<MenuButton*>((*pObjects)[i])) {			// if they are of type MenuButton then assign a callback based on the id passed in from the file
 					MenuButton* pButton = dynamic_cast<MenuButton*>((*pObjects)[i]);
 

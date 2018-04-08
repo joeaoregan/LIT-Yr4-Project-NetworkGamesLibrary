@@ -16,13 +16,13 @@ class Background : public GameObject{
 public:
 	Background(){
 		std::cout << "Background constuctor called.\n";	// Initializes the variables
-		setX(0);
+		setX(0);					// Set coordinates
 		setY(0);
-		setWidth(1280);
-		setHeight(600);
-		setVel(-1);
-		setAlive(true);
-		setTextureID("bgID");
+		setWidth(1280);					// Background fills the full screen
+		setHeight(600);					// Height of the background (doesn't fill window)
+		setVel(-1);					// Move the background right to left
+		setAlive(true);					// Set the background as active
+		setTextureID("bgID");				// Set the background image
 	}
 
 	~Background() {}
@@ -36,14 +36,11 @@ public:
 	virtual void render() {
 		GameObject::render();
 		//SDL_Rect renderQuad = { getX(), getY(), getWidth(), getHeight() };
-		SDL_Rect renderQuad2 = { getX() + getWidth(), getY(), getWidth(), getHeight() };								// Set rendering space and render to screen
-		//SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad, 0, NULL, SDL_FLIP_NONE);	// Render to screen
+		SDL_Rect renderQuad2 = { getX() + getWidth(), getY(), getWidth(), getHeight() };			// Set rendering space and render to screen
 
-		SDL_RenderCopyEx(Game::Instance()->getRenderer(), Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad2, 0, NULL, SDL_FLIP_NONE);	// Render to screen
+		SDL_RenderCopyEx(Game::Instance()->getRenderer(), 
+			Texture::Instance()->getTexture(getTextureID()), NULL, &renderQuad2, 0, NULL, SDL_FLIP_NONE);	// Render to screen
 	}
-
-//private: 
-//	int scrollingOffset;
 };
 
 #endif

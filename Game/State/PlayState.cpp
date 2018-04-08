@@ -20,7 +20,7 @@
 #include "../../Networking/NetJOR.h"
 #endif
 
-#include "../Input.h"
+#include "../Input.h"							// Handle input
 #include "MainMenuState.h"
 
 std::stringstream updateText;
@@ -37,8 +37,8 @@ bool PlayState::onEnter() {
 	std::cout << "Loading Play State" << std::endl;
 	bool success = true;
 
-	prevX = -1;
-	prevY = -1;
+	m_prevX = -1;
+	m_prevY = -1;
 
 	//success = Texture::Instance()->loadTextures();									// Load the game textures
 	success = Texture::Instance()->loadTextures(LEVEL1_DATA);								// Load the LEVEL 1 textures
@@ -103,15 +103,15 @@ void PlayState::update(){
 	//updateText << "0 Player1 " << player->getX() << " " << player->getY();						// 20180118 Send name/ID, x coord, y coord  -  to server
 	updateText << "0 " << player->getNetID() << " " << player->getX() << " " << player->getY();				// 20180118 Send name/ID, x coord, y coord  -  to server
 
-	if (player->getX() != prevX || player->getY() != prevY) {								// Only send update if position changes
+	if (player->getX() != m_prevX || player->getY() != m_prevY) {								// Only send update if position changes
 	#ifdef	__NETWORKING_JOE_O_REGAN											// Check for Windows version of game that Network Library is present
 		NetJOR::Instance()->sendString(updateText.str().c_str());
 	#endif
-		prevX = player->getX();
- 		prevY = player->getY();
+		m_prevX = player->getX();											// Set the new previous position
+ 		m_prevY = player->getY();
 	}
 
-	LaserManager::Instance()->update();
+	LaserManager::Instance()->update();											// Update lasers
 
 // RECV
 	//printf("PlayState update() recvfrom()");

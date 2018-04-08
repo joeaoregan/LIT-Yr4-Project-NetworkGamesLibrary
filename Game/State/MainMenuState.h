@@ -29,8 +29,6 @@ private:
 	virtual void setCallbacks(const std::vector<Callback>& callbacks);
 
 	std::vector<GameObject*> m_gameObjects;					// List of game objects
-//	std::vector<GameObject*> listOfMenuObjects;				// List of game objects
-//	std::vector<MenuButton*> listOfMenuButtons;				// List of menu button objects
 
 	static void connectToServer();
 	static void readyToStart();

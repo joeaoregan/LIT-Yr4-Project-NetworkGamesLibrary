@@ -27,8 +27,8 @@ public:
 	//void spawnLaser();
 
 private:
-	int prevX;					// Players previous position
-	int prevY;
+	int m_prevX;					// Players previous position
+	int m_prevY;
 
 	SDL_Event e;					// Event handler
 };

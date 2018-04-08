@@ -52,6 +52,7 @@ public:
 	int getAlpha() const { return m_Alpha; }			// Get the texture alpha value
 	std::string getName() const  { return m_Name; }
 	int getNetID() { return m_NetID; }				// Identify the object on the server side
+	int getAngle() { return m_Angle; }				// Laser angle
 
 	void setX(int x) { m_x = x; }					// Set GameObject X coord
 	void setY(int y) { m_y = y; }					// Set GameObject Y coord
@@ -72,6 +73,7 @@ public:
 	void setAlpha(int a) { m_Alpha = a; }				// Set the texture alpha value
 	void setName(std::string set) { m_Name = set; }			// Set the name for the object
 	void setNetID(int set) { m_NetID = set; }			// Set the network ID for the object
+	void setAngle(int set) { m_Angle = set; }			// Set the laser angle
 
 	//SDL_Rect getCollider();
 	//void setColliderW(int w);
@@ -95,6 +97,7 @@ private:
 //	int m_CurrentFrame;						// The current animation frame in the sprite sheet
 	int m_CurrentAnimationRow = 0;					// The current animation row in the sprite sheet 		03/04/2018 Fixed buttons not rendering - init to 0
 	int m_Alpha;							// Alpha value for Texture
+	int m_Angle = 0;						// Angle of the laser (or game object)
 
 	// Network stuff
 	int m_NetID;							// Server integer identification (so server knows who or what an object is)

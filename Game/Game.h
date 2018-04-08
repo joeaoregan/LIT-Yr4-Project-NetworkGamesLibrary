@@ -67,8 +67,8 @@ public:
 
 	GameStateMachine* getStateMachine() { return m_pGameStateMachine; }	// Get the game state machine
 
-	int getAssignedNetID() { return choosePlayer; }				// The network assigns a number to each player on connecting
-	void setAssignedNetID(int set) { choosePlayer = set; }			// Store the ID assigned by the server
+	int getAssignedNetID() { return m_choosePlayer; }			// The network assigns a number to each player on connecting
+	void setAssignedNetID(int set) { m_choosePlayer = set; }		// Store the ID assigned by the server
 
 private:
 	static Game* s_pInstance;						// Game singleton instance
@@ -82,15 +82,9 @@ private:
 	
 	bool quit;								// Main game loop condition
 	
-	SDL_Event event;							// Event handler
-	//SDL_Event* event;							// Event handler
-
-	int scrollingOffset;
-
-	//int prevX, prevY;
-
-	// Network stuff
-	int choosePlayer;
+	SDL_Event event;							// Event handler (Changed - was pointer)
+	
+	int m_choosePlayer;							// Network stuff
 };
 
 #endif	/* __GAME_H */

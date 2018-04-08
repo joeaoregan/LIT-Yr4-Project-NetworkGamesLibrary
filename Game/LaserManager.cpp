@@ -36,7 +36,8 @@ void LaserManager::addLaser(int x, int y, int v, int id) {
 	snprintf(msg, 40, "%d Player_Laser_Fired",id);
 
 	//NetJOR::Instance()->sendText("1 Player_Laser_Fired");									// Sends char* string to server
-	NetJOR::Instance()->sendText(msg);											// Sends char* string to server
+	//NetJOR::Instance()->sendText(msg);											// Sends char* string to server
+	NetJOR::Instance()->sendString(msg);
 #endif	
 }
 
