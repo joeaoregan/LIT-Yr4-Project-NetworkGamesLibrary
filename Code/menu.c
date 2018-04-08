@@ -3,7 +3,8 @@
 #include <Windows.h>
 #endif
 #include "Time.h"
-#include <string.h>		// strcpy_s
+//#include <string.h>		// strcpy_s
+#include <stdio.h>	// snprintf()
 
 void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font) {
     SDL_Event e;
@@ -80,7 +81,8 @@ void enterServerIP(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
 
                 if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER) {		
 					if (position == 0) {														// If enter is pressed without entering an address
-						strcpy_s(ip, 10,"127.0.0.1");											// Set the server address as localhost
+						//strcpy_s(ip, 10,"127.0.0.1");											// Set the server address as localhost
+						snprintf(ip, 10, "127.0.0.1");											// Replace strcpy_s
 					}
 					else
 						ip[position] = 0;

@@ -37,5 +37,21 @@ int cliRecvfrom(int sock, int16_t *arrData) {
     return numBytes;																								// Return the number of bytes received
 }
 
+/*
+	Set the ID for each player
+*/
+void setClientID(int id, int16_t* clientID, int *numPlayers) {
+	*clientID = id;																									// Set the client id
+	*numPlayers = id;																								// Number of players in the game
+	printf("main.c->setClientID: Client ID is now: %d\n", clientID);
+}
 
-
+/*
+	Increase number of players if new player added
+*/
+void checkIfNewPlayer(int id, int *numPlayers) {
+	if (id > numPlayers) {																							// If the client id is higher than the number of players
+		*numPlayers = id;																							// Set the number of players to match the ID
+		printf("Total number of players is now: %d\n", numPlayers + 1);												// The number of players in the game has increased
+	}
+}

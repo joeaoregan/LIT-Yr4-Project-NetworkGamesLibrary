@@ -29,19 +29,6 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
     return texture;
 }
 
-void setClientID(int id) {
-    clientID = id;																								// Set the client id
-    numPlayers = id;																							// Number of players in the game
-	printf("main.c->setClientID: Client ID is now: %d\n", clientID);
-}
-
-void checkIfNewPlayer(int id){
-    if (id > numPlayers) {																						// If the client id is higher than the number of players
-        numPlayers = id;																						// Set the number of players to match the ID
-		printf("Total number of players is now: %d\n", numPlayers + 1);											// The number of players in the game has increased
-    }
-}
-
 int client_loop(void *arg) {
     int socket = *((int *) arg);																				// cliSock passed in as argument
     int16_t arrData[BUF_MAX];																					// Data to receive from server
@@ -53,12 +40,12 @@ int client_loop(void *arg) {
 
         id = arrData[0];																						// Parse received data, first int = id
         if (id == -1 && !idSet) {																				// Parse data when the ID is unset
-            setClientID(arrData[1]);																			// xxx Assign an id for the connected player
+            setClientID(arrData[1], &clientID, &numPlayers);													// xxx Assign an id for the connected player
 			idSet = true;																						// Stops the ID being set more than once
         }
 
         if (id >= 0) {																							// Parse existing Client data
-            checkIfNewPlayer(id);																				// Increase number of players if new player added
+            checkIfNewPlayer(id, &numPlayers);																	// Increase number of players if new player added
             players[id].position.x = arrData[1];																// Player x position
             players[id].position.y = arrData[2];																// Player y position
             players[id].kills = arrData[3];																		// Number of kills
@@ -88,8 +75,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
     SDL_Init(SDL_INIT_VIDEO);																					// Initialise video only
     TTF_Init();																									// Initialise True Type Fonts
     TTF_Font *font = TTF_OpenFont("../resources/m5x7.ttf", 24);													// Font used to print text to screen
-    //initPlayerList();																							// Initialise the list of players
-	initPlayer(&players);																						// Initialise the list of players
+	initPlayer(players);																						// Initialise the list of players
 
 	SDL_Window *window = SDL_CreateWindow( "Cross-Platform SDL Network UDP Game",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);						// JOR Changed game window title, added screen_width & screen_height
@@ -125,7 +111,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
     srvAddr = intServerAddr(srvIPAddr);																			// Init server address structure
     cliAddr = initClientAddr();																					// Init client address structure
 
-    if(menu == 's') {																							// If Server menu option is selected
+    if (menu == 's') {																							// If Server menu option is selected
         createUDPServer(&srvSock, &srvAddr);																	// Create Server UDP socket (only one instance of the game is a server)
 		threadServerInput = SDL_CreateThread(serverInputLoop, "ServerReceiveThread", &srvSock);					// JOR SDL Thread replaces Pthread
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", &srvSock);					// Server output handled on separate thread

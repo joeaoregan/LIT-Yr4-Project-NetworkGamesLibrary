@@ -23,14 +23,14 @@ int totalNumClients = 0;
 /*
 	Initilise the server socket
 */
-void createUDPServer(int *sock, struct sockaddr_in *server_sock) {
+void createUDPServer(int *sock, struct sockaddr_in *srvAddr) {
     memset(listOfClientAddresses, 0, sizeof(struct sockaddr_in) * MAX_PLAYERS);				// Initialise the list of client addresses in memory
     if ((*sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {							// Initialise the server socket
         perror("Server_UDP createUDPServer: Socket Failed");
     }
 	else printf("Server Socket Created: %d\n", (*sock));
 
-    if (bind(*sock, (struct sockaddr*) server_sock, sizeof(struct sockaddr)) < 0) {			// Bind the server socket
+    if (bind(*sock, (struct sockaddr*) srvAddr, sizeof(struct sockaddr)) < 0) {				// Bind the server socket
         perror("Server_UDP createUDPServer: Bind Error");
     }
 	else printf("Socket Bind OK\n\n");
@@ -67,6 +67,7 @@ int serverInputLoop(void *arg) {
     while (1) {
         cliAddr = srvRecvfrom(socket, arrData);												// Receive data from client (save client address)
         curClient = findClientIDNumber(cliAddr, listOfClientAddresses, totalNumClients);	// client address, array of addresses, connected clients
+
         if (existingClient(curClient)) {													// If the client is an existing client
             int16_t keys = arrData[1];														// Key pressed is the 2nd position in the data array
             player_from_key_state(&listOfPlayers[curClient], keys);

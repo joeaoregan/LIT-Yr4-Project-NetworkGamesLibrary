@@ -6,6 +6,7 @@
 */
 
 #include "HUD.h"
+#include "font.h"
 #include <stdio.h>	// snprintf()
 
 void renderHUD(SDL_Renderer *renderer, TTF_Font *font, struct Player *players, int numPlayers, int clientID, char menu) {
