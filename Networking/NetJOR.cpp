@@ -67,8 +67,13 @@ void NetJOR::handleEvents(){
 void NetJOR::sendString(const char* sendStr) {
 	sendData(sockfd, p, (char*) sendStr);
 }
-void NetJOR::sendText(char* sendStr) {
+/*
+void NetJOR::sendText(char* sendStr) {				// Only using one function to send data
 	sendData(sockfd, p, sendStr);
+}
+*/
+void NetJOR::sendKeyPress() {
+	
 }
 
 char* msg;	// needs to be outside function
