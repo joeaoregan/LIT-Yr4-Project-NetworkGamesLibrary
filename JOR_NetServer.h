@@ -18,12 +18,11 @@
 #endif
 
 #if defined __linux__
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #elif defined _WIN32 || defined _WIN64
 #pragma comment(lib, "Ws2_32.lib")
 #include <WinSock2.h>																		// Windows sockets
-#include <ws2tcpip.h>																		// getaddrinfo()
+#include <ws2tcpip.h>																		// getaddrinfo()fo()
 #include <Windows.h>
 #endif
 
