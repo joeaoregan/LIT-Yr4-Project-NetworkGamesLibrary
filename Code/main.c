@@ -46,8 +46,7 @@ int client_loop(void *arg) {
         }
 
         if (id >= 0) {																							// Parse existing Client data
-			//checkIfNewPlayer(id, &numPlayers);																	// Increase number of players if new player added
-			JOR_NetCheckNewClient(id, &numPlayers);																	// Increase number of players if new player added
+			JOR_NetCheckNewClient(id, &numPlayers);																// Increase number of players if new player added
             players[id].position.x = arrData[1];																// Player x position
             players[id].position.y = arrData[2];																// Player y position
             players[id].kills = arrData[3];																		// Number of kills
@@ -72,9 +71,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
     struct sockaddr_in srvAddr, cliAddr;																		// Server and client address structures
     int i, srvSock, cliSock;																					// for loop index, Server and client sockets
     char *srvIPAddr = NULL;																						// Server IP Address string entered from client menu select option								
-
-	JOR_NetInitWinsock();																						// JOR_Net: Initialise winsock
-	
+		
     SDL_Init(SDL_INIT_VIDEO);																					// Initialise video only
     TTF_Init();																									// Initialise True Type Fonts
     TTF_Font *font = TTF_OpenFont("../resources/m5x7.ttf", 24);													// Font used to print text to screen
@@ -111,9 +108,8 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 	SDL_Thread* threadServerInput = NULL;																		// JOR SDL threads replacing pthread, Server input loop
 	SDL_Thread* threadServerOutput = NULL;																		// Server output loop on separate thread
 
-	//srvAddr = intServerAddr(srvIPAddr);																			// Init server address structure
-	//cliAddr = initClientAddr();																					// Init client address structure
-	srvAddr = JOR_NetServAddr(srvIPAddr);																			// Init server address structure
+	JOR_NetInitWinsock();																						// JOR_Net: Initialise winsock
+	srvAddr = JOR_NetServAddr(srvIPAddr);																		// Init server address structure
     cliAddr = JOR_NetCliAddr();																					// Init client address structure
 
     if (menu == 's') {																							// If Server menu option is selected
@@ -162,7 +158,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 
         SDL_RenderPresent(renderer);
     } // End while
-
+/*
 #if defined __linux__
 	close(cliSock);
 	close(srvSock);
@@ -171,6 +167,9 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 	closesocket(srvSock);																						// Close the server socket
 	WSACleanup();																								// Terminate use of Winsock 2 DLL
 #endif
+*/
+	JOR_NetCloseSocket(cliSock, srvSock);																		// Close the sockets
+
 	SDL_WaitThread(threadServerInput, NULL);																	// JOR SDL Thread replaces pthread
 	SDL_WaitThread(threadClient, NULL);																			// Make sure thread finishes before application closes
 	SDL_WaitThread(threadServerOutput, NULL);

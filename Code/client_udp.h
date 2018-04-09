@@ -19,11 +19,7 @@
 #include <string.h>
 #include <stdint.h>
 
-//void createClientUDPSock(int *sock, struct sockaddr_in *cliAddr);				// Create the client UDP socket
 void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
 int cliRecvfrom(int sock, int16_t *arrData);									// Receive data from server over UDP
-//void setClientID(int id, int16_t* clientID, int *numPlayers);					// Set the ID for each player
-//void checkIfNewPlayer(int id, int *numPlayers);									// Increase number of players if new player added
-//int client_loop(void *arg);
 
 #endif

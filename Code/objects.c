@@ -11,12 +11,12 @@
 void initPlayer(struct Player *players) {
 	int i;
 	for (i = 0; i < MAX_PLAYERS; i++) {
-		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);							// Init player position SDL_Rect
+		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// Init player position SDL_Rect
 		players[i].left_key = SDLK_LEFT;
 		players[i].right_key = SDLK_RIGHT;
 		players[i].up_key = SDLK_UP;
 		players[i].down_key = SDLK_DOWN;
-		players[i].attack_key = SDLK_SPACE;																		// Change fire to spacebar (Was SDLK_z)
+		players[i].attack_key = SDLK_SPACE;												// Change fire to spacebar (Was SDLK_z)
 		players[i].face = 1;
 		players[i].shoot = false;
 		players[i].y_speed = 0;
@@ -68,7 +68,7 @@ void resolve_player_key_up(int key, struct Player* player) {
 void resolve_keyboard(SDL_Event e, struct Player* player) {
     if (e.type == SDL_KEYDOWN) {
         resolve_player_key_down(e.key.keysym.sym, player);
-		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;			// Not needed, player->flip is now sent back from server
+		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// Not needed, player->flip is now sent back from server
 		//else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
     } 
     if (e.type == SDL_KEYUP) {
@@ -83,7 +83,7 @@ void set_player_pos(struct Player* player, float x, float y) {
 
 struct Bullet init_bullet(int x, int y, int face) {
     struct Bullet b;
-	b.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);			// Init bullet position SDL_Rect
+	b.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);							// Init bullet position SDL_Rect
     b.face = face;
     return b;
 }
