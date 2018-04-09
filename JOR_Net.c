@@ -17,6 +17,7 @@
 
 #if defined __linux__
 #include <unistd.h>																		// close()
+#include "Time.h"																		// Sleep
 #endif
 #include <string.h>																		// memset()
 #include "Definitions.h"																// JN_SERV_ADDR, JN_SERV_PORT
@@ -89,5 +90,17 @@ void JOR_NetCloseSocket(int cli, int srv) {
 	closesocket(cli);																	// Close the client socket
 	closesocket(srv);																	// Close the server socket
 	WSACleanup();																		// Terminate use of Winsock 2 DLL
+#endif
+}
+
+/*
+	JOR_Net: Function to handle sleep for both Windows and Linux
+	Fixes problems with microseconds/milliseconds
+*/
+void JOR_NetSleep(int amount) {
+#if defined __linux__
+	usleep(amount);																		// Linux value measured in microseconds
+#elif defined _WIN32 || defined _WIN64
+	Sleep(amount / 1000);																// Windows value measured in milliseconds
 #endif
 }

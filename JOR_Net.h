@@ -38,6 +38,8 @@ JN_MODIFIER void JOR_NetInitWinsock();							// JOR_Net: Init windows networking
 
 JN_MODIFIER void JOR_NetCloseSocket(int cli, int srv);			// JOR_Net: Init windows networking functionality
 
+JN_MODIFIER void JOR_NetSleep(int amount);						// JOR_Net: Function to handle sleep for both Windows and Linux
+
 #ifdef __cplusplus
 }
 #endif
