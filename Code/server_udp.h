@@ -24,8 +24,8 @@
 #include <string.h>
 #include <stdint.h>
 
-void srvSendto(int sock, struct sockaddr_in client, int16_t tab[], int size);	// Use sendto() to send data to client
-struct sockaddr_in srvRecvfrom(int sock, int16_t data[]);
+//void srvSendto(int sock, struct sockaddr_in client, int16_t tab[], int size);	// Use sendto() to send data to client
+//struct sockaddr_in srvRecvfrom(int sock, int16_t data[]);
 int serverInputLoop(void *arg);													// JOR Changed return type to int		
 int serverOutputLoop(void *arg);												// JOR Changed return type to int
 

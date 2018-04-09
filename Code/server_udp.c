@@ -18,7 +18,7 @@
 
 struct Player listOfPlayers[MAX_PLAYERS];
 struct node *listOfBullets = NULL;
-
+/*
 struct sockaddr_in srvRecvfrom(int sock, int16_t data[]) {
     struct sockaddr_in addr;
     socklen_t addr_size = sizeof(struct sockaddr);
@@ -31,7 +31,7 @@ void srvSendto(int sock, struct sockaddr_in client, int16_t data[], int size) {
 
     sendto(sock, data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
 }
-
+*/
 void initConnectedPlayersList() {
     int i;
     for (i = 0; i < MAX_PLAYERS; i++) {

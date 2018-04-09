@@ -19,7 +19,7 @@
 #include <string.h>
 #include <stdint.h>
 
-void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
-int cliRecvfrom(int sock, int16_t *arrData);									// Receive data from server over UDP
+//void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
+//int cliRecvfrom(int sock, int16_t *arrData);									// Receive data from server over UDP
 
 #endif

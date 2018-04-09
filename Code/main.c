@@ -15,7 +15,7 @@
 #include "Time.h"						// Handle system time on different platforms
 #include "SDLFunctions.h"
 #include "HUD.h"						// Heads up display
-#include "JOR_Net.h"					// 
+#include "JOR_Net.h"					// UDP Network game library
 
 struct Player players[MAX_PLAYERS];
 int numPlayers = 0;						// Number of players currently in the game
@@ -158,16 +158,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 
         SDL_RenderPresent(renderer);
     } // End while
-/*
-#if defined __linux__
-	close(cliSock);
-	close(srvSock);
-#elif defined _WIN32 || defined _WIN64
-	closesocket(cliSock);																						// Close the client socket
-	closesocket(srvSock);																						// Close the server socket
-	WSACleanup();																								// Terminate use of Winsock 2 DLL
-#endif
-*/
+
 	JOR_NetCloseSocket(cliSock, srvSock);																		// Close the sockets
 
 	SDL_WaitThread(threadServerInput, NULL);																	// JOR SDL Thread replaces pthread
