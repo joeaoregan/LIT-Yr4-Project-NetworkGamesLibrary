@@ -158,6 +158,8 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
         SDL_RenderPresent(renderer);
     } // End while
 
+	closeSockets(cliSock, srvSock);
+/*
 #if defined __linux__
 	close(cliSock);
 	close(srvSock);
@@ -166,6 +168,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 	closesocket(srvSock);																						// Close the server socket
 	WSACleanup();																								// Terminate use of Winsock 2 DLL
 #endif
+*/
 	SDL_WaitThread(threadServerInput, NULL);																	// JOR SDL Thread replaces pthread
 	SDL_WaitThread(threadClient, NULL);																			// Make sure thread finishes before application closes
 	SDL_WaitThread(threadServerOutput, NULL);

@@ -119,3 +119,17 @@ void player_from_key_state(struct Player *player, int16_t key_state) {
         player->shoot = false;
     }
 }
+
+/*
+	Close the sockets
+*/
+void closeSockets(int cli, int srv) {
+#if defined __linux__
+	close(cli);																			// Close client
+	close(srv);																			// Close server
+#elif defined _WIN32 || defined _WIN64
+	closesocket(cli);																	// Close the client socket
+	closesocket(srv);																	// Close the server socket
+	WSACleanup();																		// Terminate use of Winsock 2 DLL
+#endif
+}
