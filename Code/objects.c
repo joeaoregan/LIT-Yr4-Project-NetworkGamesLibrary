@@ -2,6 +2,7 @@
 #include "physic.h"
 #include "Definitions.h"
 #include "SDLFunctions.h"
+#include "JOR_Net.h"				// MAX_PLAYERS definition
 
 /*
 	Initialise the list of players

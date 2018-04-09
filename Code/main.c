@@ -15,6 +15,7 @@
 #include "Time.h"						// Handle system time on different platforms
 #include "SDLFunctions.h"
 #include "HUD.h"						// Heads up display
+#include "JOR_Net.h"					// 
 
 struct Player players[MAX_PLAYERS];
 int numPlayers = 0;						// Number of players currently in the game
@@ -40,12 +41,13 @@ int client_loop(void *arg) {
 
         id = arrData[0];																						// Parse received data, first int = id
         if (id == -1 && !idSet) {																				// Parse data when the ID is unset
-            setClientID(arrData[1], &clientID, &numPlayers);													// xxx Assign an id for the connected player
+			JOR_NetSetClientID(arrData[1], &clientID, &numPlayers);												// xxx Assign an id for the connected player
 			idSet = true;																						// Stops the ID being set more than once
         }
 
         if (id >= 0) {																							// Parse existing Client data
-            checkIfNewPlayer(id, &numPlayers);																	// Increase number of players if new player added
+			//checkIfNewPlayer(id, &numPlayers);																	// Increase number of players if new player added
+			JOR_NetCheckNewClient(id, &numPlayers);																	// Increase number of players if new player added
             players[id].position.x = arrData[1];																// Player x position
             players[id].position.y = arrData[2];																// Player y position
             players[id].kills = arrData[3];																		// Number of kills
@@ -71,7 +73,8 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
     int i, srvSock, cliSock;																					// for loop index, Server and client sockets
     char *srvIPAddr = NULL;																						// Server IP Address string entered from client menu select option								
 
-	initWinsock();																								// Initialise winsock
+	JOR_NetInitWinsock();																						// JOR_Net: Initialise winsock
+	
     SDL_Init(SDL_INIT_VIDEO);																					// Initialise video only
     TTF_Init();																									// Initialise True Type Fonts
     TTF_Font *font = TTF_OpenFont("../resources/m5x7.ttf", 24);													// Font used to print text to screen
@@ -108,15 +111,17 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 	SDL_Thread* threadServerInput = NULL;																		// JOR SDL threads replacing pthread, Server input loop
 	SDL_Thread* threadServerOutput = NULL;																		// Server output loop on separate thread
 
-    srvAddr = intServerAddr(srvIPAddr);																			// Init server address structure
-    cliAddr = initClientAddr();																					// Init client address structure
+	//srvAddr = intServerAddr(srvIPAddr);																			// Init server address structure
+	//cliAddr = initClientAddr();																					// Init client address structure
+	srvAddr = JOR_NetServAddr(srvIPAddr);																			// Init server address structure
+    cliAddr = JOR_NetCliAddr();																					// Init client address structure
 
     if (menu == 's') {																							// If Server menu option is selected
-        createUDPServer(&srvSock, &srvAddr);																	// Create Server UDP socket (only one instance of the game is a server)
+		JOR_NetInitServerUDP(&srvSock, &srvAddr);																// Create Server UDP socket (only one instance of the game is a server)
 		threadServerInput = SDL_CreateThread(serverInputLoop, "ServerReceiveThread", &srvSock);					// JOR SDL Thread replaces Pthread
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", &srvSock);					// Server output handled on separate thread
     }
-    createClientUDPSock(&cliSock, &cliAddr);																	// Create client UDP socket (all instances of the game are clients)
+    JOR_NetClientUDPSock(&cliSock, &cliAddr);																	// Create client UDP socket (all instances of the game are clients)
 	SDL_Thread* threadClient = SDL_CreateThread(client_loop, "ClientThread", &cliSock);							// JOR SDL Thread replaces Pthread, Client thread
 
     while (clientID < 0) {																						// If the current client is new

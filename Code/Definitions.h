@@ -4,8 +4,8 @@
 #include "stdbool.h"
 
 #define ADDR_LEN sizeof(struct sockaddr)	// JOR Added Address length definition
-#define SERV_PORT 8887						// JOR Server port number
-#define SERV_ADDR "127.0.0.1"  				// JOR IP address of udp server (localhost)
+//#define SERV_PORT 8887						// JOR Server port number
+//#define SERV_ADDR "127.0.0.1"  				// JOR IP address of udp server (localhost)
 
 // Text
 #define CENTRE_TEXT -1						// JOR If used for x coordinate centre horizonally, and y vertical
@@ -23,7 +23,7 @@
 #define PLAYER_HEIGHT 16
 #define BULLET_HEIGHT 8
 #define BULLET_WIDTH 8
-#define MAX_PLAYERS 10						// Maximum 10 connected players
+//#define MAX_PLAYERS 10						// Maximum 10 connected players
 #define CLIENT_FRAME_TIME 15
 #define SERVER_FRAME_TIME 15
 #define X_AXIS 1

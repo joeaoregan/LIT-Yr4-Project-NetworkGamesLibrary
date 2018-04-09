@@ -1,6 +1,9 @@
 #include "network.h"
 #include "Definitions.h"
 
+/* 
+// IN JOR NET LIB
+
 void initWinsock() {
 #if defined _WIN32 || defined _WIN64
 	WSADATA wsa;																							// Windows sockets implementation structure
@@ -11,7 +14,8 @@ void initWinsock() {
 	printf("Initialised Winsock.\n");																		// Otherwise indicate winsock has initialised
 #endif
 }
-
+*/
+/*
 struct sockaddr_in intServerAddr(char *ip) {
     struct sockaddr_in srvAddr;
     memset(&srvAddr, 0, sizeof(srvAddr));
@@ -37,7 +41,8 @@ struct sockaddr_in intServerAddr(char *ip) {
 
     return srvAddr;
 }
-
+*/
+/*
 struct sockaddr_in initClientAddr() {
     struct sockaddr_in cliAddr;
     memset(&cliAddr, 0, sizeof(struct sockaddr));
@@ -46,10 +51,11 @@ struct sockaddr_in initClientAddr() {
     cliAddr.sin_port = 0;
     return cliAddr;
 }
+*/
 
 /*
 	Return the clients position in the list or the next position in the lists of clients for new client
-*/
+
 int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in clientsList[], int numClients) {
     int i;
     for (i = 0; i < numClients; i++) {
@@ -59,7 +65,6 @@ int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in clients
     }
     return numClients;																						// Return next client ID number
 }
-
 int compare_addr(struct sockaddr_in *a, struct sockaddr_in *b) {
     if (a->sin_port == b->sin_port &&
             a->sin_family == b->sin_family &&
@@ -69,6 +74,7 @@ int compare_addr(struct sockaddr_in *a, struct sockaddr_in *b) {
         return false;
     }
 }
+*/
 
 int16_t key_state_from_player(struct Player *player) {
 	//printf("key_state from player\n");

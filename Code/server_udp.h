@@ -24,11 +24,12 @@
 #include <string.h>
 #include <stdint.h>
 
-void createUDPServer(int *sock, struct sockaddr_in *server_sock);				// Create and bind the socket
+//void createUDPServer(int *sock, struct sockaddr_in *server_sock);				// Create and bind the socket
 void srvSendto(int sock, struct sockaddr_in client, int16_t tab[], int size);	// Use sendto() to send data to client
+struct sockaddr_in srvRecvfrom(int sock, int16_t data[]);
 int serverInputLoop(void *arg);													// JOR Changed return type to int		
 int serverOutputLoop(void *arg);												// JOR Changed return type to int
-int existingClient(int client_pos);												// Check is the client already in the list of connected clients
-void addClientAddrToList(int client_pos, struct sockaddr_in *client_addr);		// Add the client address to the list of connected clients
+//int existingClient(int client_pos);												// Check is the client already in the list of connected clients
+//void addClientAddrToList(int client_pos, struct sockaddr_in *client_addr);		// Add the client address to the list of connected clients
 
 #endif

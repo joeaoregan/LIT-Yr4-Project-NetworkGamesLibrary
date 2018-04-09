@@ -5,7 +5,7 @@
 
 /*
 	Initialise the client socket
-*/
+
 void createClientUDPSock(int *sock, struct sockaddr_in *cliAddr) {
     if ((*sock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {
 		perror("Client_UDP createClientUDPSock: Socket Failed");
@@ -17,7 +17,7 @@ void createClientUDPSock(int *sock, struct sockaddr_in *cliAddr) {
     }
 	else printf("Client Bind OK\n\n");
 }
-
+*/
 /*
 	Send player data to the server
 */
@@ -39,19 +39,20 @@ int cliRecvfrom(int sock, int16_t *arrData) {
 
 /*
 	Set the ID for each player
-*/
+
 void setClientID(int id, int16_t* clientID, int *numPlayers) {
 	*clientID = id;																									// Set the client id
 	*numPlayers = id;																								// Number of players in the game
-	printf("main.c->setClientID: Client ID is now: %d\n", clientID);
+	printf("main.c->setClientID: Client ID is now: %d\n", *clientID);
 }
-
+*/
 /*
 	Increase number of players if new player added
-*/
+
 void checkIfNewPlayer(int id, int *numPlayers) {
-	if (id > numPlayers) {																							// If the client id is higher than the number of players
+	if (id > *numPlayers) {																							// If the client id is higher than the number of players
 		*numPlayers = id;																							// Set the number of players to match the ID
-		printf("Total number of players is now: %d\n", numPlayers + 1);												// The number of players in the game has increased
+		printf("Total number of players is now: %d\n", *numPlayers + 1);											// The number of players in the game has increased
 	}
 }
+*/

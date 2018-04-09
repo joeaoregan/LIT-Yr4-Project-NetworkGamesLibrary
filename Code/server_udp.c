@@ -14,15 +14,16 @@
 #endif
 #include "Time.h"
 #include "SDLFunctions.h"
+#include "JOR_Net.h"
 
-struct sockaddr_in listOfClientAddresses[MAX_PLAYERS];
+//struct sockaddr_in listOfClientAddresses[MAX_PLAYERS];
 struct Player listOfPlayers[MAX_PLAYERS];
 struct node *listOfBullets = NULL;
-int totalNumClients = 0;
+//int totalNumClients = 0;
 
 /*
 	Initilise the server socket
-*/
+
 void createUDPServer(int *sock, struct sockaddr_in *srvAddr) {
     memset(listOfClientAddresses, 0, sizeof(struct sockaddr_in) * MAX_PLAYERS);				// Initialise the list of client addresses in memory
     if ((*sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {							// Initialise the server socket
@@ -35,6 +36,7 @@ void createUDPServer(int *sock, struct sockaddr_in *srvAddr) {
     }
 	else printf("Socket Bind OK\n\n");
 }
+*/
 
 struct sockaddr_in srvRecvfrom(int sock, int16_t data[]) {
     struct sockaddr_in addr;
@@ -66,9 +68,10 @@ int serverInputLoop(void *arg) {
 
     while (1) {
         cliAddr = srvRecvfrom(socket, arrData);												// Receive data from client (save client address)
-        curClient = findClientIDNumber(cliAddr, listOfClientAddresses, totalNumClients);	// client address, array of addresses, connected clients
+		//curClient = findClientIDNumber(cliAddr, listOfClientAddresses, getTotalNumClients());	// client address, array of addresses, connected clients
+		curClient = JOR_NetFindClientID(cliAddr, JOR_NetGetNumClients());						// client address, array of addresses, connected clients
 
-        if (existingClient(curClient)) {													// If the client is an existing client
+        if (JOR_NetExistingClient(curClient)) {													// If the client is an existing client
             int16_t keys = arrData[1];														// Key pressed is the 2nd position in the data array
             player_from_key_state(&listOfPlayers[curClient], keys);
 
@@ -92,11 +95,13 @@ int serverInputLoop(void *arg) {
         }
 
         if (arrData[0] == -1 && curClient < MAX_PLAYERS) {									// ID field of the data array is -1, the client is new, and still under max players
-            addClientAddrToList(curClient, &cliAddr);										// Add the client address to the list of connected clients
+			//addClientAddrToList(curClient, &cliAddr);										// Add the client address to the list of connected clients
+			JOR_NetAddClientAddr(curClient, &cliAddr);										// Add the client address to the list of connected clients
             int16_t arrData[3];																// Create a data array with 3 elements
             arrData[0] = -1;																// Keep the same client ID
             arrData[1] = curClient;															// Set the second field to the current client number
-            srvSendto(socket, listOfClientAddresses[curClient], arrData, 3);				// Send data to client
+			//srvSendto(socket, listOfClientAddresses[curClient], arrData, 3);				// Send data to client
+			srvSendto(socket, JOR_NetClientAddrList(curClient), arrData, 3);				// Send data to client
         }
 
 		sleepCrossPlatform(50);																// Sleep for 50 microseconds
@@ -139,7 +144,7 @@ int serverOutputLoop(void *arg) {
 
         updateBullets(&listOfBullets);
 
-        for (i = 0; i < totalNumClients; i++) {
+        for (i = 0; i < JOR_NetGetNumClients(); i++) {
             updatePlayer(&listOfPlayers[i]);												// --- UPDATE PLAYER ---
 			
             if (check_if_player_dies(&listOfPlayers[i], &listOfBullets, &killerID)) {		// --- PLAYER DEAD ---
@@ -153,8 +158,10 @@ int serverOutputLoop(void *arg) {
         int16_t *arrBullets = NULL;															// Initialise the bullets array
         int bulletCount = get_bullet_array(listOfBullets, &arrBullets);						// Number of bullets
 
-        for (i = 0; i < totalNumClients; i++) {
-            for (j = 0; j < totalNumClients; j++) {
+		//for (i = 0; i < totalNumClients; i++) {
+		//	for (j = 0; j < totalNumClients; j++) {
+		for (i = 0; i < JOR_NetGetNumClients(); i++) {
+			for (j = 0; j < JOR_NetGetNumClients(); j++) {
                 arrData[0] = j;																// Client ID
                 arrData[1] = listOfPlayers[j].position.x;									// Client X position
                 arrData[2] = listOfPlayers[j].position.y;									// Client Y position
@@ -162,13 +169,14 @@ int serverOutputLoop(void *arg) {
 				arrData[4] = listOfPlayers[j].deaths;										// Client deaths
 				arrData[5] = listOfPlayers[j].flip;											// Client flip (sprite direction)
 				//srvSendto(socket, listOfClientAddresses[i], arrData, 5);					// Send to all clients
-				srvSendto(socket, listOfClientAddresses[i], arrData, 6);					// Send to all clients
+				srvSendto(socket, JOR_NetClientAddrList(i), arrData, 6);					// Send to all clients
 
 				sleepCrossPlatform(20);														// Sleep for 20 microseconds
             } // for number_of_clients j
 
 			//printf("bullets %d\n", bulletCount);
-            srvSendto(socket, listOfClientAddresses[i], arrBullets, 1 + (bulletCount * 2));	// Send data to client
+			//srvSendto(socket, listOfClientAddresses[i], arrBullets, 1 + (bulletCount * 2));	// Send data to client
+			srvSendto(socket, JOR_NetClientAddrList(i), arrBullets, 1 + (bulletCount * 2));	// Send data to client
 
 			sleepCrossPlatform(20);															// Sleep for 20 microseconds
         } // for number_of_clients i
@@ -189,16 +197,17 @@ int serverOutputLoop(void *arg) {
 
 /*
 	Check is the client already in the list of connected clients
-*/
+
 int existingClient(int clientNum) {
     return (clientNum < totalNumClients && clientNum >= 0);									// Is the client number is between 0 and the total number of clients
 }
-
+*/
 /*
 	Add the client address to the list of connected clients
-*/
+
 void addClientAddrToList(int clientNum, struct sockaddr_in *cliAddr) {
     if (clientNum >= totalNumClients) {
         listOfClientAddresses[totalNumClients++] = *cliAddr;								// Add client address to the client address list
     }
 }
+*/
