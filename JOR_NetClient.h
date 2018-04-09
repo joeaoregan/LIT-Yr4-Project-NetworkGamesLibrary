@@ -1,3 +1,14 @@
+/*
+	Created By: Joe O'Regan
+				K00203642
+
+	UDP Network Games Library for C/C++
+
+	JOR_NetClient.h
+
+	Client specific functions
+*/
+
 #pragma once
 
 #ifdef JORNET_EXPORTS								// Added by default to the defined preprocessor macros for the DLL projet
@@ -11,25 +22,29 @@
 #include <arpa/inet.h>
 #elif defined _WIN32 || defined _WIN64
 #pragma comment(lib, "Ws2_32.lib")
-#include <WinSock2.h>																// Windows sockets
-#include <ws2tcpip.h>																// getaddrinfo()
+#include <WinSock2.h>																				// Windows sockets
+#include <ws2tcpip.h>																				// getaddrinfo()
 #endif
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>																	// exit()
+#include <stdlib.h>																					// exit()
 #include <stdint.h>
 
-#ifdef __cplusplus																	// extern "C" guards are only required when programming with C++
-extern "C"
+// extern "C" guards are only required when programming with C++
+#ifdef __cplusplus
+extern "C" {
 #endif
-JORNET_API void JOR_NetClientUDPSock(int *sock, struct sockaddr_in *cliAddr);		// Create the client UDP socket
+
+extern JORNET_API void JOR_NetClientUDPSock(int *sock, struct sockaddr_in *cliAddr);				// Create the client UDP socket
+
+extern JORNET_API void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
+
+extern JORNET_API int cliRecvfrom(int sock, int16_t *arrData);										// Receive data from server over UDP
+
+extern JORNET_API void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);				// Set the ID for each player
+
+extern JORNET_API void JOR_NetCheckNewClient(int id, int *numPlayers);								// Increase number of players if new player added
 
 #ifdef __cplusplus
-extern "C"
+}
 #endif
-JORNET_API void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);		// Set the ID for each player
-
-#ifdef __cplusplus																	
-extern "C"
-#endif
-JORNET_API void JOR_NetCheckNewClient(int id, int *numPlayers);						// Increase number of players if new player added
