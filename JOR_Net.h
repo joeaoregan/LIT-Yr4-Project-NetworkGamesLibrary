@@ -16,15 +16,31 @@
 #include <arpa/inet.h>
 #elif defined _WIN32 || defined _WIN64
 #pragma comment(lib, "Ws2_32.lib")
-#include <WinSock2.h>								// Windows sockets
-#include <ws2tcpip.h>								// getaddrinfo()
+#include <WinSock2.h>												// Windows sockets
+#include <ws2tcpip.h>												// getaddrinfo()
 #endif
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>									// exit()
+#include <stdlib.h>													// exit()
 #include <stdint.h>
+#include "JOR_NetClient.h"											// Client functionality
+#include "JOR_NetServer.h"											// Server functionality
+#include "Definitions.h"
 
-#ifdef __cplusplus									// extern "C" guards are only required when programming with C++
+
+#ifdef __cplusplus													// extern "C" guards are only required when programming with C++
+extern "C"
+#endif
+JORNET_API struct sockaddr_in JOR_NetServAddr(char *ip);			// JOR_Net: Create server sockaddr_in address structure
+
+#ifdef __cplusplus
+extern "C"
+#endif
+JORNET_API struct sockaddr_in JOR_NetCliAddr();						// JOR_Net: Create client sockaddr_in address structure
+
+#ifdef __cplusplus
 extern "C" 
 #endif
-JORNET_API void initWinsock();						// Init windows networking functionality
+JORNET_API void JOR_NetInitWinsock();								// JOR_Net: Init windows networking functionality
+
+
