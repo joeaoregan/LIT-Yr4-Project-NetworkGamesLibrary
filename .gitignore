@@ -1,4 +1,9 @@
+# The Platform game folder was placed with the Library for testing on Linux
+/Platform-Game/
+
+# Visual Studio Files
 /Debug/
 *.vcxproj
 *.filters
 *.user
+

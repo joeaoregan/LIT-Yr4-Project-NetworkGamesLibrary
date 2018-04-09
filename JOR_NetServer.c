@@ -9,23 +9,12 @@
 	Server Specific functions
 */
 
-#if defined __linux__
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#elif defined _WIN32 || defined _WIN64
-#pragma comment(lib, "Ws2_32.lib")
-#include <WinSock2.h>																				// Windows sockets
-#include <ws2tcpip.h>																				// getaddrinfo()
-#include <Windows.h>
-#endif
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>																					// exit()
-#include <stdint.h>
-
 #include "stdafx.h"
 #include "JOR_NetServer.h"
-#include <cstdint>
+#include "Definitions.h"
+#include "stdbool.h"																				// True, False
+#include <string.h>																					// memset()
+#include <stdio.h>																					// printf()	
 
 struct sockaddr_in listOfClientAddresses[JN_MAX_PLAYERS];
 int totalNumClients = 0;
