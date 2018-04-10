@@ -18,7 +18,6 @@
 #include "stdbool.h"																				// True, False
 #include <string.h>																					// memset()
 #include <stdio.h>																					// printf()	
-#include "Socket.h"
 
 bool serverSocketReady = false;
 bool getServSockReady() { return serverSocketReady; }
@@ -36,7 +35,6 @@ struct sockaddr_in JOR_NetClientAddrList(int select) {
 /*
 	JOR_Net: Initilise the server socket
 */
-//void JOR_NetInitServerUDP(int *srvSock, struct sockaddr_in *srvAddr) {
 bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
     memset(listOfClientAddresses, 0, JN_SA_SZ * JN_MAX_PLAYERS);									// Initialise the list of client addresses in memory
 
@@ -62,12 +60,10 @@ bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
 /*
 	JOR_Net: Send data from server to client ERROR WITH int16_t casting to char
 */
-//void srvSendto(int sock, struct sockaddr_in client, int16_t data[], int size) {
 void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
 	if (serverSocketReady) {
 		socklen_t addr_size = JN_SA_SZ;
 
-		//sendto(sock, data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);		// Send data to client
 		sendto(srvSock, (char*)data, JN_I16_SZ * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
 	}
 }
@@ -76,14 +72,12 @@ void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
 /*
 	JOR_Net: Receive data from client
 */
-//struct sockaddr_in srvRecvfrom(int sock, int16_t data[]) {
 struct sockaddr_in srvRecvfrom(int16_t arrData[]) {
 	struct sockaddr_in addr;
 	socklen_t addr_size = JN_SA_SZ;
 
 	printf("servRecvFrom arrdata0 %d arrdata1 %d arrdata2 %d arrdata3 %d\n", arrData[0], arrData[1], arrData[2], arrData[3]);
 
-	//recvfrom(sock, data, sizeof(int16_t) * 4, 0, (struct sockaddr*)&addr, &addr_size);			// Receive data from client over UDP
 	recvfrom(srvSock, (char*) arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&addr, &addr_size);		// Receive data from client over UDP
 
 	return addr;
@@ -103,7 +97,7 @@ void JOR_NetAddClientAddr(int clientNum, struct sockaddr_in *cliAddr) {
 	JOR_Net: Check is the client already in the list of connected clients
 */
 int JOR_NetExistingClient(int clientNum) {
-	//printf("server existingClient() clientNum: %d totalNumClients: %d\n", clientNum, totalNumClients);
+	//printf("server existingClient() clientNum: %d totalNumClients: %d\n",clientNum,totalNumClients);
     return (clientNum < totalNumClients && clientNum >= 0);											// Is the client number is between 0 and the total number of clients
 }
 
@@ -116,7 +110,6 @@ int JOR_NetGetNumClients() { return totalNumClients; }												// Amount of c
 /*
 	JOR_Net: Return the clients position in the list or the next position in the lists of clients for new client
 */
-//int findClientIDNumber(struct sockaddr_in newCliAddr, struct sockaddr_in clientsList[], int numClients) {
 int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int numClients) {
     int i;
     for (i = 0; i < numClients; i++) {

@@ -29,20 +29,17 @@
 #include <stdlib.h>																			// exit(), EXIT_FAILURE
 #include <stdint.h>																			// int16_t
 #include "Definitions.h"																	// BUF_MAX, JN_MODIFIER, MAX_PLAYERS
-#include "stdbool.h"
+#include "stdbool.h"																		// Boolean values
 
-// extern "C" guards are only required when programming with C++
+// extern "C" guards are only required for C++
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	//JN_MODIFIER void JOR_NetInitServerUDP(int *sock, struct sockaddr_in *server_sock);	// Create and bind the socket
 	JN_MODIFIER bool JOR_NetInitServerUDP(struct sockaddr_in *server_sock);					// Create and bind the socket
 
-	//JN_MODIFIER void srvSendto(int sock, struct sockaddr_in client, int16_t tab[], int size);	// Use sendto() to send data to client
 	JN_MODIFIER void srvSendto(struct sockaddr_in client, int16_t tab[], int size);			// Use sendto() to send data to client
 
-	//JN_MODIFIER struct sockaddr_in srvRecvfrom(int sock, int16_t data[]);					// Receive data from client
 	JN_MODIFIER struct sockaddr_in srvRecvfrom(int16_t data[]);								// Receive data from client
 																		
 	JN_MODIFIER void JOR_NetAddClientAddr(int client_pos, struct sockaddr_in *client_addr);	// Add the client address to the list of connected clients

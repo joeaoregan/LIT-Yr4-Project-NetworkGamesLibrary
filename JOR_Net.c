@@ -22,7 +22,6 @@
 #include "JOR_Net.h"
 #include <string.h>																		// memset()
 #include "Definitions.h"																// JN_SERV_ADDR, JN_SERV_PORT
-#include "Socket.h"
 
 /*
 	JOR_Net: Create server sockaddr_in address structure
@@ -34,7 +33,6 @@ struct sockaddr_in JOR_NetServAddr(char *ip) {
 
 	// If the IP address was not entered from a client set to INADDR_ANY
     if (ip == NULL) {																	// If the IP address is not already set
-		//srvAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 #if defined __linux__
 		srvAddr.sin_addr.s_addr = INADDR_ANY;											// Linux Server: listen on any local address
 #elif defined _WIN32 || defined _WIN64

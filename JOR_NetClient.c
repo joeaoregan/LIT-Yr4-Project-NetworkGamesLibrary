@@ -14,7 +14,6 @@
 #endif
 #include "stdafx.h"																				// Visual Studio file  (can't wrap)
 #include "JOR_NetClient.h"
-#include "Socket.h"
 
 bool clientSocketReady = false;
 int cliSock;
@@ -22,7 +21,6 @@ int cliSock;
 /*
 	JOR_Net: Initialise the client socket
 */
-//void JOR_NetClientUDPSock(int *sock, struct sockaddr_in *cliAddr) {
 bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 	printf("zzzzzzzzzzz JOR_NetClientUDPSock\n");
 
@@ -48,15 +46,12 @@ bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 /*
 	Send player data to the server
 */
-//void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 	if (clientSocketReady) {
 		int16_t arrData[2] = { id, keys };														// Client identifier, and key pressed
 
 		printf("cliSendTo arrdata0 %d arrdata1 %d\n", arrData[0], arrData[1]);
 
-		//if (sendto(sock, arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
-		//if (sendto(cliSock, (char*)arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
 		if (sendto(cliSock, (char*)arrData, JN_I16_SZ * 2, 0, JN_SA &srvAddr, JN_SA_SZ) < 0) {
 			perror("Client sentToServer: sendto error");
 		}
@@ -66,12 +61,10 @@ void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 /*
 	Recieve data from the server
 */
-//int cliRecvfrom(int sock, int16_t *arrData) {
 int cliRecvfrom(int16_t *arrData) {
 	int numBytes = 0;
 
 	if (clientSocketReady) {
-		//int numBytes = recvfrom(sock, arrData, sizeof(int16_t) * BUF_MAX, 0, NULL, 0);
 		numBytes = recvfrom(cliSock, (char*)arrData, JN_I16_SZ * JN_BUF_MAX, 0, NULL, 0);		// Receive data from server
 		//printf("Received from Server -  1: %d 2: %d 3: %d 4: %d\n", 
 		//	arrData[0], arrData[1], arrData[2], arrData[3]);									// Display data received
