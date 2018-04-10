@@ -2,7 +2,7 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
-	ServerThreads.c
+	ServerThreads.h
 
 	Modified server functionality to work with windows
 	Then moved Network functionality to JOR_Net
@@ -16,7 +16,7 @@
 #include <arpa/inet.h>
 #endif
 
-int serverInputLoop(void *arg);													// JOR Changed return type to int		
-int serverOutputLoop(void *arg);												// JOR Changed return type to int
+int serverInputLoop(void *arg);		// JOR Changed return type to int		
+int serverOutputLoop(void *arg);	// JOR Changed return type to int
 
 #endif
