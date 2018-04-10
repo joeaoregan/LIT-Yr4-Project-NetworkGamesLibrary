@@ -1,12 +1,14 @@
 /*
-	Joe O'Regan
-	K00203642
+	Created by: Joe O'Regan
+				K00203642
+
+	HUD.c
 
 	Moved HUD info text here
 */
 
 #include "HUD.h"
-#include "font.h"
+#include "Text.h"	// Display game text
 #include <stdio.h>	// snprintf()
 
 void renderHUD(SDL_Renderer *renderer, TTF_Font *font, struct Player *players, int numPlayers, int clientID, char menu) {

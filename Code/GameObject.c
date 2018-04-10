@@ -1,8 +1,19 @@
-#include "objects.h"
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	GameObject.c
+
+	Added change in direction for player sprite
+	Communicated over network, so player flips
+	direction on all clients
+*/
+
+#include "GameObject.h"
 #include "physic.h"
 #include "Definitions.h"
 #include "SDLFunctions.h"
-#include "JOR_Net.h"				// MAX_PLAYERS definition
+#include "JOR_Net.h"																	// JN_MAX_PLAYERS definition
 
 /*
 	Initialise the list of players
@@ -10,7 +21,7 @@
 */
 void initPlayer(struct Player *players) {
 	int i;
-	for (i = 0; i < MAX_PLAYERS; i++) {
+	for (i = 0; i < JN_MAX_PLAYERS; i++) {
 		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// Init player position SDL_Rect
 		players[i].left_key = SDLK_LEFT;
 		players[i].right_key = SDLK_RIGHT;
@@ -82,8 +93,8 @@ void set_player_pos(struct Player* player, float x, float y) {
 }
 
 struct Bullet init_bullet(int x, int y, int face) {
-    struct Bullet b;
-	b.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);							// Init bullet position SDL_Rect
-    b.face = face;
-    return b;
+    struct Bullet bullet;
+	bullet.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);						// Init bullet position SDL_Rect
+    bullet.face = face;
+    return bullet;
 }

@@ -1,3 +1,14 @@
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	Physics.c
+
+	Added support for additional tiles to the tiled map
+	Extra collision detection is handled for additional tiles
+	Added sprite flipping for change in direction
+*/
+
 #include "physic.h"
 #include "Definitions.h"
 

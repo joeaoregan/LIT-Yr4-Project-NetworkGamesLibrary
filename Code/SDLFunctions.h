@@ -1,3 +1,12 @@
+/*
+	Created by:	Joe O'Regan
+				K00203642
+
+	SDLFunctions.h
+
+	Initialise SDL_Rect objects
+*/
+
 #ifndef SDL_FUNCTIONS_H
 #define SDL_FUNCTIONS_H
 

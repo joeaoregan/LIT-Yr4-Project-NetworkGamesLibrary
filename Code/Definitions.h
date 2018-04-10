@@ -1,9 +1,17 @@
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	Definitions.h
+
+	Moved network functionality to JOR_Net library
+	Added text centering
+*/
+
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
 #include "stdbool.h"
-
-#define ADDR_LEN sizeof(struct sockaddr)	// JOR Added Address length definition
 
 // Text
 #define CENTRE_TEXT -1						// JOR If used for x coordinate centre horizonally, and y vertical

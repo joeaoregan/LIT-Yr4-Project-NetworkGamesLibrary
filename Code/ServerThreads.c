@@ -1,6 +1,16 @@
-#include "server_udp.h"
-#include "network.h"
-#include "objects.h"
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	ServerThreads.c
+
+	Modified server functionality to work with windows
+	Then moved Network functionality to JOR_Net
+*/
+
+#include "ServerThreads.h"																	// Threads to handle server input and output
+#include "Input.h"																			// Handle player keyboard input
+#include "GameObject.h"																		// Game objects Player and Bullet
 #include "list.h"
 #include "physic.h"
 #include "Definitions.h"
@@ -12,29 +22,15 @@
 #include <ws2tcpip.h>																		// getaddrinfo()
 #include <Windows.h>
 #endif
-#include "Time.h"
 #include "SDLFunctions.h"
 #include "JOR_Net.h"
 
-struct Player listOfPlayers[MAX_PLAYERS];
+struct Player listOfPlayers[JN_MAX_PLAYERS];
 struct node *listOfBullets = NULL;
-/*
-struct sockaddr_in srvRecvfrom(int sock, int16_t data[]) {
-    struct sockaddr_in addr;
-    socklen_t addr_size = sizeof(struct sockaddr);
-    recvfrom(sock, data, sizeof(int16_t) * 4, 0, (struct sockaddr*)&addr, &addr_size);		// Receive data from client over UDP
-    return addr;
-}
 
-void srvSendto(int sock, struct sockaddr_in client, int16_t data[], int size) {
-    socklen_t addr_size = sizeof(struct sockaddr);
-
-    sendto(sock, data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
-}
-*/
 void initConnectedPlayersList() {
     int i;
-    for (i = 0; i < MAX_PLAYERS; i++) {
+    for (i = 0; i < JN_MAX_PLAYERS; i++) {
 		listOfPlayers[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);// Initialise each players position
     }
 }
@@ -73,7 +69,7 @@ int serverInputLoop(void *arg) {
             listOfPlayers[curClient].reloading = listOfPlayers[curClient].shoot;			// Set player as reloading
         }
 
-        if (arrData[0] == -1 && curClient < MAX_PLAYERS) {									// ID field of the data array is -1, the client is new, and still under max players
+        if (arrData[0] == -1 && curClient < JN_MAX_PLAYERS) {								// ID field of the data array is -1, the client is new, and still under max players
 			JOR_NetAddClientAddr(curClient, &cliAddr);										// Add the client address to the list of connected clients
             int16_t arrData[3];																// Create a data array with 3 elements
             arrData[0] = -1;																// Keep the same client ID
@@ -81,7 +77,7 @@ int serverInputLoop(void *arg) {
 			srvSendto(socket, JOR_NetClientAddrList(curClient), arrData, 3);				// Send data to client
         }
 
-		sleepCrossPlatform(50);																// Sleep for 50 microseconds
+		JOR_NetSleep(50);																	// Sleep for 50 microseconds
     }
 	return 0;																				// Changed function return type to int
 }
@@ -145,13 +141,13 @@ int serverOutputLoop(void *arg) {
 				arrData[5] = listOfPlayers[j].flip;											// Client flip (sprite direction)
 				srvSendto(socket, JOR_NetClientAddrList(i), arrData, 6);					// Send to all clients
 
-				sleepCrossPlatform(20);														// Sleep for 20 microseconds
+				JOR_NetSleep(20);															// Sleep for 20 microseconds
             } // for number_of_clients j
 
 			//printf("bullets %d\n", bulletCount);
 			srvSendto(socket, JOR_NetClientAddrList(i), arrBullets, 1 + (bulletCount * 2));	// Send data to client
 
-			sleepCrossPlatform(20);															// Sleep for 20 microseconds
+			JOR_NetSleep(20);																// Sleep for 20 microseconds
         } // for number_of_clients i
 
         free(arrBullets);																	// Deallocate the bullet array from memory
@@ -162,7 +158,7 @@ int serverOutputLoop(void *arg) {
 			time_interval = (double)(stop - start);											// Set the time interval to sleep for
 		}
 
-		sleepCrossPlatform((int) (FRAME_TIME - time_interval));								// Sleep until the end of the frame
+		JOR_NetSleep((int) (FRAME_TIME - time_interval));									// Sleep until the end of the frame
     }	// while(1)
 
 	return 0;
