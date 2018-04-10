@@ -23,6 +23,7 @@
 #endif
 #include <string.h>																		// memset()
 #include "Definitions.h"																// JN_SERV_ADDR, JN_SERV_PORT
+#include "Socket.h"
 
 /*
 	JOR_Net: Create server sockaddr_in address structure
@@ -84,13 +85,12 @@ void JOR_NetInitWinsock() {
 /*
 	JOR_Net: Close the sockets
 */
-void JOR_NetCloseSocket(int cli, int srv) {
-#if defined __linux__
-	close(cli);																			// Close client
-	close(srv);																			// Close server
-#elif defined _WIN32 || defined _WIN64
-	closesocket(cli);																	// Close the client socket
-	closesocket(srv);																	// Close the server socket
+//void JOR_NetCloseSocket(int cli, int srv) {
+void JOR_NetCloseSocket() {
+	JOR_NetCloseClientSocket();															// Close client socket
+	JOR_NetCloseServerSocket();															// Close server socket
+
+#if defined _WIN32 || defined _WIN64
 	WSACleanup();																		// Terminate use of Winsock 2 DLL
 #endif
 }

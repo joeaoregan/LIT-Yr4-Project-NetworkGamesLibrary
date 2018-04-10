@@ -26,7 +26,7 @@
 #include "JOR_NetClient.h"										// Client functionality
 #include "JOR_NetServer.h"										// Server functionality
 
-// extern "C" guards are only required when programming with C++
+// extern "C" guards only required when programming with C++
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,7 +37,8 @@ JN_MODIFIER struct sockaddr_in JOR_NetCliAddr();				// JOR_Net: Create client so
 
 JN_MODIFIER void JOR_NetInitWinsock();							// JOR_Net: Init windows networking functionality
 
-JN_MODIFIER void JOR_NetCloseSocket(int cli, int srv);			// JOR_Net: Init windows networking functionality
+//JN_MODIFIER void JOR_NetCloseSocket(int cli, int srv);		// JOR_Net: Init windows networking functionality
+JN_MODIFIER void JOR_NetCloseSocket();							// JOR_Net: Init windows networking functionality
 
 JN_MODIFIER void JOR_NetSleep(int amount);						// JOR_Net: Function to handle sleep for both Windows and Linux
 

@@ -2,50 +2,77 @@
 	Created By: Joe O'Regan
 				K00203642
 
-	Cross-platform UDP Network Games Library for C/C++
+	UDP Network Games Library for C/C++
 
-	JOR_NetClient.c
+	JOR_NetClient.cpp
 
 	Client specific functions
 */
 
 #include "stdafx.h"																				// Visual Studio file  (can't wrap)
 #include "JOR_NetClient.h"
+#include "Socket.h"
+
+bool clientSocketReady = false;
+int cliSock;
 
 /*
 	JOR_Net: Initialise the client socket
 */
-void JOR_NetClientUDPSock(int *sock, struct sockaddr_in *cliAddr) {
-    if ((*sock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {											// Create UDP socket
-		perror("JOR_NetClientUDPSock: Socket Failed");
-    }
-	else printf("JOR_NetClientUDPSock: Client Socket Created: %d\n", (*sock));
+//void JOR_NetClientUDPSock(int *sock, struct sockaddr_in *cliAddr) {
+bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
+	printf("zzzzzzzzzzz JOR_NetClientUDPSock\n");
 
-    if (bind(*sock, (struct sockaddr*) cliAddr, sizeof(struct sockaddr)) < 0) {					// Bind to address
+    if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {											// Create UDP socket
+		perror("JOR_NetClientUDPSock: Socket Failed");
+		printf("Sock: %d\n", cliSock);
+    } else {
+		printf("JOR_NetClientUDPSock: Client Socket Created: %d\n", cliSock);
+		clientSocketReady = true;
+	}
+
+    if (bind(cliSock, (struct sockaddr*) cliAddr, sizeof(struct sockaddr)) < 0) {					// Bind to address
 		perror("JOR_NetClientUDPSock: Bind Error");
-    }
-	else printf("JOR_NetClientUDPSock: Client Bind OK\n\n");
+		printf("Sock: %d\n", cliSock);
+    } else {
+		printf("JOR_NetClientUDPSock: Client Bind OK\n\n");
+		clientSocketReady = true;
+	}
+
+	return clientSocketReady;
 }
 
 /*
 	Send player data to the server
 */
-void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
-	int16_t arrData[2] = { id, keys };															// Client identifier, and key pressed
-	//if (sendto(sock, arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
-	if (sendto(sock, (char*) arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
-		perror("Client sentToServer: sendto error");
-    } 
+//void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
+void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
+	if (clientSocketReady) {
+		int16_t arrData[2] = { id, keys };															// Client identifier, and key pressed
+
+		printf("cliSendTo arrdata0 %d arrdata1 %d\n", arrData[0], arrData[1]);
+
+		//if (sendto(sock, arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
+		if (sendto(cliSock, (char*)arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
+			perror("Client sentToServer: sendto error");
+		}
+	}
 }
 
 /*
 	Recieve data from the server
 */
-int cliRecvfrom(int sock, int16_t *arrData) {
-	//int numBytes = recvfrom(sock, arrData, sizeof(int16_t) * BUF_MAX, 0, NULL, 0);
-	int numBytes = recvfrom(sock, (char*) arrData, sizeof(int16_t) * JN_BUF_MAX, 0, NULL, 0);	// Receive data from server
-	//printf("Received from Server -  1: %d 2: %d 3: %d 4: %d\n", 
-	//	arrData[0], arrData[1], arrData[2], arrData[3]);										// Display data received
+//int cliRecvfrom(int sock, int16_t *arrData) {
+int cliRecvfrom(int16_t *arrData) {
+	int numBytes = 0;
+
+	if (clientSocketReady) {
+		//int numBytes = recvfrom(sock, arrData, sizeof(int16_t) * BUF_MAX, 0, NULL, 0);
+		numBytes = recvfrom(cliSock, (char*)arrData, sizeof(int16_t) * JN_BUF_MAX, 0, NULL, 0);	// Receive data from server
+		//printf("Received from Server -  1: %d 2: %d 3: %d 4: %d\n", 
+		//	arrData[0], arrData[1], arrData[2], arrData[3]);										// Display data received
+	}
+
     return numBytes;																			// Return the number of bytes received
 }
 
@@ -66,4 +93,13 @@ void JOR_NetCheckNewClient(int id, int *numPlayers) {
 		*numPlayers = id;																		// Set the number of players to match the ID
 		printf("JOR_NetCheckNewClient: Total players is now: %d\n", *numPlayers + 1);			// The number of players in the game has increased
 	}
+}
+
+void JOR_NetCloseClientSocket() {
+#if defined __linux__
+	close(cliSock);																		// Close client socket
+#elif defined _WIN32 || defined _WIN64
+	closesocket(cliSock);																// Close the client socket
+	WSACleanup();																		// Terminate use of Winsock 2 DLL
+#endif
 }
