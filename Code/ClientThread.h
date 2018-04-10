@@ -22,6 +22,8 @@ int16_t arrBullets[256];				// Array of bullet objects
 //struct Player getPlayerList() { return *players; }
 int getNumPlayers();
 int getScreenBullets();
+int16_t getClientID();
+struct Player* getPlayers();
 
 int clientLoop(void *arg);				// JOR Client thread
 

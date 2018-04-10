@@ -70,7 +70,7 @@ int serverInputLoop(void *arg) {
             listOfPlayers[curClient].reloading = listOfPlayers[curClient].shoot;			// Set player as reloading
         }
 
-		printf("xxxxxxxxxx SERVER arrData[0] %d, curClient %d\n", arrData[0], curClient);
+		//printf("SERVER arrData[0] %d, curClient %d\n", arrData[0], curClient);
 
         if (arrData[0] == -1 && curClient < JN_MAX_PLAYERS) {								// ID field of the data array is -1, the client is new, and still under max players
 			JOR_NetAddClientAddr(curClient, &cliAddr);										// Add the client address to the list of connected clients

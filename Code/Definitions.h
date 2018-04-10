@@ -15,6 +15,7 @@
 
 // Text
 #define CENTRE_TEXT -1						// JOR If used for x coordinate centre horizonally, and y vertical
+#define SIZE16 sizeof(int16_t)				// JOR Size of int16_t type
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
