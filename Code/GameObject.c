@@ -9,7 +9,7 @@
 	direction on all clients
 */
 
-#include "GameObject.h"
+#include "GameObject.h"																	// Game objects Player and Bullet
 #include "physic.h"
 #include "Definitions.h"
 #include "SDLFunctions.h"
@@ -98,3 +98,4 @@ struct Bullet init_bullet(int x, int y, int face) {
     bullet.face = face;
     return bullet;
 }
+

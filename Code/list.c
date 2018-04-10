@@ -1,3 +1,7 @@
+/*
+	list.c
+*/
+
 #include "list.h"
 #include <string.h>
 #include <stdlib.h>

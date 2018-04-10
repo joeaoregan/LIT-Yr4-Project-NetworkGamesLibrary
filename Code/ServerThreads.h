@@ -8,14 +8,14 @@
 	Then moved Network functionality to JOR_Net
 */
 
-#ifndef SERVER_UDP_H
-#define SERVER_UDP_H
+#ifndef SERVER_THREAD_H
+#define SERVER_THREAD_H
 
 #if defined __linux__
 #include <arpa/inet.h>
 #endif
 
-int serverInputLoop(void *arg);													// JOR Changed return type to int		
-int serverOutputLoop(void *arg);												// JOR Changed return type to int
+int serverInputLoop(void *arg);		// JOR Changed return type to int		
+int serverOutputLoop(void *arg);	// JOR Changed return type to int
 
 #endif

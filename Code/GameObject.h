@@ -2,7 +2,7 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
-	GameObject.c
+	GameObject.h
 
 	Added change in direction for player sprite
 	Communicated over network, so player flips

@@ -7,6 +7,7 @@
 	Moved HUD info text here
 */
 
+
 #include "HUD.h"
 #include "Text.h"	// Display game text
 #include <stdio.h>	// snprintf()
@@ -18,7 +19,7 @@ void renderHUD(SDL_Renderer *renderer, TTF_Font *font, struct Player *players, i
 		displayTextRed(renderer, "SERVER / Client 0", font, 10, 10);										// Indicate the game is the Server
 	else {
 		char cliText[12] = "";
-		snprintf(cliText, 10, "Client: %d", clientID);
+		snprintf(cliText, 10, "Client: %d", clientID);														// Use instead of snprintf_s for Linux
 		displayTextWhite(renderer, cliText, font, 10, 10);													// HUD: Client Number
 	}
 

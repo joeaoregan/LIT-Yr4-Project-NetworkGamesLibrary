@@ -36,14 +36,15 @@ void initConnectedPlayersList() {
 }
 
 int serverInputLoop(void *arg) {
-    int socket = *((int *) arg);															// Socket passed in as argument
+    //int srvSock = *((int *) arg);															// Socket passed in as argument
     int curClient = 0;																		// Clients position in the list of connected clients
     struct sockaddr_in cliAddr;																// Address of the current client connection
     int16_t arrData[4];																		// Array of data received from the client
     initConnectedPlayersList();																// Initialise the list of connected players
 
     while (1) {
-        cliAddr = srvRecvfrom(socket, arrData);												// Receive data from client (save client address)
+		//cliAddr = srvRecvfrom(srvSock, arrData);											// Receive data from client (save client address)
+		cliAddr = srvRecvfrom(arrData);														// Receive data from client (save client address)
 		curClient = JOR_NetFindClientID(cliAddr, JOR_NetGetNumClients());					// client address, array of addresses, connected clients
 
         if (JOR_NetExistingClient(curClient)) {												// If the client is an existing client
@@ -69,15 +70,19 @@ int serverInputLoop(void *arg) {
             listOfPlayers[curClient].reloading = listOfPlayers[curClient].shoot;			// Set player as reloading
         }
 
+		printf("xxxxxxxxxx SERVER arrData[0] %d, curClient %d\n", arrData[0], curClient);
+
         if (arrData[0] == -1 && curClient < JN_MAX_PLAYERS) {								// ID field of the data array is -1, the client is new, and still under max players
 			JOR_NetAddClientAddr(curClient, &cliAddr);										// Add the client address to the list of connected clients
             int16_t arrData[3];																// Create a data array with 3 elements
             arrData[0] = -1;																// Keep the same client ID
             arrData[1] = curClient;															// Set the second field to the current client number
-			srvSendto(socket, JOR_NetClientAddrList(curClient), arrData, 3);				// Send data to client
+			//srvSendto(srvSock, JOR_NetClientAddrList(curClient), arrData, 3);				// Send data to client
+			srvSendto(JOR_NetClientAddrList(curClient), arrData, 3);						// Send data to client
+			printf("srvSend Input Loop\n");
         }
 
-		JOR_NetSleep(50);																	// Sleep for 50 microseconds
+		JOR_NetSleep(50);																	// Sleep for 50 microseconds before firing next bullet?
     }
 	return 0;																				// Changed function return type to int
 }
@@ -106,7 +111,7 @@ int get_bullet_array(struct node *list, int16_t **array) {
 }
 
 int serverOutputLoop(void *arg) {
-    int socket = *((int *) arg);
+    //int socket = *((int *) arg);
     int16_t arrData[3];																		// Data to send to the client
 	Uint32 start, stop;																		// JOR Replace struct timeval with Uint32 for SDL_GetTicks()
     double time_interval;
@@ -119,6 +124,7 @@ int serverOutputLoop(void *arg) {
 
         for (i = 0; i < JOR_NetGetNumClients(); i++) {
             updatePlayer(&listOfPlayers[i]);												// --- UPDATE PLAYER ---
+
 			
             if (check_if_player_dies(&listOfPlayers[i], &listOfBullets, &killerID)) {		// --- PLAYER DEAD ---
                 listOfPlayers[i].position.x = SPAWN_X;										// Respawn shot player at Spawn position
@@ -139,13 +145,15 @@ int serverOutputLoop(void *arg) {
                 arrData[3] = listOfPlayers[j].kills;										// Client Kills
 				arrData[4] = listOfPlayers[j].deaths;										// Client deaths
 				arrData[5] = listOfPlayers[j].flip;											// Client flip (sprite direction)
-				srvSendto(socket, JOR_NetClientAddrList(i), arrData, 6);					// Send to all clients
+				//srvSendto(socket, JOR_NetClientAddrList(i), arrData, 6);					// Send to all clients
+				srvSendto(JOR_NetClientAddrList(i), arrData, 6);							// Send to all clients
 
 				JOR_NetSleep(20);															// Sleep for 20 microseconds
             } // for number_of_clients j
 
 			//printf("bullets %d\n", bulletCount);
-			srvSendto(socket, JOR_NetClientAddrList(i), arrBullets, 1 + (bulletCount * 2));	// Send data to client
+			//srvSendto(socket, JOR_NetClientAddrList(i), arrBullets, 1 + (bulletCount * 2));	// Send data to client, ID, and bullet x and y
+			srvSendto(JOR_NetClientAddrList(i), arrBullets, 1 + (bulletCount * 2));			// Send data to client, ID, and bullet x and y
 
 			JOR_NetSleep(20);																// Sleep for 20 microseconds
         } // for number_of_clients i

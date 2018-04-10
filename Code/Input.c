@@ -2,7 +2,7 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
-	Input.h
+	Input.c
 
 	Added  keyboard keypad input
 */

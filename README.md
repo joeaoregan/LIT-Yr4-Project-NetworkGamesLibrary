@@ -16,6 +16,7 @@
 5. Added sprite change of direction passed from the Server to the Client based on key press received by Server
 6. Identify local player with alternate sprite colour
 7. Added more tiles and collision checks
+8. Using **[JOR_Net](https://github.com/joeaoregan/JOR_Net) UDP Network Games Library** to communicate between client and server
 
 ---
 
@@ -27,7 +28,7 @@ Game communicating between windows and VirtualBox running Ubuntu Linux
 ![SDL Game: Local Player identifed with alternate sprite](https://raw.githubusercontent.com/joeaoregan/sdl-game/master/Screenshots/20180408_LocalPlayerIdentifiedByRedSprite.png "SDL Game: Local Player identifed with alternate sprite")
 Local Player identifed with alternate sprite
 
-![SDL Game: Additional Tiles](https://raw.githubusercontent.com/joeaoregan/sdl-game/master/Screenshots/20180408_LocalPlayerIdentifiedByRedSprite.png "SDL Game: Additional Tiles")
+![SDL Game: Additional Tiles](https://raw.githubusercontent.com/joeaoregan/sdl-game/master/Screenshots/20180408_AdditionalTiles.png "SDL Game: Additional Tiles")
 Additional tiles and tile collision checks
 
 ---

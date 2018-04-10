@@ -7,6 +7,7 @@
 	Initialise SDL_Rect objects
 */
 
+
 #include "SDLFunctions.h"
 
 /*

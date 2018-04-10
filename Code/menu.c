@@ -89,3 +89,4 @@ void enterServerIP(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
     }
 }
 
+
