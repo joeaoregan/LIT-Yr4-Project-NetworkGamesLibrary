@@ -1,22 +1,30 @@
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	main.c
+
+	Added JOR_Net library for communication
+*/
+
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_thread.h>					// JOR SDL Thread in place of pthread
 #include <time.h>
 #include <stdint.h>
-#include "objects.h"
-#include "client_udp.h"
-#include "server_udp.h"
-#include "network.h"
+#include "GameObject.h"					// Game objects Player and Bullet
+#include "ServerThreads.h"				// Threads to handle server input and output
+#include "Input.h"						// Handle player keyboard input
 #include "physic.h"
 #include "Definitions.h"
-#include "font.h"
+#include "Text.h"						// Display game text
 #include "menu.h"
-#include "Time.h"						// Handle system time on different platforms
 #include "SDLFunctions.h"
 #include "HUD.h"						// Heads up display
+#include "JOR_Net.h"					// UDP Network game library
 
-struct Player players[MAX_PLAYERS];
+struct Player players[JN_MAX_PLAYERS];
 int numPlayers = 0;						// Number of players currently in the game
 int16_t clientID = -1;					// Distinguish between clients, default ID value is -1, if client has another value, they are an existing client
 int16_t arrBullets[256];				// Array of bullet objects
@@ -31,7 +39,7 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
 
 int client_loop(void *arg) {
     int socket = *((int *) arg);																				// cliSock passed in as argument
-    int16_t arrData[BUF_MAX];																					// Data to receive from server
+    int16_t arrData[JN_BUF_MAX];																				// Data to receive from server
 	int numBytes, id, bulletsInArray;																			// Number of bytes received , clientID, Active bullets
 	bool idSet = false;																							// The client ID has not been set yet
 
@@ -40,12 +48,12 @@ int client_loop(void *arg) {
 
         id = arrData[0];																						// Parse received data, first int = id
         if (id == -1 && !idSet) {																				// Parse data when the ID is unset
-            setClientID(arrData[1], &clientID, &numPlayers);													// xxx Assign an id for the connected player
+			JOR_NetSetClientID(arrData[1], &clientID, &numPlayers);												// xxx Assign an id for the connected player
 			idSet = true;																						// Stops the ID being set more than once
         }
 
         if (id >= 0) {																							// Parse existing Client data
-            checkIfNewPlayer(id, &numPlayers);																	// Increase number of players if new player added
+			JOR_NetCheckNewClient(id, &numPlayers);																// Increase number of players if new player added
             players[id].position.x = arrData[1];																// Player x position
             players[id].position.y = arrData[2];																// Player y position
             players[id].kills = arrData[3];																		// Number of kills
@@ -60,18 +68,16 @@ int client_loop(void *arg) {
             totalBulletsOnScreen = bulletsInArray;
         }
 
-		sleepCrossPlatform(50);																					// Sleep for 50 microseconds
+		JOR_NetSleep(50);																						// Sleep for 50 microseconds
     }
 
 	return 0;																									// Changed function return type to remove incompatible pointer type warning
 }
 
 int main(int argc, char* argv[]) {																				// Add formal parameter list
-    struct sockaddr_in srvAddr, cliAddr;																		// Server and client address structures
     int i, srvSock, cliSock;																					// for loop index, Server and client sockets
     char *srvIPAddr = NULL;																						// Server IP Address string entered from client menu select option								
-
-	initWinsock();																								// Initialise winsock
+		
     SDL_Init(SDL_INIT_VIDEO);																					// Initialise video only
     TTF_Init();																									// Initialise True Type Fonts
     TTF_Font *font = TTF_OpenFont("../resources/m5x7.ttf", 24);													// Font used to print text to screen
@@ -108,20 +114,22 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 	SDL_Thread* threadServerInput = NULL;																		// JOR SDL threads replacing pthread, Server input loop
 	SDL_Thread* threadServerOutput = NULL;																		// Server output loop on separate thread
 
-    srvAddr = intServerAddr(srvIPAddr);																			// Init server address structure
-    cliAddr = initClientAddr();																					// Init client address structure
+	struct sockaddr_in srvAddr, cliAddr;																		// Server and client address structures
+	JOR_NetInitWinsock();																						// JOR_Net: Initialise winsock
+	srvAddr = JOR_NetServAddr(srvIPAddr);																		// Init server address structure
+    cliAddr = JOR_NetCliAddr();																					// Init client address structure
 
     if (menu == 's') {																							// If Server menu option is selected
-        createUDPServer(&srvSock, &srvAddr);																	// Create Server UDP socket (only one instance of the game is a server)
+		JOR_NetInitServerUDP(&srvSock, &srvAddr);																// Create Server UDP socket (only one instance of the game is a server)
 		threadServerInput = SDL_CreateThread(serverInputLoop, "ServerReceiveThread", &srvSock);					// JOR SDL Thread replaces Pthread
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", &srvSock);					// Server output handled on separate thread
     }
-    createClientUDPSock(&cliSock, &cliAddr);																	// Create client UDP socket (all instances of the game are clients)
+    JOR_NetClientUDPSock(&cliSock, &cliAddr);																	// Create client UDP socket (all instances of the game are clients)
 	SDL_Thread* threadClient = SDL_CreateThread(client_loop, "ClientThread", &cliSock);							// JOR SDL Thread replaces Pthread, Client thread
 
     while (clientID < 0) {																						// If the current client is new
         cliSendTo(cliSock, srvAddr, clientID, 0);																// Set the client ID
-		sleepCrossPlatform(100);																				// Sleep for 100 microseconds
+		JOR_NetSleep(100);																						// Sleep for 100 microseconds
     }
 
 	SDL_Rect bullet_pos = { 0, 0, BULLET_HEIGHT, BULLET_HEIGHT };												// Init bullet object position and dimensions
@@ -135,7 +143,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
 
         cliSendTo(cliSock, srvAddr, clientID, key_state_from_player(&players[clientID]));						// Send keyboard input data to server
 
-		sleepCrossPlatform(30);																					// Sleep for 30 microseconds
+		JOR_NetSleep(30);																						// Sleep for 30 microseconds
 
         SDL_RenderClear(renderer);																				// Clear the screen
         SDL_RenderCopy(renderer, imgMap, NULL, NULL);															// Draw the map
@@ -158,17 +166,8 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
         SDL_RenderPresent(renderer);
     } // End while
 
-	closeSockets(cliSock, srvSock);
-/*
-#if defined __linux__
-	close(cliSock);
-	close(srvSock);
-#elif defined _WIN32 || defined _WIN64
-	closesocket(cliSock);																						// Close the client socket
-	closesocket(srvSock);																						// Close the server socket
-	WSACleanup();																								// Terminate use of Winsock 2 DLL
-#endif
-*/
+	JOR_NetCloseSocket(cliSock, srvSock);																		// Close the sockets
+
 	SDL_WaitThread(threadServerInput, NULL);																	// JOR SDL Thread replaces pthread
 	SDL_WaitThread(threadClient, NULL);																			// Make sure thread finishes before application closes
 	SDL_WaitThread(threadServerOutput, NULL);
@@ -178,5 +177,7 @@ int main(int argc, char* argv[]) {																				// Add formal parameter li
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
     return 0;
 }
+

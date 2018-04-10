@@ -1,11 +1,18 @@
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	Definitions.h
+
+	Moved network functionality to JOR_Net library
+	Added text centering
+*/
+
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
 #include "stdbool.h"
 
-#define ADDR_LEN sizeof(struct sockaddr)	// JOR Added Address length definition
-#define SERV_PORT 8887						// JOR Server port number
-#define SERV_ADDR "127.0.0.1"  				// JOR IP address of udp server (localhost)
 
 // Text
 #define CENTRE_TEXT -1						// JOR If used for x coordinate centre horizonally, and y vertical
@@ -23,12 +30,11 @@
 #define PLAYER_HEIGHT 16
 #define BULLET_HEIGHT 8
 #define BULLET_WIDTH 8
-#define MAX_PLAYERS 10						// Maximum 10 connected players
 #define CLIENT_FRAME_TIME 15
 #define SERVER_FRAME_TIME 15
 #define X_AXIS 1
 #define Y_AXIS 0
-#define BUF_MAX 256
+//#define BUF_MAX 256
 #define SPAWN_X 310
 #define SPAWN_Y 10
 #define LEFT_KEY 0x01
@@ -38,3 +44,4 @@
 #define ATTACK_KEY 0x10
 
 #endif
+

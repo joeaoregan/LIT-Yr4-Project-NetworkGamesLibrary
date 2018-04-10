@@ -1,3 +1,14 @@
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	Text.h
+
+	Added options to select text colour and centre horizontally and vertically
+	Added text centering on screen
+*/
+
+
 #ifndef FONT_H
 #define FONT_H
 

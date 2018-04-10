@@ -1,8 +1,19 @@
+/*
+	Modified by:	Joe O'Regan
+					K00203642
+
+	Physics.h
+
+	Added support for additional tiles to the tiled map
+	Extra collision detection is handled for additional tiles
+	Added sprite flipping for change in direction
+*/
+
 #ifndef PHYSIC_H
 #define PHYSIC_H
 
 #include <SDL.h>
-#include "objects.h"
+#include "GameObject.h"																		// Game objects Player and Bullet
 #include "list.h"
 
 void updatePlayer(struct Player *player); 
