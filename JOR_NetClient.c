@@ -9,6 +9,9 @@
 	Client specific functions
 */
 
+#if defined __linux__
+#include <unistd.h>																				// close(), usleep()
+#endif
 #include "stdafx.h"																				// Visual Studio file  (can't wrap)
 #include "JOR_NetClient.h"
 #include "Socket.h"
@@ -23,7 +26,7 @@ int cliSock;
 bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 	printf("zzzzzzzzzzz JOR_NetClientUDPSock\n");
 
-    if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {											// Create UDP socket
+    if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {										// Create UDP socket
 		perror("JOR_NetClientUDPSock: Socket Failed");
 		printf("Sock: %d\n", cliSock);
     } else {
@@ -31,7 +34,7 @@ bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 		clientSocketReady = true;
 	}
 
-    if (bind(cliSock, (struct sockaddr*) cliAddr, sizeof(struct sockaddr)) < 0) {					// Bind to address
+    if (bind(cliSock, JN_SA cliAddr, JN_SA_SZ) < 0) {											// Bind to address
 		perror("JOR_NetClientUDPSock: Bind Error");
 		printf("Sock: %d\n", cliSock);
     } else {
@@ -48,12 +51,13 @@ bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 //void cliSendTo(int sock, struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 	if (clientSocketReady) {
-		int16_t arrData[2] = { id, keys };															// Client identifier, and key pressed
+		int16_t arrData[2] = { id, keys };														// Client identifier, and key pressed
 
 		printf("cliSendTo arrdata0 %d arrdata1 %d\n", arrData[0], arrData[1]);
 
 		//if (sendto(sock, arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
-		if (sendto(cliSock, (char*)arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
+		//if (sendto(cliSock, (char*)arrData, sizeof(int16_t) * 2, 0, (struct sockaddr *) &srvAddr, sizeof(struct sockaddr)) < 0) {
+		if (sendto(cliSock, (char*)arrData, JN_I16_SZ * 2, 0, JN_SA &srvAddr, JN_SA_SZ) < 0) {
 			perror("Client sentToServer: sendto error");
 		}
 	}
@@ -68,9 +72,9 @@ int cliRecvfrom(int16_t *arrData) {
 
 	if (clientSocketReady) {
 		//int numBytes = recvfrom(sock, arrData, sizeof(int16_t) * BUF_MAX, 0, NULL, 0);
-		numBytes = recvfrom(cliSock, (char*)arrData, sizeof(int16_t) * JN_BUF_MAX, 0, NULL, 0);	// Receive data from server
+		numBytes = recvfrom(cliSock, (char*)arrData, JN_I16_SZ * JN_BUF_MAX, 0, NULL, 0);		// Receive data from server
 		//printf("Received from Server -  1: %d 2: %d 3: %d 4: %d\n", 
-		//	arrData[0], arrData[1], arrData[2], arrData[3]);										// Display data received
+		//	arrData[0], arrData[1], arrData[2], arrData[3]);									// Display data received
 	}
 
     return numBytes;																			// Return the number of bytes received
@@ -95,11 +99,14 @@ void JOR_NetCheckNewClient(int id, int *numPlayers) {
 	}
 }
 
+/*
+	JOR_Net: Close Client Socket
+*/
 void JOR_NetCloseClientSocket() {
 #if defined __linux__
-	close(cliSock);																		// Close client socket
+	close(cliSock);																				// Close client socket
 #elif defined _WIN32 || defined _WIN64
-	closesocket(cliSock);																// Close the client socket
-	WSACleanup();																		// Terminate use of Winsock 2 DLL
+	closesocket(cliSock);																		// Close the client socket
+	WSACleanup();																				// Terminate use of Winsock 2 DLL
 #endif
 }

@@ -9,6 +9,9 @@
 	Server Specific functions
 */
 
+#if defined __linux__
+#include <unistd.h>																					// close(), usleep()
+#endif
 #include "stdafx.h"
 #include "JOR_NetServer.h"
 #include "Definitions.h"
@@ -19,12 +22,9 @@
 
 bool serverSocketReady = false;
 bool getServSockReady() { return serverSocketReady; }
-struct sockaddr_in listOfClientAddresses[JN_MAX_PLAYERS];
-int totalNumClients = 0;
-
+struct sockaddr_in listOfClientAddresses[JN_MAX_PLAYERS];											// Connected client addresses
+int totalNumClients = 0;																			// Number of collected clients
 int srvSock;																						// Server Socket
-
-
 
 /*
 	JOR_Net: Return the list of connected client addresses
@@ -38,7 +38,7 @@ struct sockaddr_in JOR_NetClientAddrList(int select) {
 */
 //void JOR_NetInitServerUDP(int *srvSock, struct sockaddr_in *srvAddr) {
 bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
-    memset(listOfClientAddresses, 0, sizeof(struct sockaddr_in) * JN_MAX_PLAYERS);					// Initialise the list of client addresses in memory
+    memset(listOfClientAddresses, 0, JN_SA_SZ * JN_MAX_PLAYERS);									// Initialise the list of client addresses in memory
 
     if ((srvSock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {									// Initialise the server socket
         perror("JOR_NetInitServerUDP: Server_UDP createUDPServer: Socket Failed");
@@ -48,7 +48,7 @@ bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
 		serverSocketReady = true;
 	}
 
-    if (bind(srvSock, (struct sockaddr*) srvAddr, sizeof(struct sockaddr)) < 0) {						// Bind the server socket
+    if (bind(srvSock, (struct sockaddr*) srvAddr, JN_SA_SZ) < 0) {									// Bind the server socket
         perror("JOR_NetInitServerUDP: Bind Error");
 		printf("Sock: %d\n", srvSock);
     } else {
@@ -65,10 +65,10 @@ bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
 //void srvSendto(int sock, struct sockaddr_in client, int16_t data[], int size) {
 void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
 	if (serverSocketReady) {
-		socklen_t addr_size = sizeof(struct sockaddr);
+		socklen_t addr_size = JN_SA_SZ;
 
-		//sendto(sock, data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);			// Send data to client
-		sendto(srvSock, (char*)data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
+		//sendto(sock, data, sizeof(int16_t) * size, 0, (struct sockaddr*)&client, addr_size);		// Send data to client
+		sendto(srvSock, (char*)data, JN_I16_SZ * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
 	}
 }
 
@@ -79,12 +79,12 @@ void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
 //struct sockaddr_in srvRecvfrom(int sock, int16_t data[]) {
 struct sockaddr_in srvRecvfrom(int16_t arrData[]) {
 	struct sockaddr_in addr;
-	socklen_t addr_size = sizeof(struct sockaddr);
+	socklen_t addr_size = JN_SA_SZ;
 
 	printf("servRecvFrom arrdata0 %d arrdata1 %d arrdata2 %d arrdata3 %d\n", arrData[0], arrData[1], arrData[2], arrData[3]);
 
-	//recvfrom(sock, data, sizeof(int16_t) * 4, 0, (struct sockaddr*)&addr, &addr_size);					// Receive data from client over UDP
-	recvfrom(srvSock, (char*) arrData, sizeof(int16_t) * 4, 0, (struct sockaddr*)&addr, &addr_size);		// Receive data from client over UDP
+	//recvfrom(sock, data, sizeof(int16_t) * 4, 0, (struct sockaddr*)&addr, &addr_size);			// Receive data from client over UDP
+	recvfrom(srvSock, (char*) arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&addr, &addr_size);		// Receive data from client over UDP
 
 	return addr;
 }
@@ -140,12 +140,14 @@ int JOR_NetCompareAddr(struct sockaddr_in *a, struct sockaddr_in *b) {
 	return false;																					// Otherwise no match found
 }
 
-
+/*
+	JOR_Net: Close Server Socket
+*/
 void JOR_NetCloseServerSocket() {
 #if defined __linux__
-	close(cliSock);																		// Close client socket
+	close(srvSock);																					// Close Server socket
 #elif defined _WIN32 || defined _WIN64
-	closesocket(srvSock);																// Close the client socket
-	WSACleanup();																		// Terminate use of Winsock 2 DLL
+	closesocket(srvSock);																			// Close the Server socket
+	WSACleanup();																					// Terminate use of Winsock 2 DLL
 #endif
 }

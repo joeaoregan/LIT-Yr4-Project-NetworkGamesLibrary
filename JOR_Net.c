@@ -15,12 +15,11 @@
 // JOR_Net.c : Defines the exported functions for the DLL application.
 //
 
+#if defined __linux__
+#include <unistd.h>																		// close(), usleep()
+#endif
 #include "stdafx.h"
 #include "JOR_Net.h"
-
-#if defined __linux__
-#include <unistd.h>																		// close()
-#endif
 #include <string.h>																		// memset()
 #include "Definitions.h"																// JN_SERV_ADDR, JN_SERV_PORT
 #include "Socket.h"
@@ -59,7 +58,7 @@ struct sockaddr_in JOR_NetServAddr(char *ip) {
 */
 struct sockaddr_in JOR_NetCliAddr() {
 	struct sockaddr_in cliAddr;															// Client address structure
-	memset(&cliAddr, 0, sizeof(struct sockaddr));										// Initialise the address structure
+	memset(&cliAddr, 0, JN_SA_SZ);														// Initialise the address structure with 0s
 	cliAddr.sin_family = AF_INET;														// Address family
 	cliAddr.sin_addr.s_addr = INADDR_ANY;												// Socket accepts connections on all local IP addresses
 	cliAddr.sin_port = 0;																// Initialise port number
