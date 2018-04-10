@@ -76,7 +76,8 @@ struct sockaddr_in srvRecvfrom(int16_t arrData[]) {
 	struct sockaddr_in addr;
 	socklen_t addr_size = JN_SA_SZ;
 
-	printf("servRecvFrom arrdata0 %d arrdata1 %d arrdata2 %d arrdata3 %d\n", arrData[0], arrData[1], arrData[2], arrData[3]);
+	//printf("servRecvFrom arrdata0 %d arrdata1 %d arrdata2 %d arrdata3 %d\n", 
+	//	arrData[0], arrData[1], arrData[2], arrData[3]);
 
 	recvfrom(srvSock, (char*) arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&addr, &addr_size);		// Receive data from client over UDP
 

@@ -22,7 +22,7 @@ int cliSock;
 	JOR_Net: Initialise the client socket
 */
 bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
-	printf("zzzzzzzzzzz JOR_NetClientUDPSock\n");
+	printf("JOR_Net: Initialising Client Socket\n");
 
     if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {										// Create UDP socket
 		perror("JOR_NetClientUDPSock: Socket Failed");
@@ -50,7 +50,7 @@ void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 	if (clientSocketReady) {
 		int16_t arrData[2] = { id, keys };														// Client identifier, and key pressed
 
-		printf("cliSendTo arrdata0 %d arrdata1 %d\n", arrData[0], arrData[1]);
+		//printf("cliSendTo arrdata0 %d arrdata1 %d\n", arrData[0], arrData[1]);
 
 		if (sendto(cliSock, (char*)arrData, JN_I16_SZ * 2, 0, JN_SA &srvAddr, JN_SA_SZ) < 0) {
 			perror("Client sentToServer: sendto error");
