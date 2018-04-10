@@ -1,6 +1,7 @@
 # Joe O'Regan
 # K00203642
 # Build JOR_Net Static and Shared Libraries
+# Cross-platform UDP Network Games Library for C/C++
 
 all: program1 program2 program3 program4 program5 program6 program7 program8
 

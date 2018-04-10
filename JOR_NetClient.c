@@ -2,9 +2,9 @@
 	Created By: Joe O'Regan
 				K00203642
 
-	UDP Network Games Library for C/C++
+	Cross-platform UDP Network Games Library for C/C++
 
-	JOR_NetClient.cpp
+	JOR_NetClient.c
 
 	Client specific functions
 */

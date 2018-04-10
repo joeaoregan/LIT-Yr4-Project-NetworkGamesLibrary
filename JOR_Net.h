@@ -2,11 +2,12 @@
 	Created By: Joe O'Regan
 				K00203642
 
-	UDP Network Games Library for C/C++
+	Cross-platform UDP Network Games Library for C/C++
 
 	JOR_Net.h
-
-	Main header file
+	
+	Main header file, used to access the library from within a game/app
+	Functionality that isn't specific to Client or Server
 */
 
 #pragma once

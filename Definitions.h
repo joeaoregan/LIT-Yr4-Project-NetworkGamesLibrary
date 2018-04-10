@@ -1,3 +1,12 @@
+/*
+	Created By: Joe O'Regan
+				K00203642
+
+	Cross-platform UDP Network Games Library for C/C++
+
+	Definitions.h
+*/
+
 #ifndef JOR_NET_DEFINITIONS_H
 #define JOR_NET_DEFINITIONS_H
 
