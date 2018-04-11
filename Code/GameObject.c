@@ -77,7 +77,6 @@ void resolve_player_key_up(int key, struct Player* player) {
     }
 }
 
-
 void resolve_keyboard(SDL_Event e, struct Player* player) {
     if (e.type == SDL_KEYDOWN) {
         resolve_player_key_down(e.key.keysym.sym, player);
@@ -100,4 +99,3 @@ struct Bullet init_bullet(int x, int y, int face) {
     bullet.face = face;
     return bullet;
 }
-

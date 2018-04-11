@@ -36,9 +36,6 @@ int tileMap[15][20] = {
 
 int sign(int a) {
 	return (a < 0) ? -1 : (a > 0) ? 1 : 0;	// JOR
-    //if (a < 0) { return -1;  } 
-	//else if (a > 0) { return 1; } 
-	//else { return 0; }
 }
 
 void decrement_abs(int *a) {
@@ -128,7 +125,7 @@ int check_if_player_dies(struct Player *player, struct node **bullets, int *kill
 	Update the player objects movement (Added sprite flipping, when changing direction)
 */
 void updatePlayer(struct Player *player) {
-    int x_movement = 0;									// Set/reset movement
+    int x_movement = 0;																										// Set/reset movement
     int y_movement = 0;
 
     if (player->left) {
@@ -213,6 +210,7 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
 			else if (tileMap[i][j] == 8) SDL_RenderCopyEx(renderer, texTile5, NULL, &rect, 0, NULL, SDL_FLIP_VERTICAL);		// Vertically flip tile 5
         }
     }
+
     SDL_SetRenderTarget(renderer, NULL);
     return map_texture;
 }

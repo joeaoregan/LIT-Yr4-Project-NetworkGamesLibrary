@@ -12,6 +12,15 @@
 #include "Text.h"	// Display game text
 #include <stdio.h>	// snprintf()
 
+int highlightLocalPlayerText(SDL_Renderer *renderer, TTF_Font *font, int posX, int data, int clientID, int index) {
+	char label[10] = "";
+	int numbytes = snprintf(label, 3, "%d", data);
+	if (index == clientID) displayTextRed(renderer, label, font, posX, 30 + index * 20);						/// Display the kills for the local player in red on new line
+	else displayTextWhite(renderer, label, font, posX, 30 + index * 20);										// Display connected players in white
+
+	return numbytes;
+}
+
 void renderHUD(SDL_Renderer *renderer, TTF_Font *font, struct Player *players, int numPlayers, int clientID, char menu) {
 	int i, numbytes;
 
@@ -25,17 +34,22 @@ void renderHUD(SDL_Renderer *renderer, TTF_Font *font, struct Player *players, i
 
 	displayTextWhite(renderer, "Kills:", font, 400, 10);													// HUD: players kills
 	for (i = 0; i <= numPlayers; i++) {
-		char kills[10] = "";
-		numbytes = snprintf(kills, 3, "%d", players[i].kills);
-		if (i == clientID) displayTextRed(renderer, kills, font, 400, 30 + i * 20);							// Display the kills for the local player in red on new line
-		else displayTextWhite(renderer, kills, font, 400, 30 + i * 20);										// Display connected players in white
+		numbytes = highlightLocalPlayerText(renderer, font, 400, players[i].kills, clientID, i);
+		//char kills[10] = "";
+		//numbytes = snprintf(kills, 3, "%d", players[i].kills);
+		//if (i == clientID) displayTextRed(renderer, kills, font, 400, 30 + i * 20);						// Display the kills for the local player in red on new line
+		//else displayTextWhite(renderer, kills, font, 400, 30 + i * 20);									// Display connected players in white
 	}
 
 	displayTextWhite(renderer, "Deaths:", font, 460, 10);													// HUD: player deaths
 	for (i = 0; i <= numPlayers; i++) {
-		char deaths[10] = "";
-		numbytes = snprintf(deaths, 3, "%d", players[i].deaths);
-		if (i == clientID) displayTextRed(renderer, deaths, font, 460, 30 + i * 20);						// Display deaths for local player in read beside kills
-		else displayTextWhite(renderer, deaths, font, 460, 30 + i * 20);									// Display connected players in white
+		numbytes = highlightLocalPlayerText(renderer, font, 460, players[i].deaths, clientID, i);
+		//char deaths[10] = "";
+		//numbytes = snprintf(deaths, 3, "%d", players[i].deaths);
+		//if (i == clientID) displayTextRed(renderer, deaths, font, 460, 30 + i * 20);						// Display deaths for local player in read beside kills
+		//else displayTextWhite(renderer, deaths, font, 460, 30 + i * 20);									// Display connected players in white
 	}
+
+	if (numbytes == 0) printf("Error initialising HUD\n");
 }
+

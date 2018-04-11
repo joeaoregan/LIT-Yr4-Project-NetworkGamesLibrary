@@ -67,13 +67,16 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Thread* threadServerInput = NULL;														// JOR SDL threads replacing pthread, Server input loop
 	SDL_Thread* threadServerOutput = NULL;														// Server output loop on separate thread
 
-	struct sockaddr_in srvAddr;																	// Server address structure
+	struct sockaddr_in srvAddr, srvAddrListen;													// Server address structure, additional listening socket so server can listen on any address (can't send this way in windows)
 	JOR_NetInitWinsock();																		// JOR_Net: Initialise winsock
 	srvAddr = JOR_NetServAddr(srvIPAddr);														// Init server address structure
+	srvAddrListen = JOR_NetServAddr(INADDR_ANY);												// Null for server, IP entered for client
 	JOR_NetCliAddr();																			// Init client address structure
 
     if (menu == 's') {																			// If Server menu option is selected
 		commsReady = JOR_NetInitServerUDP(&srvAddr);											// Create Server UDP socket (only one instance of the game is a server)
+		commsReady = JOR_NetInitServerListenUDP(&srvAddrListen);								// Initialise the listening socket
+
 		threadServerInput = SDL_CreateThread(serverInputLoop, "ServerReceiveThread", NULL);		// JOR SDL Thread replaces Pthread
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", NULL);		// Server output handled on separate thread
     }
@@ -82,7 +85,7 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Thread* threadClient = SDL_CreateThread(clientLoop, "ClientThread", NULL);				// JOR SDL Thread replaces Pthread, Client thread
 
 	while (getClientID() < 0 && commsReady) {													// If the current client is new
-		cliSendTo(srvAddr, getClientID(), 0);													// Set the client ID
+		cliSendTo(srvAddrListen, getClientID(), 0);													// Set the client ID
 
 		JOR_NetSleep(100);																		// Sleep for 100 microseconds
     }
@@ -98,7 +101,7 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 			resolve_keyboard(e, &players[getClientID()]);										// Handle keyboard input
         }
 
-		cliSendTo(srvAddr, getClientID(), key_state_from_player(&players[getClientID()]));		// Send keyboard input data to server
+		cliSendTo(srvAddrListen, getClientID(), key_state_from_player(&players[getClientID()]));		// Send keyboard input data to server
 
 		JOR_NetSleep(30);																		// Sleep for 30 microseconds
 
@@ -106,12 +109,6 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
         SDL_RenderCopy(renderer, imgMap, NULL, NULL);											// Draw the map
 		
         for (i = 0; i <= getNumPlayers(); i++) {												// For every player
-			/*
-			if (i == getClientID())																// If it is the local player
-				renderFlip(renderer, imgPlayer2, &players[i].position, players[i].flip);		// Render red sprite for player local player
-			else
-				renderFlip(renderer, imgPlayer1, &players[i].position, players[i].flip);		// Render blue sprite for connected players
-			*/
 			renderFlip(renderer, (i == getClientID()) ? 
 				imgPlayer2 : imgPlayer1, &players[i].position, players[i].flip);				// Red sprite for local player, blue for connected players
         }
