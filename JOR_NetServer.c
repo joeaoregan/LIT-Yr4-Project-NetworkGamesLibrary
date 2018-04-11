@@ -22,7 +22,7 @@
 bool serverSocketReady = false;
 bool getServSockReady() { return serverSocketReady; }
 struct sockaddr_in listOfClientAddresses[JN_MAX_PLAYERS];											// Connected client addresses
-int totalNumClients = 0;																			// Number of collected clients
+unsigned int totalNumClients = 0;																	// Number of connected clients
 int srvSock;																						// Server Socket
 
 /*
@@ -93,8 +93,8 @@ int srvRecvfrom(int16_t arrData[]) {
 	JOR_Net: Return the clients position in the list or the 
 	next position in the lists of clients for new client
 */
-int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int numClients) {
-    int i;
+int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int unsigned numClients) {
+    unsigned int i;
     for (i = 0; i < numClients; i++) {
         if (JOR_NetCompareAddr(&newCliAddr, &listOfClientAddresses[i])) {							// If the address matches and address in the existing clients
             return i;																				// Return clients position in the list									
@@ -108,7 +108,7 @@ int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int numClients) {
 */
 void JOR_NetAddClientAddr(int clientNum, struct sockaddr_in *cliAddr) {
 	//printf("server addClientAddrToList()\n");
-    if (clientNum >= totalNumClients) {
+    if (clientNum >= (int) totalNumClients) {
         listOfClientAddresses[totalNumClients++] = *cliAddr;										// Add client address to the client address list
     }
 }
@@ -118,7 +118,7 @@ void JOR_NetAddClientAddr(int clientNum, struct sockaddr_in *cliAddr) {
 */
 int JOR_NetExistingClient(int clientNum) {
 	//printf("server existingClient() clientNum: %d totalNumClients: %d\n",clientNum,totalNumClients);
-    return (clientNum < totalNumClients && clientNum >= 0);											// Is the client number is between 0 and the total number of clients
+    return (clientNum < (int) totalNumClients && clientNum >= 0);											// Is the client number is between 0 and the total number of clients
 }
 
 /*

@@ -48,7 +48,7 @@ extern "C" {
 
 	JN_MODIFIER int JOR_NetGetNumClients();													// Get the total number of clients
 
-	JN_MODIFIER int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int size);			// Find the client ID number
+	JN_MODIFIER int JOR_NetFindClientID(struct sockaddr_in newCliAddr, unsigned int size);	// Find the client ID number
 
 	JN_MODIFIER int JOR_NetCompareAddr(struct sockaddr_in *a, struct sockaddr_in *b);		// Compare to sockaddr_in addresses to see if there is a match
 
