@@ -69,7 +69,6 @@ void JOR_NetInitWinsock() {
 /*
 	JOR_Net: Close the sockets
 */
-//void JOR_NetCloseSocket(int cli, int srv) {
 void JOR_NetCloseSocket() {
 	JOR_NetCloseClientSocket();															// Close client socket
 	JOR_NetCloseServerSocket();															// Close server socket

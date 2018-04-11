@@ -14,6 +14,7 @@
 #endif
 #include "stdafx.h"																				// Visual Studio file  (can't wrap)
 #include "JOR_NetClient.h"
+#include <string.h>
 
 bool clientSocketReady = false;
 int cliSock;
@@ -23,7 +24,6 @@ struct sockaddr_in getCliAddr() { return cliAddr; }
 /*
 	JOR_Net: Initialise the client socket
 */
-//bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 bool JOR_NetInitClientUDP() {
 	printf("JOR_Net: Initialising Client Socket\n");
 
@@ -51,7 +51,6 @@ bool JOR_NetInitClientUDP() {
 	JOR_Net: Create client sockaddr_in address structure
 */
 struct sockaddr_in JOR_NetCliAddr() {
-	//struct sockaddr_in cliAddr;														// Client address structure
 	memset(&cliAddr, 0, JN_SA_SZ);														// Initialise the address structure with 0s
 	cliAddr.sin_family = AF_INET;														// Address family
 	cliAddr.sin_addr.s_addr = INADDR_ANY;												// Socket accepts connections on all local IP addresses

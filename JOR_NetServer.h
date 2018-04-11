@@ -38,10 +38,8 @@ extern "C" {
 
 	JN_MODIFIER bool JOR_NetInitServerUDP(struct sockaddr_in *server_sock);					// Create and bind the socket
 
-	//JN_MODIFIER void srvSendto(struct sockaddr_in clientAddr, int16_t tab[], int size);	// Send data to client using client address sendto()
 	JN_MODIFIER void srvSendto(int clientID, int16_t tab[], int size);						// Use client ID to get address from list and send data to client using sendto()
 
-	//JN_MODIFIER struct sockaddr_in srvRecvfrom(int16_t data[]);							// Receive data from client and return client address
 	JN_MODIFIER int srvRecvfrom(int16_t data[]);											// Receive data from client and return client ID
 																		
 	JN_MODIFIER void JOR_NetAddClientAddr(int client_pos, struct sockaddr_in *client_addr);	// Add the client address to the list of connected clients

@@ -59,14 +59,7 @@ bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
 
 /*
 	JOR_Net: Send data from server to client ERROR WITH int16_t casting to char
-*//*
-void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
-	if (serverSocketReady) {
-		socklen_t addr_size = JN_SA_SZ;
-
-		sendto(srvSock, (char*)data, JN_I16_SZ * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
-	}
-}*/
+*/
 void srvSendto(int clientID, int16_t data[], int size) {
 	struct sockaddr_in client = JOR_NetGetClientAddr(clientID);										// Get the client address using its ID
 
@@ -79,20 +72,7 @@ void srvSendto(int clientID, int16_t data[], int size) {
 
 /*
 	JOR_Net: Receive data from client
-*//*
-struct sockaddr_in srvRecvfrom(int16_t arrData[]) {
-	struct sockaddr_in cliAddr;
-	socklen_t addr_size = JN_SA_SZ;
-
-	//printf("servRecvFrom arrdata0 %d arrdata1 %d arrdata2 %d arrdata3 %d\n", 
-	//	arrData[0], arrData[1], arrData[2], arrData[3]);
-
-	recvfrom(srvSock, (char*) arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&cliAddr, &addr_size);	// Receive data from client over UDP
-
-	JOR_NetFindClientID(cliAddr, totalNumClients);
-
-	return cliAddr;
-}*/
+*/
 int srvRecvfrom(int16_t arrData[]) {
 	struct sockaddr_in cliAddr;
 	socklen_t addr_size = JN_SA_SZ;
@@ -110,7 +90,8 @@ int srvRecvfrom(int16_t arrData[]) {
 }
 
 /*
-	JOR_Net: Return the clients position in the list or the next position in the lists of clients for new client
+	JOR_Net: Return the clients position in the list or the 
+	next position in the lists of clients for new client
 */
 int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int numClients) {
     int i;
