@@ -28,7 +28,7 @@ int srvSock;																						// Server Socket
 /*
 	JOR_Net: Return the list of connected client addresses
 */
-struct sockaddr_in JOR_NetClientAddrList(int select) {
+struct sockaddr_in JOR_NetGetClientAddr(int select) {
 	return listOfClientAddresses[select];															// Client address list
 }
 
@@ -59,8 +59,17 @@ bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
 
 /*
 	JOR_Net: Send data from server to client ERROR WITH int16_t casting to char
-*/
+*//*
 void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
+	if (serverSocketReady) {
+		socklen_t addr_size = JN_SA_SZ;
+
+		sendto(srvSock, (char*)data, JN_I16_SZ * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
+	}
+}*/
+void srvSendto(int clientID, int16_t data[], int size) {
+	struct sockaddr_in client = JOR_NetGetClientAddr(clientID);										// Get the client address using its ID
+
 	if (serverSocketReady) {
 		socklen_t addr_size = JN_SA_SZ;
 
@@ -68,20 +77,49 @@ void srvSendto(struct sockaddr_in client, int16_t data[], int size) {
 	}
 }
 
-
 /*
 	JOR_Net: Receive data from client
-*/
+*//*
 struct sockaddr_in srvRecvfrom(int16_t arrData[]) {
-	struct sockaddr_in addr;
+	struct sockaddr_in cliAddr;
 	socklen_t addr_size = JN_SA_SZ;
 
 	//printf("servRecvFrom arrdata0 %d arrdata1 %d arrdata2 %d arrdata3 %d\n", 
 	//	arrData[0], arrData[1], arrData[2], arrData[3]);
 
-	recvfrom(srvSock, (char*) arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&addr, &addr_size);		// Receive data from client over UDP
+	recvfrom(srvSock, (char*) arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&cliAddr, &addr_size);	// Receive data from client over UDP
 
-	return addr;
+	JOR_NetFindClientID(cliAddr, totalNumClients);
+
+	return cliAddr;
+}*/
+int srvRecvfrom(int16_t arrData[]) {
+	struct sockaddr_in cliAddr;
+	socklen_t addr_size = JN_SA_SZ;
+	int curClient;
+
+	recvfrom(srvSock, (char*)arrData, JN_I16_SZ * 4, 0, (struct sockaddr*)&cliAddr, &addr_size);	// Receive data from client over UDP
+
+	curClient = JOR_NetFindClientID(cliAddr, totalNumClients);
+
+	if (arrData[0] == -1 && curClient < JN_MAX_PLAYERS) {											// ID field of the data array is -1, the client is new, and still under max players
+		JOR_NetAddClientAddr(curClient, &cliAddr);													// Add the client address to the list of connected clients
+	}
+
+	return curClient;
+}
+
+/*
+	JOR_Net: Return the clients position in the list or the next position in the lists of clients for new client
+*/
+int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int numClients) {
+    int i;
+    for (i = 0; i < numClients; i++) {
+        if (JOR_NetCompareAddr(&newCliAddr, &listOfClientAddresses[i])) {							// If the address matches and address in the existing clients
+            return i;																				// Return clients position in the list									
+        }
+    }
+    return numClients;																				// Return next client ID number
 }
 
 /*
@@ -106,20 +144,6 @@ int JOR_NetExistingClient(int clientNum) {
 	JOR_Net: Get the total number of clients
 */
 int JOR_NetGetNumClients() { return totalNumClients; }												// Amount of connected clients
-
-
-/*
-	JOR_Net: Return the clients position in the list or the next position in the lists of clients for new client
-*/
-int JOR_NetFindClientID(struct sockaddr_in newCliAddr, int numClients) {
-    int i;
-    for (i = 0; i < numClients; i++) {
-        if (JOR_NetCompareAddr(&newCliAddr, &listOfClientAddresses[i])) {							// If the address matches and address in the existing clients
-            return i;																				// Return clients position in the list									
-        }
-    }
-    return numClients;																				// Return next client ID number
-}
 
 /*
 	JOR_Net: Compare to sockaddr_in addresses to see if there is a match

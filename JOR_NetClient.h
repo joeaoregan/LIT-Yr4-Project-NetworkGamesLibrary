@@ -26,20 +26,24 @@
 #endif
 #include <stdio.h>																		// printf()
 #include <stdint.h>																		// int16_t
+#include "stdbool.h"																	// Boolean values
 #include "Definitions.h"																// BUF_MAX, JN_MODIFIER
-#include "stdbool.h"
 
 // extern "C" guards are only required when programming with C++
 #ifdef __cplusplus
 extern "C" {
 #endif
-	bool getServSockReady();
+	bool getServSockReady(); 
+	struct sockaddr_in getCliAddr();
 
-	JN_MODIFIER bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr);					// Create the client UDP socket
+	//JN_MODIFIER bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr);				// Create the client UDP socket
+	JN_MODIFIER bool JOR_NetInitClientUDP();											// Create the client UDP socket
+
+	JN_MODIFIER struct sockaddr_in JOR_NetCliAddr();									// JOR_Net: Create client sockaddr_in address structure
 
 	JN_MODIFIER void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
 
-	JN_MODIFIER int cliRecvfrom(int16_t *arrData);										// Receive data from server over UDP
+	JN_MODIFIER int JOR_NetRecvFromCl(int16_t *arrData);										// Receive data from server over UDP
 
 	JN_MODIFIER void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);	// Set the ID for each player
 

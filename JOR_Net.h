@@ -32,9 +32,7 @@ extern "C" {
 #endif
 
 	JN_MODIFIER struct sockaddr_in JOR_NetServAddr(char *ip);	// JOR_Net: Create server sockaddr_in address structure
-
-	JN_MODIFIER struct sockaddr_in JOR_NetCliAddr();			// JOR_Net: Create client sockaddr_in address structure
-
+	
 	JN_MODIFIER void JOR_NetInitWinsock();						// JOR_Net: Init windows networking functionality
 
 	JN_MODIFIER void JOR_NetCloseSocket();						// JOR_Net: Init windows networking functionality

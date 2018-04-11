@@ -17,11 +17,14 @@
 
 bool clientSocketReady = false;
 int cliSock;
+struct sockaddr_in cliAddr;																		// Client address structure
+struct sockaddr_in getCliAddr() { return cliAddr; }
 
 /*
 	JOR_Net: Initialise the client socket
 */
-bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
+//bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
+bool JOR_NetInitClientUDP() {
 	printf("JOR_Net: Initialising Client Socket\n");
 
     if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {										// Create UDP socket
@@ -32,7 +35,7 @@ bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 		clientSocketReady = true;
 	}
 
-    if (bind(cliSock, JN_SA cliAddr, JN_SA_SZ) < 0) {											// Bind to address
+    if (bind(cliSock, JN_SA &cliAddr, JN_SA_SZ) < 0) {											// Bind to address
 		perror("JOR_NetClientUDPSock: Bind Error");
 		printf("Sock: %d\n", cliSock);
     } else {
@@ -41,6 +44,20 @@ bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr) {
 	}
 
 	return clientSocketReady;
+}
+
+
+/*
+	JOR_Net: Create client sockaddr_in address structure
+*/
+struct sockaddr_in JOR_NetCliAddr() {
+	//struct sockaddr_in cliAddr;														// Client address structure
+	memset(&cliAddr, 0, JN_SA_SZ);														// Initialise the address structure with 0s
+	cliAddr.sin_family = AF_INET;														// Address family
+	cliAddr.sin_addr.s_addr = INADDR_ANY;												// Socket accepts connections on all local IP addresses
+	cliAddr.sin_port = 0;																// Initialise port number
+		
+	return cliAddr;
 }
 
 /*
@@ -61,7 +78,7 @@ void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 /*
 	Recieve data from the server
 */
-int cliRecvfrom(int16_t *arrData) {
+int JOR_NetRecvFromCl(int16_t *arrData) {
 	int numBytes = 0;
 
 	if (clientSocketReady) {
