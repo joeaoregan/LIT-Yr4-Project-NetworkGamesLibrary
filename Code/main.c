@@ -26,16 +26,6 @@
 #include "JOR_Net.h"					// UDP Network game library
 #include "Textures.h"
 
-/*
-SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
-	SDL_Surface *bitmap = SDL_LoadBMP(file);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, bitmap);
-    SDL_FreeSurface(bitmap);
-
-    return texture;
-}
-*/
-
 int main(int argc, char* argv[]) {																// Add formal parameter list
 	bool commsReady = false;
 	int i;
@@ -77,10 +67,12 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Thread* threadServerInput = NULL;														// JOR SDL threads replacing pthread, Server input loop
 	SDL_Thread* threadServerOutput = NULL;														// Server output loop on separate thread
 
-	struct sockaddr_in srvAddr, cliAddr;														// Server and client address structures
+	//struct sockaddr_in srvAddr, cliAddr;														// Server and client address structures
+	struct sockaddr_in srvAddr;																	// Server address structure
 	JOR_NetInitWinsock();																		// JOR_Net: Initialise winsock
 	srvAddr = JOR_NetServAddr(srvIPAddr);														// Init server address structure
-    cliAddr = JOR_NetCliAddr();																	// Init client address structure
+	//cliAddr = JOR_NetCliAddr();																// Init client address structure
+	JOR_NetCliAddr();																			// Init client address structure
 
     if (menu == 's') {																			// If Server menu option is selected
 		commsReady = JOR_NetInitServerUDP(&srvAddr);											// Create Server UDP socket (only one instance of the game is a server)
@@ -88,10 +80,11 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", NULL);		// Server output handled on separate thread
     }
 
-	commsReady = JOR_NetClientUDPSock(&cliAddr);												// Create client UDP socket (all instances of the game are clients)
+	//commsReady = JOR_NetClientUDPSock(&cliAddr);												// Create client UDP socket (all instances of the game are clients)
+	commsReady = JOR_NetInitClientUDP();														// Create client UDP socket (all instances of the game are clients)
 	SDL_Thread* threadClient = SDL_CreateThread(clientLoop, "ClientThread", NULL);				// JOR SDL Thread replaces Pthread, Client thread
 
-    while (getClientID() < 0 && commsReady) {													// If the current client is new
+	while (getClientID() < 0 && commsReady) {													// If the current client is new
 		cliSendTo(srvAddr, getClientID(), 0);													// Set the client ID
 
 		JOR_NetSleep(100);																		// Sleep for 100 microseconds
@@ -117,11 +110,9 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 		
         for (i = 0; i <= getNumPlayers(); i++) {												// For every player
 			if (i == getClientID())																// If it is the local player
-				//SDL_RenderCopyEx(renderer, imgPlayer2, NULL, &players[i].position, 0, NULL, players[i].flip);	// Render red sprite for player local player
 				renderFlip(renderer, imgPlayer2, &players[i].position, players[i].flip);		// Render red sprite for player local player
 			else
-				//SDL_RenderCopyEx(renderer, imgPlayer1, NULL, &players[i].position, 0, NULL, players[i].flip);	// Render blue sprite for connected players
-				renderFlip(renderer, imgPlayer2, &players[i].position, players[i].flip);		// Render blue sprite for connected players
+				renderFlip(renderer, imgPlayer1, &players[i].position, players[i].flip);		// Render blue sprite for connected players
         }
 
 		renderHUD(renderer, font, players, getNumPlayers(), getClientID(), menu);				// Render game info text
