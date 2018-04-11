@@ -67,11 +67,9 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Thread* threadServerInput = NULL;														// JOR SDL threads replacing pthread, Server input loop
 	SDL_Thread* threadServerOutput = NULL;														// Server output loop on separate thread
 
-	//struct sockaddr_in srvAddr, cliAddr;														// Server and client address structures
 	struct sockaddr_in srvAddr;																	// Server address structure
 	JOR_NetInitWinsock();																		// JOR_Net: Initialise winsock
 	srvAddr = JOR_NetServAddr(srvIPAddr);														// Init server address structure
-	//cliAddr = JOR_NetCliAddr();																// Init client address structure
 	JOR_NetCliAddr();																			// Init client address structure
 
     if (menu == 's') {																			// If Server menu option is selected
@@ -80,7 +78,6 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 		threadServerOutput = SDL_CreateThread(serverOutputLoop, "ServerSendThread", NULL);		// Server output handled on separate thread
     }
 
-	//commsReady = JOR_NetClientUDPSock(&cliAddr);												// Create client UDP socket (all instances of the game are clients)
 	commsReady = JOR_NetInitClientUDP();														// Create client UDP socket (all instances of the game are clients)
 	SDL_Thread* threadClient = SDL_CreateThread(clientLoop, "ClientThread", NULL);				// JOR SDL Thread replaces Pthread, Client thread
 
@@ -94,7 +91,7 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Event e;																				// Handle events
 
     while (1) {
-		struct Player *players = getPlayers();
+		struct Player *players = getPlayers();													// Player list
 
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) { break; }													// Exit the while loop and close the game
@@ -109,10 +106,14 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
         SDL_RenderCopy(renderer, imgMap, NULL, NULL);											// Draw the map
 		
         for (i = 0; i <= getNumPlayers(); i++) {												// For every player
+			/*
 			if (i == getClientID())																// If it is the local player
 				renderFlip(renderer, imgPlayer2, &players[i].position, players[i].flip);		// Render red sprite for player local player
 			else
 				renderFlip(renderer, imgPlayer1, &players[i].position, players[i].flip);		// Render blue sprite for connected players
+			*/
+			renderFlip(renderer, (i == getClientID()) ? 
+				imgPlayer2 : imgPlayer1, &players[i].position, players[i].flip);				// Red sprite for local player, blue for connected players
         }
 
 		renderHUD(renderer, font, players, getNumPlayers(), getClientID(), menu);				// Render game info text

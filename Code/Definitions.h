@@ -13,10 +13,15 @@
 
 #include "stdbool.h"
 
-// Text
+// Joe
 #define CENTRE_TEXT -1						// JOR If used for x coordinate centre horizonally, and y vertical
 #define SIZE16 sizeof(int16_t)				// JOR Size of int16_t type
+#define BULLET_SPEED 5						// Speed of the bullets
 
+enum messageID { NEW_PLAYER = -1, BULLET = -2 };
+enum direction { FORWARDS = 1, BACKWARDS = -1 };
+
+// Original
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define FRAME_TIME 16666
@@ -25,7 +30,6 @@
 #define MAX_VERTICAL_SPEED 25
 #define PLAYER_JUMP_POWER 25
 #define PLAYER_SPEED 4
-#define BULLET_SPEED 5						// Speed of the bullets
 #define PLAYER_WIDTH 16
 #define PLAYER_HEIGHT 16
 #define BULLET_HEIGHT 8
@@ -34,9 +38,9 @@
 #define SERVER_FRAME_TIME 15
 #define X_AXIS 1
 #define Y_AXIS 0
-//#define BUF_MAX 256
-#define SPAWN_X 310
+#define SPAWN_X 310							// Spawn position
 #define SPAWN_Y 10
+
 #define LEFT_KEY 0x01
 #define RIGHT_KEY 0x02
 #define UP_KEY 0x04

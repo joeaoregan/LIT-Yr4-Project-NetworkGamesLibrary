@@ -35,9 +35,10 @@ int tileMap[15][20] = {
     {2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2}};
 
 int sign(int a) {
-    if (a < 0) { return -1;  } 
-	else if (a > 0) { return 1; } 
-	else { return 0; }
+	return (a < 0) ? -1 : (a > 0) ? 1 : 0;	// JOR
+    //if (a < 0) { return -1;  } 
+	//else if (a > 0) { return 1; } 
+	//else { return 0; }
 }
 
 void decrement_abs(int *a) {
@@ -132,7 +133,7 @@ void updatePlayer(struct Player *player) {
 
     if (player->left) {
         x_movement -= PLAYER_SPEED;
-        player->face = -1;
+        player->face = BACKWARDS;
 		player->flip = 1;
 		//printf("test flip: %d\n", player->flip);
     }

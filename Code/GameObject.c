@@ -20,7 +20,7 @@
 	Moved from main.c
 */
 void initPlayer(struct Player *players) {
-	int i;
+	unsigned int i;
 	for (i = 0; i < JN_MAX_PLAYERS; i++) {
 		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// Init player position SDL_Rect
 		players[i].left_key = SDLK_LEFT;
@@ -37,6 +37,8 @@ void initPlayer(struct Player *players) {
 		players[i].deaths = 0;
 		players[i].flip = 0;
 	}
+
+	printf("Player List initilised\n");
 }
 
 void resolve_player_key_down(int key, struct Player* player) {

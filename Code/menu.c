@@ -73,6 +73,7 @@ void enterServerIP(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
 					}
 					else
 						ip[position] = 0;
+
 					ok = true;
                 }
             }

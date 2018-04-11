@@ -32,27 +32,34 @@ int getNumPlayers() { return numPlayers; }
 int totalBulletsOnScreen = 0;													// Current bullet
 int getScreenBullets() { return totalBulletsOnScreen; }
 
-int16_t cliID = -1;
+int16_t cliID = NEW_PLAYER;														// Initialise client ID to -1
 int16_t getClientID() { return cliID; }
 
 int clientLoop(void *arg) {
 	initPlayer(players);														// Initialise the list of players
-	printf("Players initilised\n");
 
 	int16_t arrData[JN_BUF_MAX];												// Data to receive from server
 	int numBytes, id, bulletsInArray;											// Number of bytes received , clientID, Active bullets
 	bool idSet = false;															// The client ID has not been set yet
 
 	while (1) {
+		/*
+			Get client ID from data received
+		*/
 		numBytes = JOR_NetRecvFromCl(arrData);									// Receive data from server
-
 		id = arrData[0];														// Parse received data, first int = id
 
-		if (id == -1 && !idSet) {												// Parse data when the ID is unset
-			JOR_NetSetClientID(arrData[1], &cliID, &numPlayers);				// Assign an id for the connected player
+		/*
+			Assign ID to new client connection
+		*/
+		if (id == NEW_PLAYER && !idSet) {										// Parse data when the ID is unset
+			JOR_NetSetClientID(arrData[1], &cliID, &numPlayers);				// Assign an ID for the connected player
 			idSet = true;														// Stops the ID being set more than once
 		}
 
+		/*
+			Receive update from server for existing player
+		*/
 		if (id >= 0) {															// Parse existing Client data
 			JOR_NetCheckNewClient(id, &numPlayers);								// Increase number of players if new player added		
 
@@ -62,8 +69,10 @@ int clientLoop(void *arg) {
 			players[id].deaths = arrData[4];									// Number of times died
 			players[id].flip = arrData[5];										// Client flip (sprite direction)
 		}
-
-		if (id == -2) {															// Parse Bullet data
+		/*
+			Receive server update for bullets
+		*/
+		if (id == BULLET) {														// Parse Bullet data
 			bulletsInArray = (numBytes - SIZE16) / (SIZE16 * 2);				// Number of bullets in bullet list
 			memcpy(arrBullets, arrData + 1, SIZE16 * 2 * bulletsInArray);
 			if (totalBulletsOnScreen != bulletsInArray) 
