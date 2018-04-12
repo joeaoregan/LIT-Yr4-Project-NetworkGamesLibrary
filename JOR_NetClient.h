@@ -43,7 +43,7 @@ extern "C" {
 
 	JN_MODIFIER void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
 
-	JN_MODIFIER int JOR_NetRecvFromCl(int16_t *arrData);										// Receive data from server over UDP
+	JN_MODIFIER int JOR_NetCliRecvfrom(int16_t *arrData);								// Receive data from server over UDP
 
 	JN_MODIFIER void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);	// Set the ID for each player
 

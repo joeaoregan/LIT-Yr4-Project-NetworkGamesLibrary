@@ -43,7 +43,7 @@ bool JOR_NetInitClientUDP() {
 		clientSocketReady = true;
 	}
 
-	return clientSocketReady;
+	return clientSocketReady;																	// The client is ready to communicate
 }
 
 
@@ -56,11 +56,11 @@ struct sockaddr_in JOR_NetCliAddr() {
 	cliAddr.sin_addr.s_addr = INADDR_ANY;														// Socket accepts connections on all local IP addresses
 	cliAddr.sin_port = 0;																		// Initialise port number
 		
-	return cliAddr;
+	return cliAddr;																				// Return the client address structure
 }
 
 /*
-	Send player data to the server
+	JOR_Net: Send player data to the server
 */
 void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 	if (clientSocketReady) {
@@ -68,21 +68,21 @@ void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 
 		//printf("cliSendTo arrdata0 %d arrdata1 %d\n", arrData[0], arrData[1]);
 
-		if (sendto(cliSock, (char*)arrData, JN_I16_SZ * 2, 0, JN_SA &srvAddr, JN_SA_SZ) < 0) {
+		if (sendto(cliSock, (char*)arrData, JN_I16_SZ * 2, 0, JN_SA &srvAddr, JN_SA_SZ) < 0) {	// Send data to 
 			perror("Client sentToServer: sendto error");
 		}
 	}
 }
 
 /*
-	Recieve data from the server
+	JOR_Net: Recieve data from the server
 */
-int JOR_NetRecvFromCl(int16_t *arrData) {
+int JOR_NetCliRecvfrom(int16_t *arrData) {
 	int numBytes = 0;
 
 	if (clientSocketReady) {
 		numBytes = recvfrom(cliSock, (char*)arrData, JN_I16_SZ * JN_BUF_MAX, 0, NULL, 0);		// Receive data from server
-		//printf("Received from Server -  1: %d 2: %d 3: %d 4: %d\n", 
+		//if (numBytes > 0) printf("Received from Server -  1: %d 2: %d 3: %d 4: %d\n", 
 		//	arrData[0], arrData[1], arrData[2], arrData[3]);									// Display data received
 	}
 
@@ -95,7 +95,8 @@ int JOR_NetRecvFromCl(int16_t *arrData) {
 void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers) {
 	*clientID = id;																				// Set the client id
 	*numPlayers = id;																			// Number of players in the game
-	printf("JOR_Net setClientID(): Client ID is now: %d\n", *clientID);
+
+	printf("JOR_Net setClientID(): Client ID is now: %d\n", *clientID);							// Display the client ID
 }
 
 /*
@@ -104,6 +105,7 @@ void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers) {
 void JOR_NetCheckNewClient(int id, int *numPlayers) {
 	if (id > *numPlayers) {																		// If the client id is higher than the number of players
 		*numPlayers = id;																		// Set the number of players to match the ID
+
 		printf("JOR_NetCheckNewClient: Total players is now: %d\n", *numPlayers + 1);			// The number of players in the game has increased
 	}
 }
