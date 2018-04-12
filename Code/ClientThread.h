@@ -16,15 +16,12 @@
 #include "JOR_Net.h"
 #include "GameObject.h"
 
-//struct Player players[JN_MAX_PLAYERS];
-int16_t arrBullets[256];				// Array of bullet objects
+int16_t arrBullets[256];								// Array of bullet objects
+int getNumPlayers();									// Current number of players
+int getScreenBullets();									// Current on screen bullets
+int16_t getClientID();									// Client identifier
+Player* getPlayers();									// Get the list of players for updating/sending data
 
-//struct Player getPlayerList() { return *players; }
-int getNumPlayers();
-int getScreenBullets();
-int16_t getClientID();
-struct Player* getPlayers();
-
-int clientLoop(void *arg);				// JOR Client thread
+int clientLoop(void *arg);								// JOR Client thread
 
 #endif

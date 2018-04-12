@@ -85,7 +85,8 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Thread* threadClient = SDL_CreateThread(clientLoop, "ClientThread", NULL);				// JOR SDL Thread replaces Pthread, Client thread
 
 	while (getClientID() < 0 && commsReady) {													// If the current client is new
-		cliSendTo(srvAddrListen, getClientID(), 0);													// Set the client ID
+		//cliSendTo((menu == 's') ? srvAddrListen : srvAddr, getClientID(), 0);					// Set the client ID
+		cliSendTo(srvAddrListen, getClientID(), 0);												// Set the client ID
 
 		JOR_NetSleep(100);																		// Sleep for 100 microseconds
     }
@@ -94,14 +95,16 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_Event e;																				// Handle events
 
     while (1) {
-		struct Player *players = getPlayers();													// Player list
+		Player *players = getPlayers();															// Player list
 
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) { break; }													// Exit the while loop and close the game
 			resolve_keyboard(e, &players[getClientID()]);										// Handle keyboard input
         }
 
-		cliSendTo(srvAddrListen, getClientID(), key_state_from_player(&players[getClientID()]));		// Send keyboard input data to server
+		//cliSendTo((menu == 's') ? srvAddrListen : srvAddr, getClientID(),						// Only use additional server listening address for server locally
+		//	key_state_from_player(&players[getClientID()]));									// Send keyboard input data to server
+		cliSendTo(srvAddrListen, getClientID(),	key_state_from_player(&players[getClientID()]));// Send keyboard input data to server
 
 		JOR_NetSleep(30);																		// Sleep for 30 microseconds
 

@@ -29,7 +29,7 @@ void keypadInput(int *key) {
 	}
 }
 
-int16_t key_state_from_player(struct Player *player) {
+int16_t key_state_from_player(Player *player) {
 	//printf("key_state from player\n");
     int16_t key_state = 0;
     if (player->left) {
@@ -50,7 +50,7 @@ int16_t key_state_from_player(struct Player *player) {
     return key_state;
 }
 
-void player_from_key_state(struct Player *player, int16_t key_state) {	
+void player_from_key_state(Player *player, int16_t key_state) {	
 	//printf("player from key state\n");
     if (key_state & LEFT_KEY) {
         player->left = true;

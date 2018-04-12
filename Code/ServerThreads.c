@@ -8,9 +8,9 @@
 	Then moved Network functionality to JOR_Net
 */
 
-#include "ServerThreads.h"																	// Threads to handle server input and output
-#include "Input.h"																			// Handle player keyboard input
-#include "GameObject.h"																		// Game objects Player and Bullet
+#include "ServerThreads.h"																		// Threads to handle server input and output
+#include "Input.h"																				// Handle player keyboard input
+#include "GameObject.h"																			// Game objects Player and Bullet
 #include "list.h"
 #include "physic.h"
 #include "Definitions.h"
@@ -18,14 +18,14 @@
 #if defined __linux__
 #include "sys/time.h"
 #elif defined _WIN32 || defined _WIN64
-#include <WinSock2.h>																		// Windows sockets
-#include <ws2tcpip.h>																		// getaddrinfo()
+#include <WinSock2.h>																			// Windows sockets
+#include <ws2tcpip.h>																			// getaddrinfo()
 #include <Windows.h>
 #endif
 #include "SDLFunctions.h"
 #include "JOR_Net.h"
 
-struct Player listOfPlayers[JN_MAX_PLAYERS];
+Player listOfPlayers[JN_MAX_PLAYERS];
 struct node *listOfBullets = NULL;
 
 void initConnectedPlayersList() {
@@ -40,6 +40,7 @@ void initConnectedPlayersList() {
 */
 int serverInputLoop(void *arg) {
     //int srvSock = *((int *) arg);																// Socket passed in as argument
+
     int curClientID = 0;																		// Clients position in the list of connected clients
     int16_t arrData[4];																			// Array of data received from the client
     initConnectedPlayersList();																	// Initialise the list of connected players
@@ -55,7 +56,7 @@ int serverInputLoop(void *arg) {
             player_from_key_state(&listOfPlayers[curClientID], keys);
 
             if(listOfPlayers[curClientID].shoot && !listOfPlayers[curClientID].reloading) {		// If the player has fired, and isn't reloading
-                struct Bullet bullet;															// Create a bullet
+                Bullet bullet;																	// Create a bullet
 				bullet.position = makeRect(listOfPlayers[curClientID].position.x,				
 					listOfPlayers[curClientID].position.y, BULLET_WIDTH, BULLET_HEIGHT);		// Init the bullet at the current player position using SDL_Rect
                 bullet.face = listOfPlayers[curClientID].face;									// Aim the bullet in the direction the player is facing
@@ -63,7 +64,7 @@ int serverInputLoop(void *arg) {
 				bullet.position.x += (bullet.face == FORWARDS) ? PLAYER_WIDTH : -BULLET_WIDTH; // JOR Offset bullet spawn position, to left or right of player, depending of direction facing
 
                 bullet.player_id = curClientID;													// Set the bullet id to the player who fired the bullet
-                push_element(&listOfBullets, &bullet, sizeof(struct Bullet));					// Add bullet to the bullet list
+                push_element(&listOfBullets, &bullet, sizeof(Bullet));							// Add bullet to the bullet list
             }
 
             listOfPlayers[curClientID].reloading = listOfPlayers[curClientID].shoot;			// Set player as reloading
@@ -77,8 +78,7 @@ int serverInputLoop(void *arg) {
             arrData[0] = NEW_PLAYER;															// Keep the same client ID
             arrData[1] = curClientID;															// Set the second field to the current client number
 
-			JOR_NetSrvSendID(curClientID, arrData, 3);											// Send the client its new ID
-			printf("New Client ID Sent To Client\n");
+			JOR_NetSrvSendID(curClientID, arrData, 3);	
         }
 
 		JOR_NetSleep(50);																		// Sleep for 50 microseconds before firing next bullet
@@ -104,8 +104,8 @@ unsigned int createBulleDataArray(struct node *list, int16_t **array) {
     temp = list;																				// Reset list
 
     while (temp != NULL && i < numBullets) {
-        (*array)[1 + (i * 2)] = ((struct Bullet*) temp->data)->position.x;						// Odd array position starting at 1 used to store x coordinate - 1. 
-        (*array)[2 + (i * 2)] = ((struct Bullet*) temp->data)->position.y;						// Even array position starting at 2 used to store y coordinate - 2. etc...
+        (*array)[1 + (i * 2)] = ((Bullet*) temp->data)->position.x;								// Odd array position starting at 1 used to store x coordinate - 1. 
+        (*array)[2 + (i * 2)] = ((Bullet*) temp->data)->position.y;								// Even array position starting at 2 used to store y coordinate - 2. etc...
         i++;																					// increment i
         temp = temp->next;
     }

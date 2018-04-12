@@ -85,14 +85,14 @@ int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
 */
 void updateBullets(struct node **bullets) {
     struct node *next = *bullets;
-    struct Bullet *b = NULL;
+    Bullet *bullet = NULL;
     int i = 0;
 
     while (next != NULL) {
-        b = (struct Bullet*) next->data;
-        b->position.x += BULLET_SPEED * b->face * 1;
+        bullet = (Bullet*) next->data;
+        bullet->position.x += BULLET_SPEED * bullet->face * 1;
         next = next->next;
-        if (checkTileCollisions(&b->position)) {
+        if (checkTileCollisions(&bullet->position)) {
             erase_element(bullets, i);
         } else {
             i++;
@@ -100,18 +100,18 @@ void updateBullets(struct node **bullets) {
     }
 }
 
-int check_if_player_dies(struct Player *player, struct node **bullets, int *killer) {
+int check_if_player_dies(Player *player, struct node **bullets, int *killer) {
     struct node *next = *bullets;
     struct SDL_Rect tmpBullet; 
     struct SDL_Rect tmpPlayer = player->position;
     int i = 0;
     while (next != NULL) {
-        tmpBullet = ((struct Bullet*) next->data)->position;
+        tmpBullet = ((Bullet*) next->data)->position;
         if (tmpPlayer.x < (tmpBullet.x + tmpBullet.w) &&
                 (tmpPlayer.x + tmpPlayer.w) > tmpBullet.x &&
                 tmpPlayer.y < (tmpBullet.y + tmpBullet.h) &&
                 (tmpPlayer.y + tmpPlayer.h) > tmpBullet.y) {
-            *killer = ((struct Bullet*) next->data)->player_id;																// Identify the player who got the kill
+            *killer = ((Bullet*) next->data)->player_id;																	// Identify the player who got the kill
             erase_element(bullets, i);																						// Clear the bullet from the list of bullets
             return true;
         }
@@ -124,7 +124,7 @@ int check_if_player_dies(struct Player *player, struct node **bullets, int *kill
 /*
 	Update the player objects movement (Added sprite flipping, when changing direction)
 */
-void updatePlayer(struct Player *player) {
+void updatePlayer(Player *player) {
     int x_movement = 0;																										// Set/reset movement
     int y_movement = 0;
 

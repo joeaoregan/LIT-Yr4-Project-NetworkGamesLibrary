@@ -23,8 +23,8 @@
 #endif
 #include "SDLFunctions.h"
 
-struct Player players[JN_MAX_PLAYERS];
-struct Player* getPlayers() { return players; }
+Player players[JN_MAX_PLAYERS];
+Player* getPlayers() { return players; }
 
 int numPlayers = 0;																// Number of players currently in the game
 int getNumPlayers() { return numPlayers; }
@@ -46,7 +46,7 @@ int clientLoop(void *arg) {
 		/*
 			Get client ID from data received
 		*/
-		numBytes = JOR_NetRecvFromCl(arrData);									// Receive data from server
+		numBytes = JOR_NetCliRecvfrom(arrData);									// Receive data from server
 		id = arrData[0];														// Parse received data, first int = id
 
 		/*

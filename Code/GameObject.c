@@ -19,7 +19,7 @@
 	Initialise the list of players
 	Moved from main.c
 */
-void initPlayer(struct Player *players) {
+void initPlayer(Player *players) {
 	unsigned int i;
 	for (i = 0; i < JN_MAX_PLAYERS; i++) {
 		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// Init player position SDL_Rect
@@ -41,7 +41,7 @@ void initPlayer(struct Player *players) {
 	printf("Player List initilised\n");
 }
 
-void resolve_player_key_down(int key, struct Player* player) {
+void resolve_player_key_down(int key, Player* player) {
     if (key == player->left_key) {
         player->left = true;
     }
@@ -59,7 +59,7 @@ void resolve_player_key_down(int key, struct Player* player) {
     }
 }
 
-void resolve_player_key_up(int key, struct Player* player) {
+void resolve_player_key_up(int key, Player* player) {
     if (key == player->left_key) {
         player->left = false;
     }
@@ -77,7 +77,7 @@ void resolve_player_key_up(int key, struct Player* player) {
     }
 }
 
-void resolve_keyboard(SDL_Event e, struct Player* player) {
+void resolve_keyboard(SDL_Event e, Player* player) {
     if (e.type == SDL_KEYDOWN) {
         resolve_player_key_down(e.key.keysym.sym, player);
 		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// Not needed, player->flip is now sent back from server
@@ -88,13 +88,13 @@ void resolve_keyboard(SDL_Event e, struct Player* player) {
     }
 }
 
-void set_player_pos(struct Player* player, float x, float y) {
+void set_player_pos(Player* player, float x, float y) {
     player->position.x = (int) x;
     player->position.y = (int) y;
 }
 
-struct Bullet init_bullet(int x, int y, int face) {
-    struct Bullet bullet;
+Bullet init_bullet(int x, int y, int face) {
+    Bullet bullet;
 	bullet.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);						// Init bullet position SDL_Rect
     bullet.face = face;
     return bullet;
