@@ -24,34 +24,6 @@
 #include "Definitions.h"																// JN_SERV_ADDR, JN_SERV_PORT
 
 /*
-	JOR_Net: Create server sockaddr_in address structure
-*/
-struct sockaddr_in JOR_NetServAddr(char *ip) {
-    struct sockaddr_in srvAddr;															// Server address structure
-    memset(&srvAddr, 0, sizeof(srvAddr));												// Initialise address
-    srvAddr.sin_family = AF_INET;														// Address family socket can communicate with
-
-	// If the IP address was not entered from a client set to INADDR_ANY
-    if (ip == NULL) {																	// If the IP address is not already set
-#if defined __linux__
-		srvAddr.sin_addr.s_addr = INADDR_ANY;											// Linux Server: listen on any local address
-#elif defined _WIN32 || defined _WIN64
-		inet_pton(AF_INET, JN_SERV_ADDR, &srvAddr.sin_addr);							// Windows Server: Specify the address as 127.0.0.1
-#endif
-    } else {
-		inet_pton(AF_INET, ip, &srvAddr.sin_addr);										// JOR Replace inet_aton with inet_pton
-    }
-
-    srvAddr.sin_port = htons(JN_SERV_PORT);												// Set the port number to communicate on
-
-	char str[INET6_ADDRSTRLEN];															// Char string to hold human readable address
-	inet_ntop(AF_INET, &(srvAddr.sin_addr), str, INET6_ADDRSTRLEN);						// Get the IP address
-	printf("JOR_NetServAddr: Server Address: %s:%d\n", str, ntohs(srvAddr.sin_port));	// Display the IP address
-
-    return srvAddr;
-}
-
-/*
 	JOR_Net: Init windows networking functionality
 */
 void JOR_NetInitWinsock() {
@@ -86,6 +58,6 @@ void JOR_NetSleep(int amount) {
 #if defined __linux__
 	usleep(amount);																		// Linux value measured in microseconds
 #elif defined _WIN32 || defined _WIN64
-	Sleep(amount / 1000);																// Windows value measured in milliseconds
+	Sleep(amount/1000);																		// Windows value measured in milliseconds??? Was dividing by 1000
 #endif
 }

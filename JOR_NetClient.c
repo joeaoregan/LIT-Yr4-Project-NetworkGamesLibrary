@@ -51,10 +51,10 @@ bool JOR_NetInitClientUDP() {
 	JOR_Net: Create client sockaddr_in address structure
 */
 struct sockaddr_in JOR_NetCliAddr() {
-	memset(&cliAddr, 0, JN_SA_SZ);														// Initialise the address structure with 0s
-	cliAddr.sin_family = AF_INET;														// Address family
-	cliAddr.sin_addr.s_addr = INADDR_ANY;												// Socket accepts connections on all local IP addresses
-	cliAddr.sin_port = 0;																// Initialise port number
+	memset(&cliAddr, 0, JN_SA_SZ);																// Initialise the address structure with 0s
+	cliAddr.sin_family = AF_INET;																// Address family
+	cliAddr.sin_addr.s_addr = INADDR_ANY;														// Socket accepts connections on all local IP addresses
+	cliAddr.sin_port = 0;																		// Initialise port number
 		
 	return cliAddr;
 }

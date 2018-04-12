@@ -36,9 +36,19 @@
 extern "C" {
 #endif
 
-	JN_MODIFIER bool JOR_NetInitServerUDP(struct sockaddr_in *server_sock);					// Create and bind the socket
+	JN_MODIFIER struct sockaddr_in JOR_NetServAddr(char *ip);	// JOR_Net: Create server sockaddr_in address structure
 
-	JN_MODIFIER void srvSendto(int clientID, int16_t tab[], int size);						// Use client ID to get address from list and send data to client using sendto()
+	JN_MODIFIER bool initServerUDPSock(int *sock, struct sockaddr_in *srvAddr);
+
+	JN_MODIFIER bool JOR_NetInitServerListenUDP(struct sockaddr_in *srvAddr);
+
+	JN_MODIFIER bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr);						// Create and bind the socket
+
+	JN_MODIFIER void JOR_NetSrvSendto(int clientID, int16_t data[], int size);
+
+	JN_MODIFIER void JOR_NetSrvSendID(int clientID, int16_t data[], int size);
+
+	JN_MODIFIER void srvSendto(int sock, int clientID, int16_t tab[], int size);			// Use client ID to get address from list and send data to client using sendto()
 
 	JN_MODIFIER int srvRecvfrom(int16_t data[]);											// Receive data from client and return client ID
 																		
