@@ -25,12 +25,15 @@
 #endif
 #include "JOR_NetClient.h"										// Client functionality
 #include "JOR_NetServer.h"										// Server functionality
+#include "JOR_NetText.h"										// Text functionality
 
 // extern "C" guards only required when programming with C++
 #ifdef __cplusplus
 extern "C" {
 #endif
-		
+
+	JN_MODIFIER void JOR_NetInit();								// JOR_Net: Display Logo
+
 	JN_MODIFIER void JOR_NetInitWinsock();						// JOR_Net: Init windows networking functionality
 
 	JN_MODIFIER void JOR_NetCloseSocket();						// JOR_Net: Init windows networking functionality

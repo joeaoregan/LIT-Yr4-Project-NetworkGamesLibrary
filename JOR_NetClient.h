@@ -33,10 +33,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 	bool getServSockReady(); 
 	struct sockaddr_in getCliAddr();
 
-	//JN_MODIFIER bool JOR_NetClientUDPSock(struct sockaddr_in *cliAddr);				// Create the client UDP socket
 	JN_MODIFIER bool JOR_NetInitClientUDP();											// Create the client UDP socket
 
 	JN_MODIFIER struct sockaddr_in JOR_NetCliAddr();									// JOR_Net: Create client sockaddr_in address structure
@@ -47,7 +47,7 @@ extern "C" {
 
 	JN_MODIFIER void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);	// Set the ID for each player
 
-	JN_MODIFIER void JOR_NetCheckNewClient(int id, int *numPlayers);					// Increase number of players if new player added
+	JN_MODIFIER bool JOR_NetCheckNewClient(int id, int *numPlayers);					// Increase number of players if new player added
 
 	JN_MODIFIER void JOR_NetCloseClientSocket();										// Close Client socket
 

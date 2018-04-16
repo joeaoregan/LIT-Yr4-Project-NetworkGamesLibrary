@@ -36,17 +36,19 @@
 extern "C" {
 #endif
 
-	JN_MODIFIER struct sockaddr_in JOR_NetServAddr(char *ip);	// JOR_Net: Create server sockaddr_in address structure
+	//JN_MODIFIER char* JOR_NetDisplayClientAddr(int clientID);								// Print client address;
 
-	JN_MODIFIER bool initServerUDPSock(int *sock, struct sockaddr_in *srvAddr);
+	JN_MODIFIER struct sockaddr_in JOR_NetServAddr(char *ip);								// JOR_Net: Create server sockaddr_in address structure
 
-	JN_MODIFIER bool JOR_NetInitServerListenUDP(struct sockaddr_in *srvAddr);
+	JN_MODIFIER bool initServerUDPSock(int *sock, struct sockaddr_in *srvAddr);				// Create and bind the socket
+
+	JN_MODIFIER bool JOR_NetInitServerListenUDP(struct sockaddr_in *srvAddr);				// Wrapper function for initialisng the socket
 
 	JN_MODIFIER bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr);						// Create and bind the socket
 
-	JN_MODIFIER void JOR_NetSrvSendto(int clientID, int16_t data[], int size);
+	JN_MODIFIER void JOR_NetSrvSendto(int clientID, int16_t data[], int size);				// Send data to the client
 
-	JN_MODIFIER void JOR_NetSrvSendID(int clientID, int16_t data[], int size);
+	JN_MODIFIER void JOR_NetSrvSendID(int clientID, int16_t data[], int size);				// Send an ID to the client
 
 	JN_MODIFIER void srvSendto(int sock, int clientID, int16_t tab[], int size);			// Use client ID to get address from list and send data to client using sendto()
 
@@ -62,7 +64,7 @@ extern "C" {
 
 	JN_MODIFIER int JOR_NetCompareAddr(struct sockaddr_in *a, struct sockaddr_in *b);		// Compare to sockaddr_in addresses to see if there is a match
 
-	JN_MODIFIER struct sockaddr_in JOR_NetGetClientAddr(int select);						// Returns the list of client addresses
+	JN_MODIFIER struct sockaddr_in JOR_NetGetClientAddr(int select);						// Use the client ID to get the client address and then send data
 
 	JN_MODIFIER void JOR_NetCloseServerSocket();											// Close Server socket
 

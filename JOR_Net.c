@@ -28,13 +28,14 @@
 */
 void JOR_NetInitWinsock() {
 #if defined _WIN32 || defined _WIN64
+	JOR_NetTextColour("JOR_NetInitWinsock: ", TEST_COL);
+	printf(": Initialised Winsock.\n");								// Otherwise indicate winsock has initialised
 	WSADATA wsa;																		// Windows sockets implementation structure
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {										// If winsock doesn't initialise
 		printf("JOR_NetInitWinsock: FAILED!!! Error Code : %d", WSAGetLastError());		// Display an error message
 		exit(EXIT_FAILURE);																// And exit with the specified error code
 	}
 
-	printf("JOR_NetInitWinsock: Initialised Winsock.\n");								// Otherwise indicate winsock has initialised
 #endif
 }
 
@@ -60,4 +61,19 @@ void JOR_NetSleep(int amount) {
 #elif defined _WIN32 || defined _WIN64
 	Sleep(amount/1000);																	// Windows value measured in milliseconds??? Was dividing by 1000
 #endif
+}
+
+/*
+	JOR_Net: Display Logo
+*/
+void JOR_NetInit() {
+	JOR_NetTextColour("     ____.________ __________      _______          __\n", RED);
+	JOR_NetTextColour("    |    |\\_____  \\\\______   \\     \\      \\   _____/  |_\n", RED);
+	JOR_NetTextColour("    |    | /   |   \\|       _/     /   |   \\_/ __ \\   __\\\n", RED);
+	JOR_NetTextColour("/\\__|    |/    |    \\    |   \\    /    |    \\  ___/|  |\n", RED);
+	JOR_NetTextColour("\\________|\\_______  /____|_  /____\\____|__  /\\___  >__|\n", RED);
+	JOR_NetTextColour("                  \\/       \\/_____/       \\/     \\/\n", RED);
+	printf("Cross-Platform UDP Networked Games Library by ");
+	JOR_NetTextColour("Joe O'Regan\n\n", BLUE);
+
 }

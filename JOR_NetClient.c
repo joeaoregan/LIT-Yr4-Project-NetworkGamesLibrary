@@ -15,6 +15,7 @@
 #include "stdafx.h"																				// Visual Studio file  (can't wrap)
 #include "JOR_NetClient.h"
 #include <string.h>
+#include "JOR_NetText.h"
 
 bool clientSocketReady = false;
 int cliSock;
@@ -25,21 +26,25 @@ struct sockaddr_in getCliAddr() { return cliAddr; }
 	JOR_Net: Initialise the client socket
 */
 bool JOR_NetInitClientUDP() {
-	printf("JOR_Net: Initialising Client Socket\n");
+	JOR_NetTextColour("\nJOR_Net: Initialising Client Socket\n\n", BLUE);
 
     if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {										// Create UDP socket
-		perror("JOR_NetClientUDPSock: Socket Failed");
+		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
+		perror("Socket Failed");
 		printf("Sock: %d\n", cliSock);
     } else {
-		printf("JOR_NetClientUDPSock: Client Socket Created: %d\n", cliSock);
+		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
+		printf("Client Socket Created: %d\n", cliSock);
 		clientSocketReady = true;
 	}
 
     if (bind(cliSock, JN_SA &cliAddr, JN_SA_SZ) < 0) {											// Bind to address
-		perror("JOR_NetClientUDPSock: Bind Error");
+		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
+		perror("Bind Error");
 		printf("Sock: %d\n", cliSock);
     } else {
-		printf("JOR_NetClientUDPSock: Client Bind OK\n\n");
+		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
+		printf("Client Bind OK: %d\n\n", cliSock);
 		clientSocketReady = true;
 	}
 
@@ -96,18 +101,22 @@ void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers) {
 	*clientID = id;																				// Set the client id
 	*numPlayers = id;																			// Number of players in the game
 
-	printf("JOR_Net setClientID(): Client ID is now: %d\n", *clientID);							// Display the client ID
+	JOR_NetTextColour("JOR_NetSetClientID: ", BLUE);
+	printf("Client ID is now: %d\n", *clientID);							// Display the client ID
 }
 
 /*
 	JOR_Net: Increase number of players if new player added
 */
-void JOR_NetCheckNewClient(int id, int *numPlayers) {
+bool JOR_NetCheckNewClient(int id, int *numPlayers) {
 	if (id > *numPlayers) {																		// If the client id is higher than the number of players
 		*numPlayers = id;																		// Set the number of players to match the ID
 
-		printf("JOR_NetCheckNewClient: Total players is now: %d\n", *numPlayers + 1);			// The number of players in the game has increased
+		JOR_NetTextColour("JOR_NetCheckNewClient: ", BLUE);
+		printf("Total players is now: %d\n", *numPlayers + 1);			// The number of players in the game has increased
+		return true;
 	}
+	return false;
 }
 
 /*
