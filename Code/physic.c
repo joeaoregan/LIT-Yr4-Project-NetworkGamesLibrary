@@ -180,11 +180,11 @@ void updatePlayer(Player *player) {
 */
 SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
 	SDL_Rect rect = { 0, 0, TILE_SIZE, TILE_SIZE };																			// Tile position and dimensions
-	SDL_Surface *bmpTile1 = SDL_LoadBMP("../resources/tile1.bmp");
-	SDL_Surface *bmpTile2 = SDL_LoadBMP("../resources/tile2.bmp");															// Additional tiles
-	SDL_Surface *bmpTile3 = SDL_LoadBMP("../resources/tile3.bmp");
-	SDL_Surface *bmpTile4 = SDL_LoadBMP("../resources/tile4.bmp");
-	SDL_Surface *bmpTile5 = SDL_LoadBMP("../resources/tile5.bmp");
+	SDL_Surface *bmpTile1 = SDL_LoadBMP("Resources/tile1.bmp");
+	SDL_Surface *bmpTile2 = SDL_LoadBMP("Resources/tile2.bmp");															// Additional tiles
+	SDL_Surface *bmpTile3 = SDL_LoadBMP("Resources/tile3.bmp");
+	SDL_Surface *bmpTile4 = SDL_LoadBMP("Resources/tile4.bmp");
+	SDL_Surface *bmpTile5 = SDL_LoadBMP("Resources/tile5.bmp");
 	SDL_Texture *texTile1 = SDL_CreateTextureFromSurface(renderer, bmpTile1);
 	SDL_Texture *texTile2 = SDL_CreateTextureFromSurface(renderer, bmpTile2);
 	SDL_Texture *texTile3 = SDL_CreateTextureFromSurface(renderer, bmpTile3);

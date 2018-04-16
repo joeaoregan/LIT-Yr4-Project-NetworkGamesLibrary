@@ -44,6 +44,7 @@ void enterServerIP(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
 	ip[15] = '\0';																				// Terminate string
     SDL_Event e;
     int position = 0, ok = false;
+
     while (!ok) {
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_KEYDOWN) {	

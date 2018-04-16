@@ -1,15 +1,14 @@
 /*
 	Modified by:	Joe O'Regan
 					K00203642
-
 	Text.c
-
 	Added options to select text colour and centre horizontally and vertically
 	Added text centering on screen
 */
 
 #include "Text.h"																						// Display game text
 #include "SDLFunctions.h"																				// Init SDL Rects
+#include "Definitions.h"
 
 /*
 	Display text with the font and position specified

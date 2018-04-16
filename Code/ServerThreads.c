@@ -28,6 +28,8 @@
 Player listOfPlayers[JN_MAX_PLAYERS];
 struct node *listOfBullets = NULL;
 
+int16_t arrStoredPlayerData[JN_MAX_PLAYERS][6];
+
 void initConnectedPlayersList() {
     int i;
     for (i = 0; i < JN_MAX_PLAYERS; i++) {
@@ -93,15 +95,16 @@ int serverInputLoop(void *arg) {
 unsigned int createBulleDataArray(struct node *list, int16_t **array) {
     unsigned int numBullets = 0;																// Bullet amount Can't have negative bullets
     struct node *temp = list;																	// Temporary list
-    while (temp != NULL) {
+
+    while (temp != NULL) {																		// Search through the node linked list
         numBullets++;																			// Count the bullets
-        temp = temp->next;
+        temp = temp->next;																		// Get the next node in linked list
     }
 
     *array = malloc(sizeof(int16_t) + (numBullets * 2 * sizeof(int16_t)));
     (*array)[0] = BULLET;																		// Bullet ID is -2 (1st array position 0) - 0.
     unsigned int i = 0; 
-    temp = list;																				// Reset list
+    temp = list;																				// Reset temp
 
     while (temp != NULL && i < numBullets) {
         (*array)[1 + (i * 2)] = ((Bullet*) temp->data)->position.x;								// Odd array position starting at 1 used to store x coordinate - 1. 
@@ -111,6 +114,34 @@ unsigned int createBulleDataArray(struct node *list, int16_t **array) {
     }
 
     return numBullets;
+}
+
+//bool checkDataChanged(int16_t* arrData) {
+//	int16_t arrStoredData[6];
+	//arrStoredPlayerData	
+//}
+void storePlayerData(int16_t* arrData, int client) {
+	int i;
+	for (i = 0; i < 6; i++) {
+			arrStoredPlayerData[client][i] = arrData[i];	// Store the client data
+	}
+}
+
+
+bool checkNewData(int16_t* arrData, int client) {
+	int i, j;
+	for (i = 1; i < 6; i++) {	// skip id
+		if (arrStoredPlayerData[client][i] != arrData[i]) return true;
+	}
+	/*
+	for (i = 0; i < 6; i++) {
+		for (j = 0; j < JOR_NetGetNumClients(); j++) {			
+			if (arrStoredPlayerData[j][i] != arrData[i])
+				return true;
+		}
+	}
+	*/
+	return false;
 }
 
 int serverOutputLoop(void *arg) {
@@ -127,8 +158,7 @@ int serverOutputLoop(void *arg) {
 
         for (i = 0; i < JOR_NetGetNumClients(); i++) {
             updatePlayer(&listOfPlayers[i]);													// --- UPDATE PLAYER ---
-
-			
+						
             if (check_if_player_dies(&listOfPlayers[i], &listOfBullets, &killerID)) {			// --- PLAYER DEAD ---
                 listOfPlayers[i].position.x = SPAWN_X;											// Respawn shot player at Spawn position
                 listOfPlayers[i].position.y = SPAWN_Y;	
@@ -139,17 +169,48 @@ int serverOutputLoop(void *arg) {
 
         int16_t *arrBullets = NULL;																// Initialise the bullets array
         unsigned int bulletCount = createBulleDataArray(listOfBullets, &arrBullets);			// Get number of bullets, and set up bullet data to return to client
+		
+		int k;
 
-		for (i = 0; i < JOR_NetGetNumClients(); i++) {
-			for (j = 0; j < JOR_NetGetNumClients(); j++) {
+		for (i = 0; i < JOR_NetGetNumClients(); i++) {	// Update all clients
+			for (j = 0; j < JOR_NetGetNumClients(); j++) {	// Current Client
                 arrData[0] = j;																	// Client ID
                 arrData[1] = listOfPlayers[j].position.x;										// Client X position
                 arrData[2] = listOfPlayers[j].position.y;										// Client Y position
                 arrData[3] = listOfPlayers[j].kills;											// Client Kills
 				arrData[4] = listOfPlayers[j].deaths;											// Client deaths
 				arrData[5] = listOfPlayers[j].flip;												// Client flip (sprite direction)
+				
+				//for (k = 0; k < 6; k++) {
+				//	if (arrStoredPlayerData[j][i] != arrData[i]) 
+				//		JOR_NetSrvSendto(i, arrData, 6);
+				//}
 
-				JOR_NetSrvSendto(i, arrData, 6);												// Send to all clients
+				//if (checkNewData(arrData, j)) {													// If there is new data to send
+				//if (checkNewData(arrData, j) && j == i) {									// MOVE ONLY ON THEIR OWN SCREEN
+				//if (checkNewData(arrData, i) && j == i) {									// MOVE ONLY ON THEIR OWN SCREEN
+				//if (checkNewData(arrData, j) && j != i) {									// MOVE ON EACH OTHERS SCREENS
+				//if (checkNewData(arrData, j) || j != i) {									// MOVE ON EACH OTHERS SCREENS
+				//if (checkNewData(arrData, j)) {												// SERVER OK, CLIENT ONLY MOVES ON SERVER 
+
+
+
+				//if (checkNewData(arrData, j) || arrData[0] != 0) {												// SERVER OK, CLIENT ONLY MOVES ON SERVER 
+					JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
+				//	JOR_NetTextCoords(arrData[0], arrData[1], arrData[2]);						// Display coords
+				//}
+
+				//storePlayerData(arrData, j);												// Store the latest data
+
+
+				//else if (checkNewData(arrData, i) && i != j) {												// SERVER OK, CLIENT ONLY MOVES ON SERVER 
+				//	JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
+				//	JOR_NetTextCoords(arrData[0], arrData[1], arrData[2]);						// Display coords
+
+				//	storePlayerData(arrData, i);												// Store the latest data
+				//}
+				//if (i == j) JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
+				
 
 				JOR_NetSleep(20);																// Sleep for 20 microseconds
             } // for number_of_clients j

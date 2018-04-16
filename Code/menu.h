@@ -13,7 +13,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "Text.h"																// Display game text
+//#include "Text.h"																// Display game text
 #include "Definitions.h"
 
 void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font);

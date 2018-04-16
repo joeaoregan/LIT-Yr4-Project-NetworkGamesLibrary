@@ -24,8 +24,11 @@ enum direction { FORWARDS = 1, BACKWARDS = -1 };
 // Original
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+
 #define FRAME_TIME 16666
 #define TILE_SIZE 32
+
+// Player
 #define GRAVITY 1
 #define MAX_VERTICAL_SPEED 25
 #define PLAYER_JUMP_POWER 25
@@ -34,13 +37,16 @@ enum direction { FORWARDS = 1, BACKWARDS = -1 };
 #define PLAYER_HEIGHT 16
 #define BULLET_HEIGHT 8
 #define BULLET_WIDTH 8
-#define CLIENT_FRAME_TIME 15
-#define SERVER_FRAME_TIME 15
-#define X_AXIS 1
-#define Y_AXIS 0
 #define SPAWN_X 310							// Spawn position
 #define SPAWN_Y 10
 
+#define CLIENT_FRAME_TIME 15
+#define SERVER_FRAME_TIME 15
+
+#define X_AXIS 1
+#define Y_AXIS 0
+
+// Key presses
 #define LEFT_KEY 0x01
 #define RIGHT_KEY 0x02
 #define UP_KEY 0x04

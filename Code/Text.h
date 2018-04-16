@@ -1,16 +1,14 @@
 /*
 	Modified by:	Joe O'Regan
 					K00203642
-
 	Text.h
-
 	Added options to select text colour and centre horizontally and vertically
 	Added text centering on screen
 */
 
 
-#ifndef FONT_H
-#define FONT_H
+#ifndef TEXT_H
+#define TEXT_H
 
 #include <SDL.h>
 #include <SDL_ttf.h>

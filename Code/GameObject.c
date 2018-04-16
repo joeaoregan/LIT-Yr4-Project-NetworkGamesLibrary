@@ -41,7 +41,7 @@ void initPlayer(Player *players) {
 	printf("Player List initilised\n");
 }
 
-void resolve_player_key_down(int key, Player* player) {
+bool resolve_player_key_down(int key, Player* player) {
     if (key == player->left_key) {
         player->left = true;
     }
@@ -57,9 +57,11 @@ void resolve_player_key_down(int key, Player* player) {
     if (key == player->attack_key) {
         player->shoot = player->face;
     }
+
+	return (player->left || player->right || player->up || player->down || player->shoot);
 }
 
-void resolve_player_key_up(int key, Player* player) {
+bool resolve_player_key_up(int key, Player* player) {
     if (key == player->left_key) {
         player->left = false;
     }
@@ -75,17 +77,26 @@ void resolve_player_key_up(int key, Player* player) {
     if (key == player->attack_key) {
         player->shoot = false;
     }
+
+
+	//return ((player->left && player->right && player->up && player->down && player->shoot));	// Moves around
+	return (!(player->left && player->right && player->up && player->down && player->shoot));
 }
 
-void resolve_keyboard(SDL_Event e, Player* player) {
+bool resolve_keyboard(SDL_Event e, Player* player) {
+	bool keyPressed = false;
+	//bool keyReleased = false;
+
     if (e.type == SDL_KEYDOWN) {
-        resolve_player_key_down(e.key.keysym.sym, player);
+        keyPressed = resolve_player_key_down(e.key.keysym.sym, player);
 		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// Not needed, player->flip is now sent back from server
 		//else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
     } 
     if (e.type == SDL_KEYUP) {
-        resolve_player_key_up(e.key.keysym.sym, player);
+		keyPressed = resolve_player_key_up(e.key.keysym.sym, player);
     }
+
+	return keyPressed;
 }
 
 void set_player_pos(Player* player, float x, float y) {

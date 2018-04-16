@@ -36,11 +36,11 @@ int16_t cliID = NEW_PLAYER;														// Initialise client ID to -1
 int16_t getClientID() { return cliID; }
 
 int clientLoop(void *arg) {
-	initPlayer(players);														// Initialise the list of players
-
 	int16_t arrData[JN_BUF_MAX];												// Data to receive from server
 	int numBytes, id, bulletsInArray;											// Number of bytes received , clientID, Active bullets
 	bool idSet = false;															// The client ID has not been set yet
+
+	initPlayer(players);														// Initialise the list of players
 
 	while (1) {
 		/*
@@ -61,7 +61,9 @@ int clientLoop(void *arg) {
 			Receive update from server for existing player
 		*/
 		if (id >= 0) {															// Parse existing Client data
-			JOR_NetCheckNewClient(id, &numPlayers);								// Increase number of players if new player added		
+			if (JOR_NetCheckNewClient(id, &numPlayers))							// Increase number of players if new player added		
+				//printf("New Connection, %s \n", JOR_NetDisplayClientAddr(id));
+				printf("New Connection\n");
 
 			players[id].position.x = arrData[1];								// Player x position
 			players[id].position.y = arrData[2];								// Player y position

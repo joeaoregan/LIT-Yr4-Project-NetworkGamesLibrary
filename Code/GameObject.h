@@ -13,6 +13,7 @@
 #define GAME_OBJECT_H
 
 #include <SDL.h>
+#include "Definitions.h"										// Boolean
 
 typedef struct PlayerObject {
     SDL_Rect position;											// Position and dimensions
@@ -32,9 +33,12 @@ typedef struct BulletObject {
 
 void initPlayer(Player *players);								// Initialise the player struct
 
-void resolve_player_key_up(int key, Player* player);
-void resolve_player_key_down(int key, Player* player);
-void resolve_keyboard(SDL_Event e, Player* player);
+//void resolve_player_key_up(int key, Player* player);
+bool resolve_player_key_up(int key, Player* player);
+//void resolve_player_key_down(int key, Player* player);
+bool resolve_player_key_down(int key, Player* player);
+//void resolve_keyboard(SDL_Event e, Player* player);
+bool resolve_keyboard(SDL_Event e, Player* player);
 void set_player_pos(Player* player, float x, float y);
 Bullet init_bullet(int x, int y, int face);
 
