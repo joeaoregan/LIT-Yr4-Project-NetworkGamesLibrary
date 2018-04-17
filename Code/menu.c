@@ -12,6 +12,7 @@
 #include "Input.h"
 #include "JOR_Net.h"
 #include <stdio.h>	// snprintf()
+#include "Text.h"	// displayTextRed(), displayTextWhite()
 
 void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font) {
     SDL_Event e;

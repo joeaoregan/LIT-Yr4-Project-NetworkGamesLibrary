@@ -129,11 +129,12 @@ void storePlayerData(int16_t* arrData, int client) {
 
 
 bool checkNewData(int16_t* arrData, int client) {
-	int i, j;
+	int i;
 	for (i = 1; i < 6; i++) {	// skip id
 		if (arrStoredPlayerData[client][i] != arrData[i]) return true;
 	}
 	/*
+	int j;
 	for (i = 0; i < 6; i++) {
 		for (j = 0; j < JOR_NetGetNumClients(); j++) {			
 			if (arrStoredPlayerData[j][i] != arrData[i])
@@ -170,7 +171,7 @@ int serverOutputLoop(void *arg) {
         int16_t *arrBullets = NULL;																// Initialise the bullets array
         unsigned int bulletCount = createBulleDataArray(listOfBullets, &arrBullets);			// Get number of bullets, and set up bullet data to return to client
 		
-		int k;
+		//int k;
 
 		for (i = 0; i < JOR_NetGetNumClients(); i++) {	// Update all clients
 			for (j = 0; j < JOR_NetGetNumClients(); j++) {	// Current Client
@@ -181,35 +182,27 @@ int serverOutputLoop(void *arg) {
 				arrData[4] = listOfPlayers[j].deaths;											// Client deaths
 				arrData[5] = listOfPlayers[j].flip;												// Client flip (sprite direction)
 				
-				//for (k = 0; k < 6; k++) {
-				//	if (arrStoredPlayerData[j][i] != arrData[i]) 
-				//		JOR_NetSrvSendto(i, arrData, 6);
-				//}
-
-				//if (checkNewData(arrData, j)) {													// If there is new data to send
-				//if (checkNewData(arrData, j) && j == i) {									// MOVE ONLY ON THEIR OWN SCREEN
-				//if (checkNewData(arrData, i) && j == i) {									// MOVE ONLY ON THEIR OWN SCREEN
-				//if (checkNewData(arrData, j) && j != i) {									// MOVE ON EACH OTHERS SCREENS
-				//if (checkNewData(arrData, j) || j != i) {									// MOVE ON EACH OTHERS SCREENS
+				//if (checkNewData(arrData, j)) {												// If there is new data to send
+				//if (checkNewData(arrData, j) && j == i) {										// MOVE ONLY ON THEIR OWN SCREEN
+				//if (checkNewData(arrData, j) && j != i) {										// MOVE ON EACH OTHERS SCREENS
+				//if (checkNewData(arrData, j) || j != i) {										// MOVE ON EACH OTHERS SCREENS
 				//if (checkNewData(arrData, j)) {												// SERVER OK, CLIENT ONLY MOVES ON SERVER 
 
-
-
-				//if (checkNewData(arrData, j) || arrData[0] != 0) {												// SERVER OK, CLIENT ONLY MOVES ON SERVER 
+				//if (checkNewData(arrData, j) || arrData[0] != 0) {							// SERVER OK, CLIENT ONLY MOVES ON SERVER 
 					JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
 				//	JOR_NetTextCoords(arrData[0], arrData[1], arrData[2]);						// Display coords
 				//}
 
-				//storePlayerData(arrData, j);												// Store the latest data
+				//storePlayerData(arrData, j);													// Store the latest data
 
 
-				//else if (checkNewData(arrData, i) && i != j) {												// SERVER OK, CLIENT ONLY MOVES ON SERVER 
+				//else if (checkNewData(arrData, i) && i != j) {								// SERVER OK, CLIENT ONLY MOVES ON SERVER 
 				//	JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
 				//	JOR_NetTextCoords(arrData[0], arrData[1], arrData[2]);						// Display coords
 
 				//	storePlayerData(arrData, i);												// Store the latest data
 				//}
-				//if (i == j) JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
+				//if (i == j) JOR_NetSrvSendto(i, arrData, 6);									// Send to all clients
 				
 
 				JOR_NetSleep(20);																// Sleep for 20 microseconds
