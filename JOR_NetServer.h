@@ -11,15 +11,17 @@
 
 #pragma once
 
+
+#if defined __linux__
+#include <arpa/inet.h>
+#elif defined _WIN32 || defined _WIN64
+
 #ifdef JORNET_EXPORTS																		// Added by default to the defined preprocessor macros for the DLL project
 #define JORNET_API __declspec(dllexport)													// Modifier set on the function declarations. Tells the compiler and linker to export a function or variable from the DLL so that it can be used by other applications
 #else	
 #define JORNET_API __declspec(dllimport)													// This modifier optimizes the import of the function or variable in an application
 #endif
 
-#if defined __linux__
-#include <arpa/inet.h>
-#elif defined _WIN32 || defined _WIN64
 #pragma comment(lib, "Ws2_32.lib")
 #include <WinSock2.h>																		// Windows sockets
 #include <ws2tcpip.h>																		// getaddrinfo()fo()

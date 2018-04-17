@@ -102,7 +102,7 @@ void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers) {
 	*numPlayers = id;																			// Number of players in the game
 
 	JOR_NetTextColour("JOR_NetSetClientID: ", BLUE);
-	printf("Client ID is now: %d\n", *clientID);							// Display the client ID
+	printf("Client ID is now: %d\n", *clientID);												// Display the client ID
 }
 
 /*
@@ -113,7 +113,7 @@ bool JOR_NetCheckNewClient(int id, int *numPlayers) {
 		*numPlayers = id;																		// Set the number of players to match the ID
 
 		JOR_NetTextColour("JOR_NetCheckNewClient: ", BLUE);
-		printf("Total players is now: %d\n", *numPlayers + 1);			// The number of players in the game has increased
+		printf("Total players is now: %d\n", *numPlayers + 1);									// The number of players in the game has increased
 		return true;
 	}
 	return false;

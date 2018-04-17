@@ -11,13 +11,22 @@
 #include "JOR_NetText.h"
 #include <stdio.h>
 
+
+//#define RED   "\x1B[31m"
+//#define GREEN "\x1B[32m"
+//#define YELO  "\x1B[33m"
+//#define BLUE  "\x1B[34m"
+//#define MGNT  "\x1B[35m"
+//#define CYAN  "\x1B[36m"
+//#define NORM  "\x1B[0m"
+
 /*
 	Format text based depending on platform
 */
 void JOR_NetTextCoords(int id, int x, int y){
 // Format output for Linux terminal
 #if defined __linux__
-	printf("%sPlayer:%s\t%s\t%sX:%s\t%d%s\tY:%s\t%d\n", BLUE, NORM, name, BLUE, NORM, x, BLUE, NORM, y);	// Display Coordinates
+	printf("\x1B[34mClient ID:\x1B[0m\t%d\t\x1B[34mX:\x1B[0m\t%d\x1B[34m\tY:\x1B[0m\t%d\n",id, x, y);	// Display Coordinates
 
 // Format output for Windows command prompt
 #elif defined _WIN32 || defined _WIN64
@@ -43,11 +52,14 @@ void JOR_NetTextCoords(int id, int x, int y){
 	Display output message with colour
 */
 void JOR_NetTextColour(char* msg, int colour){
-	//printf("colour: %d\n", colour);
+	//printf("colour: %d\n", colour); 
+
 #if defined __linux__
 	char* textColour;
 	if (colour == 5)							// Magenta 
 		textColour = "\x1B[35m";
+	else if (colour == 6)						// Magenta 
+		textColour = "\x1B[33m";
 	else if (colour == 9)						// Blue
 		textColour = "\x1B[34m";
 	else if (colour == 12)						// Red
@@ -56,7 +68,8 @@ void JOR_NetTextColour(char* msg, int colour){
 		textColour = "\x1B[0m";					// Normal
 
 	// Format output for Linux terminal
-	printf("%s%s%s",textColour,msg,NORM);		// Display message in single colour
+	//printf("%s%s%s",textColour,msg,NORM);		// Display message in single colour
+	printf("%s%s\x1B[0m",textColour,msg);		// Display message in single colour
  
 #elif defined _WIN32 || defined _WIN64	
 	// Format output for Windows command prompt
