@@ -76,7 +76,9 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	struct sockaddr_in srvAddr, srvAddrListen;													// Server address structure, additional listening socket so server can listen on any address (can't send this way in windows)
 	JOR_NetInitWinsock();																		// JOR_Net: Initialise winsock
 	srvAddr = JOR_NetServAddr(srvIPAddr);														// Init server address structure
+#if defined _WIN32 || defined _WIN64
 	srvAddrListen = JOR_NetServAddr(INADDR_ANY);												// Null for server, IP entered for client
+#endif
 	JOR_NetCliAddr();																			// Init client address structure
 
     if (menu == 's') {																			// If Server menu option is selected
@@ -94,7 +96,13 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 		Get ID for new client
 	*/
 	while (getClientID() < 0 && commsReady) {													// If the current client is new
+
+#if defined __linux__
+		cliSendTo(srvAddr, getClientID(), 0);
+#elif defined _WIN32 || defined _WIN64
 		cliSendTo((menu == 's') ? srvAddrListen : srvAddr, getClientID(), 0);					// Set the client ID
+#endif
+
 		//cliSendTo(srvAddrListen, getClientID(), 0);											// Set the client ID
 
 		JOR_NetSleep(100);																		// Sleep for 100 microseconds
@@ -128,9 +136,12 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 			//if (keyState != 0)
 			if (keyState != prevState) {
 				prevState = keyState;
-				cliSendTo((menu == 's') ? srvAddrListen : srvAddr, getClientID(),				// Only use additional server listening address for server locally
-					keyState);																	// Send keyboard input data to server
-			//cliSendTo((menu == 's') ? srvAddrListen : srvAddr, getClientID(),					// Only use additional server listening address for server locally
+
+#if defined __linux__
+				cliSendTo(srvAddr, getClientID(), keyState);
+#elif defined _WIN32 || defined _WIN64
+				cliSendTo((menu == 's') ? srvAddrListen : srvAddr, getClientID(), keyState);	// Only use additional server listening address for server locally, Send keyboard input data to server
+#endif
 			}
 			//	key_state_from_player(&players[getClientID()]));								// Send keyboard input data to server
 

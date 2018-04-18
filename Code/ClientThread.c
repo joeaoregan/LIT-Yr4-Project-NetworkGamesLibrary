@@ -63,7 +63,8 @@ int clientLoop(void *arg) {
 		if (id >= 0) {															// Parse existing Client data
 			//if (JOR_NetCheckNewClient(id, &numPlayers))						// Increase number of players if new player added		
 				//printf("New Connection, %s \n", JOR_NetDisplayClientAddr(id));
-				//JOR_NetTextColour("New Connection\n", BLUE);					// Display new connection text in blue to highlight
+				//JOR_NetTextColour("New Connection\n", BLUE);					// Display new connection text in blue to highlig
+			JOR_NetCheckNewClient(id, &numPlayers);								// Increase number of players if new player added		ht
 
 			playerList[id].position.x = arrData[1];								// Player x position
 			playerList[id].position.y = arrData[2];								// Player y position
