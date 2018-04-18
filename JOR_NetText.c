@@ -5,6 +5,7 @@
 	JORNetText.cpp
 
 	Format the Server text for both Linux Terminal and Windows Command Prompt
+	Console text is displayed in colour
 */
 
 #include "stdafx.h"
@@ -58,10 +59,14 @@ void JOR_NetTextColour(char* msg, int colour){
 	char* textColour;
 	if (colour == 5)							// Magenta 
 		textColour = "\x1B[35m";
-	else if (colour == 6)						// Magenta 
+	else if (colour == 6)						// Gold 
 		textColour = "\x1B[33m";
 	else if (colour == 9)						// Blue
 		textColour = "\x1B[34m";
+	else if (colour == 10)						// Green
+		textColour = "\x1B[32m";
+	else if (colour == 11)						// Cyan
+		textColour = "\x1B[36m";
 	else if (colour == 12)						// Red
 		textColour = "\x1B[31m";
 	else

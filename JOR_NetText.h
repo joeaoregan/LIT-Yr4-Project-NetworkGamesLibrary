@@ -35,9 +35,15 @@
 #include "Definitions.h"
 
 // Colours
+#define	DGREEN 2
+#define DRED 4
 #define MGNT 5
-#define TEST_COL 6
+#define GOLD 6
+#define WHITE 7
+#define GREY 8
 #define BLUE 9
+#define GREEN 10
+#define CYAN 11
 #define RED 12
 #define NORM 15
 

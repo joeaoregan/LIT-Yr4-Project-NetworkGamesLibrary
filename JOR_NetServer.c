@@ -163,7 +163,7 @@ void srvSendto(int sock, int clientID, int16_t data[], int size) {
 	if (serverSocketReady) {
 		socklen_t addr_size = JN_SA_SZ;
 
-		sendto(sock, (char*)data, JN_I16_SZ * size, 0, (struct sockaddr*)&client, addr_size);	// Send data to client
+		sendto(sock, (char*)data, JN_I16_SZ * size, 0, (struct sockaddr*)&client, addr_size);		// Send data to client
 	}
 }
 
@@ -192,11 +192,13 @@ int srvRecvfrom(int16_t arrData[]) {
 */
 int JOR_NetFindClientID(struct sockaddr_in newCliAddr, unsigned int numClients) {
     unsigned int i;
+
     for (i = 0; i < numClients; i++) {
         if (JOR_NetCompareAddr(&newCliAddr, &listOfClientAddresses[i])) {							// If the address matches and address in the existing clients
             return i;																				// Return clients position in the list									
         }
     }
+
     return numClients;																				// Return next client ID number
 }
 

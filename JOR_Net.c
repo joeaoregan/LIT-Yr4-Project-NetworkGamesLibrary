@@ -29,7 +29,7 @@
 */
 void JOR_NetInitWinsock() {
 #if defined _WIN32 || defined _WIN64
-	JOR_NetTextColour("JOR_NetInitWinsock: ", TEST_COL);
+	JOR_NetTextColour("JOR_NetInitWinsock: ", GOLD);
 	printf(": Initialised Winsock.\n");													// Otherwise indicate winsock has initialised
 	WSADATA wsa;																		// Windows sockets implementation structure
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {										// If winsock doesn't initialise
