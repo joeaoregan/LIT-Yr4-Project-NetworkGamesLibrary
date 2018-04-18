@@ -38,7 +38,7 @@ void initPlayer(Player *players) {
 		players[i].flip = 0;
 	}
 
-	printf("Player List initilised\n");
+	JOR_NetTextColour("Player List initilised\n", GREEN);
 }
 
 /*
@@ -47,9 +47,11 @@ void initPlayer(Player *players) {
 bool isKeyDown(int key, Player* player) {
     if (key == player->left_key) {
         player->left = true;
+		//printf("LEFT LEFT LEFT LEFT LEFT LEFT\n");
     }
     if (key == player->right_key) {
         player->right = true;
+		//printf("RIGHT RIGHT RIGHT RIGHT RIGHT \n");
     }
     if (key == player->up_key) {
         player->up = true;
@@ -102,7 +104,8 @@ bool getInputFromPlayer(SDL_Event e, Player* player) {
 		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// Not needed, player->flip is now sent back from server
 		//else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
     } 
-    else if (e.type == SDL_KEYUP) {
+   // else 
+	if (e.type == SDL_KEYUP) {
 		keyPressed = isKeyUp(e.key.keysym.sym, player);
     }
 

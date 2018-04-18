@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 		JOR_NetSleep(100);																		// Sleep for 100 microseconds
     }
 
-	SDL_Rect bullet_pos = { 0, 0, BULLET_HEIGHT, BULLET_HEIGHT };								// Init bullet object position and dimensions
+	SDL_Rect bulletPos = { 0, 0, BULLET_HEIGHT, BULLET_HEIGHT };								// Init bullet object position and dimensions
 	SDL_Event e;																				// Handle events
 	unsigned int time = 0;
 	//unsigned int count = 0;
@@ -111,18 +111,18 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 		Render the graphics
 	*/
     while (1) {
-		Player *players = getPlayers();															// Get the Player list
+		Player *playersList = getPlayers();														// Get the Player list
 
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) { break; }													// Exit the while loop and close the game
 			//keyPressed = resolve_keyboard(e, &players[getClientID()]);						// Handle keyboard input
-			getInputFromPlayer(e, &players[getClientID()]);										// Handle keyboard input, to send to the server
+			getInputFromPlayer(e, &playersList[getClientID()]);									// Handle keyboard input, to send to the server
         }
 
 		if (SDL_GetTicks() > time) {
 			//printf("Count: %d\n", count++);
 
-			int16_t keyState = getPlayerKeyState(&players[getClientID()]);
+			int16_t keyState = getPlayerKeyState(&playersList[getClientID()]);
 
 			//if (keyPressed)
 			//if (keyState != 0)
@@ -142,28 +142,30 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 
         SDL_RenderClear(renderer);																// Clear the screen
         SDL_RenderCopy(renderer, imgMap, NULL, NULL);											// Draw the map
-		
+
+
 		/*
 			JOR - Highlight the local client in red to distinguish from connected clients
 		*/
         for (i = 0; i <= getNumPlayers(); i++) {												// For every player
-			renderFlip(renderer, (i == getClientID()) ?											// If it is the current client draw with
-				imgPlayer2 : imgPlayer1, &players[i].position, players[i].flip);				// Red sprite for local player, blue for connected players
+			//printf("arrData x: %d y; %d\n", playersList[i].position.x, playersList[i].position.y);
+			renderFlip(renderer, (i == getClientID()) ?											// If it is the current client draw with		
+				imgPlayer2 : imgPlayer1, &playersList[i].position, playersList[i].flip);		// Red sprite for local player, blue for connected players
         }
 
-		renderHUD(renderer, font, players, getNumPlayers(), getClientID(), menu);				// JOR - Render game info text
+		renderHUD(renderer, font, playersList, getNumPlayers(), getClientID(), menu);			// JOR - Render game info text
 
         for (i = 0; i < getScreenBullets(); i++) {												// Handle data for bullets on screen
             //bullet_pos.x = arrBullets[i * 3];													/ Every even number is an x coordinate
 			//bullet_pos.y = arrBullets[i * 3 + 1];												/ Every odd number is a y coordinate
 
-			bullet_pos.x = arrBullets[i * BUL_DATA];											// Every even number is an x coordinate
-			bullet_pos.y = arrBullets[(i * BUL_DATA) + 1];										// Every odd number is a y coordinate
+			bulletPos.x = arrBullets[i * BUL_DATA];												// Every even number is an x coordinate
+			bulletPos.y = arrBullets[(i * BUL_DATA) + 1];										// Every odd number is a y coordinate
 			
 			if (arrBullets[(i * BUL_DATA) + 2] == getClientID())								// Every odd number is a y coordinate
-				SDL_RenderCopy(renderer, imgBullet2, NULL, &bullet_pos);						// Draw the bulletes to screen
+				SDL_RenderCopy(renderer, imgBullet2, NULL, &bulletPos);							// Draw the bulletes to screen
 			else
-				SDL_RenderCopy(renderer, imgBullet1, NULL, &bullet_pos);						// Draw the bulletes to screen
+				SDL_RenderCopy(renderer, imgBullet1, NULL, &bulletPos);							// Draw the bulletes to screen
         }
 
         SDL_RenderPresent(renderer);															// Update the screen with rendering performed each call
@@ -173,8 +175,10 @@ int main(int argc, char* argv[]) {																// Add formal parameter list
 	SDL_WaitThread(threadClient, NULL);															// Make sure thread finishes before application closes
 	SDL_WaitThread(threadServerOutput, NULL);
 	JOR_NetCloseSocket();																		// Close the sockets
-    SDL_DestroyTexture(imgPlayer1);																// Destroy player sprite texture
-    SDL_DestroyTexture(imgBullet1);																// Destroy bullet texture
+	SDL_DestroyTexture(imgPlayer1);																// Destroy player sprite texture
+	SDL_DestroyTexture(imgBullet1);																// Destroy bullet texture
+	SDL_DestroyTexture(imgPlayer2);																// Destroy player sprite texture
+	SDL_DestroyTexture(imgBullet2);																// Destroy bullet texture
     SDL_DestroyTexture(imgMap);																	// Destroy tiled map texture
     SDL_DestroyRenderer(renderer);																// Destroy the rendering context for a window and free associated textures
     SDL_DestroyWindow(window);																	// Destroy the window

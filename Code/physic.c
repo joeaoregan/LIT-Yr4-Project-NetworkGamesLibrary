@@ -140,13 +140,14 @@ int check_if_player_dies(Player *player, struct node **bullets, int *killer) {
 void updatePlayer(Player *player) {
     int x_movement = 0;																				// Set/reset movement
     int y_movement = 0;
-
+		
     if (player->left) {
         x_movement -= PLAYER_SPEED;
         player->face = BACKWARDS;																	// Player is facing backwards (Direction to shoot is right to left)
 		player->flip = 1;
 		//printf("test flip: %d\n", player->flip);
     }
+	
     if (player->right) {
         x_movement += PLAYER_SPEED;
         player->face = FORWARDS;																	// Player is facing forwards (Direction to shoot is left to right)

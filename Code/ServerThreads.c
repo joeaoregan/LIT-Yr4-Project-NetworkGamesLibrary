@@ -201,6 +201,8 @@ int serverOutputLoop(void *arg) {
                 arrData[3] = listOfPlayers[j].kills;											// Client Kills
 				arrData[4] = listOfPlayers[j].deaths;											// Client deaths
 				arrData[5] = listOfPlayers[j].flip;												// Client flip (sprite direction)
+
+				//printf("arrData x: %d y; %d\n", arrData[1], arrData[2]);
 				
 				/*
 					JOR - Try to limit frequency of data begin sent to client
@@ -214,6 +216,7 @@ int serverOutputLoop(void *arg) {
 
 				//if (checkNewData(arrData, j) || arrData[0] != 0) {							// SERVER OK, CLIENT ONLY MOVES ON SERVER 
 					JOR_NetSrvSendto(i, arrData, 6);											// Send to all clients
+					//printf("arrData x: %d y; %d\n", arrData[1], arrData[2]);
 				//	JOR_NetTextCoords(arrData[0], arrData[1], arrData[2]);						// Display coords
 				//}
 

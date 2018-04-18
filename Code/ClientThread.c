@@ -23,8 +23,8 @@
 #endif
 #include "SDLFunctions.h"
 
-Player players[JN_MAX_PLAYERS];													// Player array
-Player* getPlayers() { return players; }										// Get the Player array
+Player playerList[JN_MAX_PLAYERS];												// Player array
+Player* getPlayers() { return playerList; }										// Get the Player array
 
 int numPlayers = 0;																// Number of players currently in the game
 int getNumPlayers() { return numPlayers; }										// Get the current number of players
@@ -40,7 +40,7 @@ int clientLoop(void *arg) {
 	int numBytes, id, bulletsInArray;											// Number of bytes received , clientID, Active bullets
 	bool idSet = false;															// The client ID has not been set yet
 
-	initPlayer(players);														// Initialise the list of players
+	initPlayer(playerList);														// Initialise the list of players
 
 	while (1) {
 		/*
@@ -48,7 +48,7 @@ int clientLoop(void *arg) {
 		*/
 		numBytes = JOR_NetCliRecvfrom(arrData);									// Receive data from server
 		id = arrData[0];														// Parse received data, first int = id
-
+		
 		/*
 			Assign ID to new client connection
 		*/
@@ -61,15 +61,15 @@ int clientLoop(void *arg) {
 			Receive update from server for existing player
 		*/
 		if (id >= 0) {															// Parse existing Client data
-			if (JOR_NetCheckNewClient(id, &numPlayers))							// Increase number of players if new player added		
+			//if (JOR_NetCheckNewClient(id, &numPlayers))						// Increase number of players if new player added		
 				//printf("New Connection, %s \n", JOR_NetDisplayClientAddr(id));
-				JOR_NetTextColour("New Connection\n", BLUE);					// Display new connection text in blue to highlight
+				//JOR_NetTextColour("New Connection\n", BLUE);					// Display new connection text in blue to highlight
 
-			players[id].position.x = arrData[1];								// Player x position
-			players[id].position.y = arrData[2];								// Player y position
-			players[id].kills = arrData[3];										// Number of kills
-			players[id].deaths = arrData[4];									// Number of times died
-			players[id].flip = arrData[5];										// Client flip (sprite direction)
+			playerList[id].position.x = arrData[1];								// Player x position
+			playerList[id].position.y = arrData[2];								// Player y position
+			playerList[id].kills = arrData[3];									// Number of kills
+			playerList[id].deaths = arrData[4];									// Number of times died
+			playerList[id].flip = arrData[5];									// Client flip (sprite direction)
 		}
 
 		/*

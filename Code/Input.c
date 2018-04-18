@@ -36,9 +36,11 @@ int16_t getPlayerKeyState(Player *player) {
 	//printf("key_state from player\n");
     int16_t key_state = 0;
     if (player->left) {
+		//printf("LEFT LEFT LEFT LEFT LEFT LEFT\n");
         key_state = key_state | LEFT_KEY;						// 00000000 or 00000001
     }
     if (player->right) {
+		//printf("RIGHT RIGHT RIGHT RIGHT RIGHT \n");
         key_state = key_state | RIGHT_KEY;						// 00000000 or 00000010
     }
     if (player->up) {
