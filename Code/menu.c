@@ -14,6 +14,9 @@
 #include <stdio.h>	// snprintf()
 #include "Text.h"	// displayTextRed(), displayTextWhite()
 
+/*
+	Display menu option to select client or server
+*/
 void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font) {
     SDL_Event e;
     int pressed = false;
@@ -40,6 +43,9 @@ void selectServerOrClient(SDL_Renderer *renderer, char *menu, TTF_Font *font) {
     }
 }
 
+/*
+	Get the server IP address from the player
+*/
 void enterServerIP(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
     memset(ip, ' ', 15);
 	ip[15] = '\0';																				// Terminate string

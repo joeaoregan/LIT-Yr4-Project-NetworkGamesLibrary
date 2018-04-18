@@ -6,6 +6,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+/*
+	Add an element to the linked list
+*/
 void push_element(struct node **head, void *data, size_t data_size) {
     struct node* new_node = malloc(sizeof(struct node));
     new_node->data = malloc(data_size);
@@ -14,6 +17,9 @@ void push_element(struct node **head, void *data, size_t data_size) {
     *head = new_node;
 }
 
+/*
+	Remove an element from the linked list
+*/
 void erase_element(struct node **head, int n) {
     int i;
     struct node *tmp = *head;
@@ -30,10 +36,13 @@ void erase_element(struct node **head, int n) {
                 break;
             }
         }
+
         struct node *next = NULL; 
+
         if (tmp->next != NULL) {
             next = tmp->next->next;
         }
+
         free(tmp->next->data);
         free(tmp->next);
         tmp->next = next;

@@ -1,5 +1,7 @@
 /*
 	list.h
+
+	Maciej Spychala
 */
 
 #ifndef LIST_H

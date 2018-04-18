@@ -41,7 +41,10 @@ void initPlayer(Player *players) {
 	printf("Player List initilised\n");
 }
 
-bool resolve_player_key_down(int key, Player* player) {
+/*
+	Set the player key presses to send to the server
+*/
+bool isKeyDown(int key, Player* player) {
     if (key == player->left_key) {
         player->left = true;
     }
@@ -61,7 +64,11 @@ bool resolve_player_key_down(int key, Player* player) {
 	return (player->left || player->right || player->up || player->down || player->shoot);
 }
 
-bool resolve_player_key_up(int key, Player* player) {
+/*
+	If the key is no longer pressed
+	Set the player stored key press to false
+*/
+bool isKeyUp(int key, Player* player) {
     if (key == player->left_key) {
         player->left = false;
     }
@@ -83,30 +90,43 @@ bool resolve_player_key_up(int key, Player* player) {
 	return (!(player->left && player->right && player->up && player->down && player->shoot));
 }
 
-bool resolve_keyboard(SDL_Event e, Player* player) {
+/*
+	Set the player key presses to the keyboard input
+*/
+bool getInputFromPlayer(SDL_Event e, Player* player) {
 	bool keyPressed = false;
 	//bool keyReleased = false;
 
     if (e.type == SDL_KEYDOWN) {
-        keyPressed = resolve_player_key_down(e.key.keysym.sym, player);
+        keyPressed = isKeyDown(e.key.keysym.sym, player);
 		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// Not needed, player->flip is now sent back from server
 		//else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
     } 
-    if (e.type == SDL_KEYUP) {
-		keyPressed = resolve_player_key_up(e.key.keysym.sym, player);
+    else if (e.type == SDL_KEYUP) {
+		keyPressed = isKeyUp(e.key.keysym.sym, player);
     }
 
 	return keyPressed;
 }
-
+/*
+// Unused Player position update function
 void set_player_pos(Player* player, float x, float y) {
     player->position.x = (int) x;
     player->position.y = (int) y;
 }
+*/
 
+/*
+	Initialise the bullet using the player that fired its position as the spawn point
+	and the direction they are facing as the direction to move in
+*/
 Bullet init_bullet(int x, int y, int face) {
-    Bullet bullet;
-	bullet.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);						// Init bullet position SDL_Rect
-    bullet.face = face;
-    return bullet;
+	if (face != FORWARDS || face != BACKWARDS)											// JOR If the bullet isn't facing forwards or backwards it won't move
+		face = FORWARDS;																// JOR Set default to forwards initially when player was spawned face was 0
+
+    Bullet bullet;																		// Bullet object
+	bullet.position = makeRect(x, y, BULLET_WIDTH, BULLET_HEIGHT);						// JOR Init bullet position SDL_Rect
+    bullet.face = face;																	// Set the direction to aim the bullet
+
+    return bullet;																		// Return the initiliased bullet object
 }

@@ -14,6 +14,6 @@
 #include <SDL_ttf.h>		// font
 #include "GameObject.h"		// Game objects Player and Bullet
 
-void renderHUD(SDL_Renderer *renderer, TTF_Font *font, Player *players, int numPlayers, int clientID, char menu);
+void renderHUD(SDL_Renderer *renderer, TTF_Font *font, Player *players, int numPlayers, int clientID, char menu);	// Draw the client ID, kills and deaths for each client
 
 #endif

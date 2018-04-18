@@ -11,7 +11,7 @@
 #include "Definitions.h"
 
 /*
-	Handle input from keyboard keypad
+	JOR - Handle input from keyboard keypad
 */
 void keypadInput(int *key) {
 	switch (*key) {												// JOR Keypad keys support added
@@ -29,7 +29,10 @@ void keypadInput(int *key) {
 	}
 }
 
-int16_t key_state_from_player(Player *player) {
+/*
+	Apply binary OR to keystate if key is pressed
+*/
+int16_t getPlayerKeyState(Player *player) {
 	//printf("key_state from player\n");
     int16_t key_state = 0;
     if (player->left) {
@@ -50,7 +53,10 @@ int16_t key_state_from_player(Player *player) {
     return key_state;
 }
 
-void player_from_key_state(Player *player, int16_t key_state) {	
+/*
+	Use binary AND to set Player key presses
+*/
+void setPlayerKeyPresses(Player *player, int16_t key_state) {	
 	//printf("player from key state\n");
     if (key_state & LEFT_KEY) {									// If they are both 1 in first position 00000001 the left key is pressed
         player->left = true;

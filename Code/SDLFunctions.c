@@ -21,6 +21,10 @@ SDL_Rect* initSDLRect(SDL_Rect *Rect, int x, int y, int w, int h) {
 
 	return Rect;
 }
+
+/*
+	Set the SDL_Rect values
+*/
 SDL_Rect makeRect(int x, int y, int w, int h) {
 	SDL_Rect rect = { x, y, w, h };
 	return rect;

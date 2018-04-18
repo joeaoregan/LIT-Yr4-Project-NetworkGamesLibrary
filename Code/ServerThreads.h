@@ -2,6 +2,8 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
+	Originally by:	Maciej Spychala
+
 	ServerThreads.h
 
 	Modified server functionality to work with windows
@@ -15,7 +17,7 @@
 #include <arpa/inet.h>
 #endif
 
-int serverInputLoop(void *arg);		// JOR Changed return type to int		
+int serverInputLoop(void *arg);		// JOR Changed return type to int to comply with SDL_Thread	
 int serverOutputLoop(void *arg);	// JOR Changed return type to int
 
 #endif

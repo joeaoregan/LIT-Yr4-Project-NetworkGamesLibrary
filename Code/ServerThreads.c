@@ -11,7 +11,7 @@
 #include "ServerThreads.h"																		// Threads to handle server input and output
 #include "Input.h"																				// Handle player keyboard input
 #include "GameObject.h"																			// Game objects Player and Bullet
-#include "list.h"
+#include "list.h"																				// Create linked list
 #include "physic.h"
 #include "Definitions.h"
 #include "time.h"
@@ -22,18 +22,21 @@
 #include <ws2tcpip.h>																			// getaddrinfo()
 #include <Windows.h>
 #endif
-#include "SDLFunctions.h"
-#include "JOR_Net.h"
+#include "SDLFunctions.h"																		// SDL_Rect functions
+#include "JOR_Net.h"																			// JOR Networked Games Library
 
-Player listOfPlayers[JN_MAX_PLAYERS];
-struct node *listOfBullets = NULL;
+Player listOfPlayers[JN_MAX_PLAYERS];															// Array of players with a maximum size of 10
+struct node *listOfBullets = NULL;																// Linked list of bullet objects
+int16_t arrStoredPlayerData[JN_MAX_PLAYERS][6];													// Stored player data to compare against before sending updates to all clients
 
-int16_t arrStoredPlayerData[JN_MAX_PLAYERS][6];
-
+/*
+	initialise the connected Players list
+*/
 void initConnectedPlayersList() {
     int i;
     for (i = 0; i < JN_MAX_PLAYERS; i++) {
-		listOfPlayers[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);// Initialise each players position
+		listOfPlayers[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// Initialise each players position
+		listOfPlayers[i].face = FORWARDS;														// Set face or bullet fired from spawn point landing position never moves
     }
 }
 
@@ -55,7 +58,7 @@ int serverInputLoop(void *arg) {
 		*/
         if (JOR_NetExistingClient(curClientID)) {												// If the client is an existing client
             int16_t keys = arrData[1];															// Key pressed is the 2nd position in the data array
-            player_from_key_state(&listOfPlayers[curClientID], keys);
+            setPlayerKeyPresses(&listOfPlayers[curClientID], keys);
 
             if(listOfPlayers[curClientID].shoot && !listOfPlayers[curClientID].reloading) {		// If the player has fired, and isn't reloading
                 Bullet bullet;																	// Create a bullet
@@ -63,7 +66,7 @@ int serverInputLoop(void *arg) {
 					listOfPlayers[curClientID].position.y, BULLET_WIDTH, BULLET_HEIGHT);		// Init the bullet at the current player position using SDL_Rect
                 bullet.face = listOfPlayers[curClientID].face;									// Aim the bullet in the direction the player is facing
 
-				bullet.position.x += (bullet.face == FORWARDS) ? PLAYER_WIDTH : -BULLET_WIDTH; // JOR Offset bullet spawn position, to left or right of player, depending of direction facing
+				bullet.position.x += (bullet.face == FORWARDS) ? PLAYER_WIDTH : -BULLET_WIDTH;	// JOR Offset bullet spawn position, to left or right of player, depending of direction facing
 
                 bullet.player_id = curClientID;													// Set the bullet id to the player who fired the bullet
                 push_element(&listOfBullets, &bullet, sizeof(Bullet));							// Add bullet to the bullet list
@@ -92,7 +95,7 @@ int serverInputLoop(void *arg) {
 	Add the bullet positions to an array to send to the client
 	Return the number of active bullets
 */
-unsigned int createBulleDataArray(struct node *list, int16_t **array) {
+unsigned int createBulleDataArray(struct node *list, int16_t **arrBullets) {
     unsigned int numBullets = 0;																// Bullet amount Can't have negative bullets
     struct node *temp = list;																	// Temporary list
 
@@ -101,37 +104,47 @@ unsigned int createBulleDataArray(struct node *list, int16_t **array) {
         temp = temp->next;																		// Get the next node in linked list
     }
 
-    *array = malloc(sizeof(int16_t) + (numBullets * 2 * sizeof(int16_t)));
-    (*array)[0] = BULLET;																		// Bullet ID is -2 (1st array position 0) - 0.
+    *arrBullets = malloc(sizeof(int16_t) + (numBullets * BUL_DATA * sizeof(int16_t)));
+    (*arrBullets)[0] = BULLET;																	// Bullet ID is -2 (1st array position 0) - 0.
     unsigned int i = 0; 
     temp = list;																				// Reset temp
 
     while (temp != NULL && i < numBullets) {
-        (*array)[1 + (i * 2)] = ((Bullet*) temp->data)->position.x;								// Odd array position starting at 1 used to store x coordinate - 1. 
-        (*array)[2 + (i * 2)] = ((Bullet*) temp->data)->position.y;								// Even array position starting at 2 used to store y coordinate - 2. etc...
+        (*arrBullets)[1 + (i * BUL_DATA)] = ((Bullet*) temp->data)->position.x;					// Odd array position starting at 1 used to store x coordinate - 1. 
+		(*arrBullets)[2 + (i * BUL_DATA)] = ((Bullet*)temp->data)->position.y;					// Even array position starting at 2 used to store y coordinate - 2. etc...
+
+
+		(*arrBullets)[3 + (i * BUL_DATA)] = ((Bullet*)temp->data)->player_id;					// zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+		
         i++;																					// increment i
         temp = temp->next;
     }
 
-    return numBullets;
+    return numBullets;																			// Return the number of bullets added
 }
 
 //bool checkDataChanged(int16_t* arrData) {
 //	int16_t arrStoredData[6];
 	//arrStoredPlayerData	
 //}
+/*
+	Store the player updates in an array
+*/
 void storePlayerData(int16_t* arrData, int client) {
 	int i;
-	for (i = 0; i < 6; i++) {
-			arrStoredPlayerData[client][i] = arrData[i];	// Store the client data
+	for (i = 0; i < 6; i++) {																	// For each array position
+		arrStoredPlayerData[client][i] = arrData[i];											// Store the client data
 	}
 }
 
-
+/*
+	Check the latest player updates against the stored data
+*/
 bool checkNewData(int16_t* arrData, int client) {
 	int i;
-	for (i = 1; i < 6; i++) {	// skip id
-		if (arrStoredPlayerData[client][i] != arrData[i]) return true;
+	for (i = 1; i < 6; i++) {																	// skip id
+		if (arrStoredPlayerData[client][i] != arrData[i]) return true;							// If an array position doesnt match it is new data
 	}
 	/*
 	int j;
@@ -145,18 +158,27 @@ bool checkNewData(int16_t* arrData, int client) {
 	return false;
 }
 
+/*
+	Handle output from the server, update the list of clients with the current state of all clients
+*/
 int serverOutputLoop(void *arg) {
     //int socket = *((int *) arg);
     int16_t arrData[6];																			// Data to send to the client
 	Uint32 start, stop;																			// JOR Replace struct timeval with Uint32 for SDL_GetTicks()
     double time_interval;
     int killerID;																				// ID of the player who has killed another player
+	/*
+		Server send loop
+	*/
     while (1) {
 		start = SDL_GetTicks();																	// JOR Replaces gettimeofday(), get start time of frame
         int i, j;
 
-        updateBullets(&listOfBullets);
+        updateBullets(&listOfBullets);															// Update the bullet object movement on X coord checking collisions with tiles
 
+		/*
+			Update the locally stored list of players data
+		*/
         for (i = 0; i < JOR_NetGetNumClients(); i++) {
             updatePlayer(&listOfPlayers[i]);													// --- UPDATE PLAYER ---
 						
@@ -171,10 +193,8 @@ int serverOutputLoop(void *arg) {
         int16_t *arrBullets = NULL;																// Initialise the bullets array
         unsigned int bulletCount = createBulleDataArray(listOfBullets, &arrBullets);			// Get number of bullets, and set up bullet data to return to client
 		
-		//int k;
-
-		for (i = 0; i < JOR_NetGetNumClients(); i++) {	// Update all clients
-			for (j = 0; j < JOR_NetGetNumClients(); j++) {	// Current Client
+		for (i = 0; i < JOR_NetGetNumClients(); i++) {											// Update all clients
+			for (j = 0; j < JOR_NetGetNumClients(); j++) {										// Current Client
                 arrData[0] = j;																	// Client ID
                 arrData[1] = listOfPlayers[j].position.x;										// Client X position
                 arrData[2] = listOfPlayers[j].position.y;										// Client Y position
@@ -182,6 +202,10 @@ int serverOutputLoop(void *arg) {
 				arrData[4] = listOfPlayers[j].deaths;											// Client deaths
 				arrData[5] = listOfPlayers[j].flip;												// Client flip (sprite direction)
 				
+				/*
+					JOR - Try to limit frequency of data begin sent to client
+				*/
+
 				//if (checkNewData(arrData, j)) {												// If there is new data to send
 				//if (checkNewData(arrData, j) && j == i) {										// MOVE ONLY ON THEIR OWN SCREEN
 				//if (checkNewData(arrData, j) && j != i) {										// MOVE ON EACH OTHERS SCREENS
@@ -209,7 +233,7 @@ int serverOutputLoop(void *arg) {
             } // for number_of_clients j
 
 			//if (bulletCount > 0)																// If there is bullet data to send								// BULLETS NOT CLEARING
-			JOR_NetSrvSendto(i, arrBullets, 1 + (bulletCount * 2));								// Send data to client, ID, and bullet x and y
+			JOR_NetSrvSendto(i, arrBullets, 1 + (bulletCount * BUL_DATA));						// Send data to client, ID, and bullet x and y and id for bullet firer
 
 			JOR_NetSleep(20);																	// Sleep for 20 microseconds
         } // for number_of_clients i

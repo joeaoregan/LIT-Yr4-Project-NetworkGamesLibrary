@@ -1,7 +1,8 @@
 # SDL Game with CLient / Server Communication over UDP
 ## With communication loops on separate threads for Client and Server
 ### Original version by Daniel Linssen
-### Adapted to work run on Windows by Joe O'Regan (tested on windows 10)
+### Adapted to work run on Windows by Joe O'Regan 
+#### (tested on windows 10)
 
 ---
 
@@ -17,6 +18,8 @@
 6. Identify local player with alternate sprite colour
 7. Added more tiles and collision checks
 8. Using **[JOR_Net](https://github.com/joeaoregan/JOR_Net) UDP Network Games Library** to communicate between client and server
+9. Added functionality to highlight text in console window for debugging
+10. Player bullets are now green for local player to highlight them against connected players
 
 ---
 
@@ -30,6 +33,9 @@ Local Player identifed with alternate sprite
 
 ![SDL Game: Additional Tiles](https://raw.githubusercontent.com/joeaoregan/sdl-game/master/Screenshots/20180408_AdditionalTiles.png "SDL Game: Additional Tiles")
 Additional tiles and tile collision checks
+
+![SDL Game: Local Player Bullets Separate Colour](https://raw.githubusercontent.com/joeaoregan/sdl-game/master/Screenshots/20180417_Bullets_Different_Colour_Local_Player.png "SDL Game: Local Player Bullets Separate Colour")
+Local Player Bullets Separate Colour
 
 ---
 

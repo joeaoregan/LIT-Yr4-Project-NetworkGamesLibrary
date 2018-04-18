@@ -14,6 +14,6 @@
 #include "Definitions.h"
 
 SDL_Rect* initSDLRect(SDL_Rect *Rect, int x, int y, int w, int h);	// Initialise SDL_Rect objects
-SDL_Rect makeRect(int x, int y, int w, int h);
+SDL_Rect makeRect(int x, int y, int w, int h);						// Set the SDL_Rect values
 
 #endif

@@ -9,9 +9,13 @@
 
 
 #include "HUD.h"
-#include "Text.h"	// Display game text
-#include <stdio.h>	// snprintf()
+#include "Text.h"		// Display game text
+#include <stdio.h>		// snprintf()
+#include "JOR_Net.h"	// Display errors in coloured text in console window
 
+/*
+	Highlight the local players kills and deaths in red
+*/
 int highlightLocalPlayerText(SDL_Renderer *renderer, TTF_Font *font, int posX, int data, int clientID, int index) {
 	char label[10] = "";
 	int numbytes = snprintf(label, 3, "%d", data);
@@ -21,7 +25,10 @@ int highlightLocalPlayerText(SDL_Renderer *renderer, TTF_Font *font, int posX, i
 	return numbytes;
 }
 
-void renderHUD(SDL_Renderer *renderer, TTF_Font *font, Player *players, int numPlayers, int clientID, char menu) {
+/*
+	Draw the client ID, kills and deaths for each client
+*/
+void renderHUD(SDL_Renderer *renderer, TTF_Font *font, Player *players, int numPlayers, int clientID, char menu) {	// Render the HUD text to the screen
 	int i, numbytes;
 
 	if (menu == 's') 
@@ -42,6 +49,6 @@ void renderHUD(SDL_Renderer *renderer, TTF_Font *font, Player *players, int numP
 		numbytes = highlightLocalPlayerText(renderer, font, 460, players[i].deaths, clientID, i);					// Display the deaths for the local player in red on new line, connected players in white
 	}
 
-	if (numbytes == 0) printf("Error initialising HUD\n");
+	if (numbytes == 0) JOR_NetTextColour("Error initialising HUD\n", RED);											// Highlight error in coloured text
 }
 
