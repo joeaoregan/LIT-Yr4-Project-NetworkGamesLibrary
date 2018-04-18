@@ -20,7 +20,7 @@ program4: JOR_NetText.c
 	gcc -c JOR_NetText.c -o bin/static/JOR_NetText.o
 
 program5: bin/static/JOR_Net.o bin/static/JOR_NetClient.o bin/static/JOR_NetServer.o
-	ar rcs bin/static/libJOR_Net.a bin/static/JOR_Net.o bin/static/JOR_NetClient.o bin/static/JOR_NetServer.o
+	ar rcs bin/static/libJOR_Net.a bin/static/JOR_Net.o bin/static/JOR_NetClient.o bin/static/JOR_NetServer.o bin/static/JOR_NetText.o
 
 # Shared LIb
 
@@ -37,4 +37,4 @@ program9: JOR_NetText.c
 	gcc -c -fPIC JOR_NetText.c -o bin/shared/JOR_NetText.o
 
 program10: bin/shared/JOR_Net.o bin/shared/JOR_NetClient.o bin/shared/JOR_NetServer.o
-	gcc -shared bin/shared/JOR_Net.o bin/shared/JOR_NetClient.o bin/shared/JOR_NetServer.o -o bin/shared/libJOR_Net.so
+	gcc -shared bin/shared/JOR_Net.o bin/shared/JOR_NetClient.o bin/shared/JOR_NetServer.o bin/shared/JOR_NetText.o -o bin/shared/libJOR_Net.so
