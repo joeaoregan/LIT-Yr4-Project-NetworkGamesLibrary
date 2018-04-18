@@ -22,7 +22,7 @@
 #include "JOR_Net.h"
 #include <string.h>																		// memset()
 #include "Definitions.h"																// JN_SERV_ADDR, JN_SERV_PORT
-#include "JOR_NetText.h"
+//#include "JOR_NetText.h"
 
 /*
 	JOR_Net: Init windows networking functionality
@@ -30,7 +30,7 @@
 void JOR_NetInitWinsock() {
 #if defined _WIN32 || defined _WIN64
 	JOR_NetTextColour("JOR_NetInitWinsock: ", GOLD);
-	printf(": Initialised Winsock.\n");													// Otherwise indicate winsock has initialised
+	printf("\tInitialised Winsock.\n");													// Otherwise indicate winsock has initialised
 	WSADATA wsa;																		// Windows sockets implementation structure
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {										// If winsock doesn't initialise
 		printf("JOR_NetInitWinsock: FAILED!!! Error Code : %d", WSAGetLastError());		// Display an error message

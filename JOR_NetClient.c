@@ -15,7 +15,8 @@
 #include "stdafx.h"																				// Visual Studio file  (can't wrap)
 #include "JOR_NetClient.h"
 #include <string.h>
-#include "JOR_NetText.h"
+#include "JOR_NetServer.h"																		// Server functionality
+#include "JOR_NetText.h"																		// Debugging text
 
 bool clientSocketReady = false;
 int cliSock;
@@ -28,23 +29,23 @@ struct sockaddr_in getCliAddr() { return cliAddr; }
 bool JOR_NetInitClientUDP() {
 	JOR_NetTextColour("\nJOR_Net: Initialising Client Socket\n\n", BLUE);
 
+	JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);											// Display label before error and info messages
+
     if ((cliSock = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {										// Create UDP socket
-		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
 		perror("Socket Failed");
 		printf("Sock: %d\n", cliSock);
     } else {
-		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
-		printf("Client Socket Created: %d\n", cliSock);
+		printf("\tClient Socket Created: %d\n", cliSock);
 		clientSocketReady = true;
 	}
 
+	JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
+
     if (bind(cliSock, JN_SA &cliAddr, JN_SA_SZ) < 0) {											// Bind to address
-		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
 		perror("Bind Error");
 		printf("Sock: %d\n", cliSock);
     } else {
-		JOR_NetTextColour("JOR_NetClientUDPSock: ", BLUE);
-		printf("Client Bind OK: %d\n\n", cliSock);
+		printf("\tClient Bind OK: %d\n\n", cliSock);
 		clientSocketReady = true;
 	}
 
@@ -67,7 +68,7 @@ struct sockaddr_in JOR_NetCliAddr() {
 /*
 	JOR_Net: Send player data to the server
 */
-void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
+void JOR_NetCliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys) {
 	if (clientSocketReady) {
 		int16_t arrData[2] = { id, keys };														// Client identifier, and key pressed
 
@@ -102,7 +103,7 @@ void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers) {
 	*numPlayers = id;																			// Number of players in the game
 
 	JOR_NetTextColour("JOR_NetSetClientID: ", BLUE);
-	printf("Client ID is now: %d\n", *clientID);												// Display the client ID
+	printf("\tClient ID is now: %d\n", *clientID);												// Display the client ID
 }
 
 /*
@@ -113,9 +114,14 @@ bool JOR_NetCheckNewClient(int id, int *numPlayers) {
 		*numPlayers = id;																		// Set the number of players to match the ID
 
 		JOR_NetTextColour("JOR_NetCheckNewClient: ", BLUE);
-		printf("Total players is now: %d\n", *numPlayers + 1);									// The number of players in the game has increased
+		printf("\nTotal players is now: %d\n", *numPlayers + 1);								// The number of players in the game has increased
+		
+		JOR_NetTextColour("New Connection: ", BLUE);											// Display new connection message in blue
+		printf("\t%s\n", JOR_NetDisplayClientAddr(id));											// Display the client address
+
 		return true;
 	}
+
 	return false;
 }
 

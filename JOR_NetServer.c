@@ -25,19 +25,20 @@ bool getServSockReady() { return serverSocketReady; }
 struct sockaddr_in listOfClientAddresses[JN_MAX_PLAYERS];											// Connected client addresses
 unsigned int totalNumClients = 0;																	// Number of connected clients
 int srvSock, srvSockListen;																			// Server Socket, additional listening socket for server needed to listen on any local address
-char* cliAddrStr[INET6_ADDRSTRLEN];																	// Char string to hold human readable address
+char cliAddrStr[INET6_ADDRSTRLEN];																	// Char string to hold human readable address
 char str[INET6_ADDRSTRLEN];
 
 /*
+	JOR_Net: Display the address for a new client connection
+*/
 char* JOR_NetDisplayClientAddr(int clientID) {
 	struct sockaddr_in cliAddr =  JOR_NetGetClientAddr(clientID);
-																// Char string to hold human readable address
-	inet_ntop(AF_INET, &(cliAddr.sin_addr), cliAddrStr, INET6_ADDRSTRLEN);									// Get the IP address
+																									// Char string to hold human readable address
+	inet_ntop(AF_INET, &(cliAddr.sin_addr), cliAddrStr, INET6_ADDRSTRLEN);							// Get the IP address
 	snprintf(str, INET6_ADDRSTRLEN + 5, "%s:%d\n", cliAddrStr, ntohs(cliAddr.sin_port));
 
 	return str;
 }
-*/
 
 /*
 	JOR_Net: Return the list of connected client addresses
@@ -47,7 +48,7 @@ struct sockaddr_in JOR_NetGetClientAddr(int select) {
 }
 
 /*
-	JOR_Net: Initilise the server socket
+	JOR_Net: Initilise the UDP server listen socket
 */
 bool JOR_NetInitServerListenUDP(struct sockaddr_in *srvAddr) {
 	JOR_NetTextColour("\nInitialise Server Listen Socket\n\n", RED);
@@ -55,29 +56,11 @@ bool JOR_NetInitServerListenUDP(struct sockaddr_in *srvAddr) {
 
 	return serverSocketReady;
 }
+
 /*
-	JOR_Net: Initilise the server socket
+	JOR_Net: Initilise the UDP server send socket
 */
 bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
-	/*
-    memset(listOfClientAddresses, 0, JN_SA_SZ * JN_MAX_PLAYERS);									// Initialise the list of client addresses in memory
-
-    if ((srvSock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {									// Initialise the server socket
-        perror("JOR_NetInitServerUDP: Server_UDP createUDPServer: Socket Failed");
-		printf("JOR_NetInitServerUDP: Socket: %d\n", srvSock);
-    } else {
-		printf("JOR_NetInitServerUDP: Server Socket Created: %d\n", (srvSock));
-		serverSocketReady = true;
-	}
-
-    if (bind(srvSock, (struct sockaddr*) srvAddr, JN_SA_SZ) < 0) {									// Bind the server socket
-        perror("JOR_NetInitServerUDP: Bind Error");
-		printf("Sock: %d\n", srvSock);
-    } else {
-		printf("JOR_NetInitServerUDP: Socket Bind OK\n\n");
-		serverSocketReady = true;
-	}
-	*/
 	JOR_NetTextColour("\nInitialise Server Send Socket\n\n", RED);
 
 	serverSocketReady = initServerUDPSock(&srvSock, srvAddr);
@@ -85,6 +68,9 @@ bool JOR_NetInitServerUDP(struct sockaddr_in *srvAddr) {
 	return serverSocketReady;
 }
 
+/*
+	JOR_Net: IInitialise the UDP sever socket
+*/
 bool initServerUDPSock(int *sock, struct sockaddr_in *srvAddr) {
 	// set SO_REUSEADDR on a socket to true (1):
 	//int optval = 1;
@@ -92,30 +78,30 @@ bool initServerUDPSock(int *sock, struct sockaddr_in *srvAddr) {
 
 	memset(listOfClientAddresses, 0, JN_SA_SZ * JN_MAX_PLAYERS);
 
+	JOR_NetTextColour("JOR_NetInitServerUDP: ", RED);												// Display label before error and info message
+
 	if ((*sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
 		perror("JOR_NetInitServerUDP: Server_UDP createUDPServer: Socket Failed");
-		JOR_NetTextColour("JOR_NetInitServerUDP: ", RED);
-		printf("Socket Error: %d\n", *sock);
+		printf("\tSocket Error: %d\n", *sock);
 	} else {
-		JOR_NetTextColour("JOR_NetInitServerUDP: ", RED);
-		 printf("Server Socket Created: %d\n", (*sock));
+		 printf("\tServer Socket Created: %d\n", (*sock));
 		 serverSocketReady = true;
 	 }
+
+	JOR_NetTextColour("JOR_NetInitServerUDP: ", RED);
 		
 	if (bind(*sock, (struct sockaddr*) srvAddr, JN_SA_SZ) < 0) {									// Bind the server socket
-		JOR_NetTextColour("JOR_NetInitServerUDP: ", RED);
-		perror("Bind Error");
-		printf("Sock: %d\n", *sock);
+		printf("\tSock: %d\t", *sock);
+		JOR_NetTextColour("Bind Error", RED);
+		perror(" ");
 	}
 	else {
-		JOR_NetTextColour("JOR_NetInitServerUDP: ", RED);
-		printf("Socket Bind OK: %d\n", *sock);
+		printf("\tSocket Bind OK: %d\n", *sock);
 		serverSocketReady = true;
 	}
 
 	return serverSocketReady;
 }
-
 
 /*
 	JOR_Net: Create server sockaddr_in address structure
@@ -141,17 +127,28 @@ struct sockaddr_in JOR_NetServAddr(char *ip) {
 	char str[INET6_ADDRSTRLEN];															// Char string to hold human readable address
 	inet_ntop(AF_INET, &(srvAddr.sin_addr), str, INET6_ADDRSTRLEN);						// Get the IP address
 	JOR_NetTextColour("JOR_NetServAddr: ", RED);
-	printf("Server Address: %s:%d\n", str, ntohs(srvAddr.sin_port));	// Display the IP address
+	printf("\tServer Address: %s:%d\n", str, ntohs(srvAddr.sin_port));	// Display the IP address
 
     return srvAddr;
 }
 
-
-void JOR_NetSrvSendto(int clientID, int16_t data[], int size) {
-	srvSendto(srvSock, clientID, data, size);
+/*
+	JOR_Net: Send data to the client
+*/
+void JOR_NetSrvSendto(int clientID, int16_t arrData[], int size) {
+	srvSendto(srvSock, clientID, arrData, size);
+	//printf("arrData x: %d y; %d\n", arrData[1], arrData[2]);
 }
-void JOR_NetSrvSendID(int clientID, int16_t data[], int size) {
-	srvSendto(srvSockListen, clientID, data, size);
+
+/*
+	JOR_Net: Send a new client an ID, additional socket added so windows can use more than 127.0.0.1
+*/
+void JOR_NetSrvSendID(int clientID, int16_t arrData[], int size) {
+#if defined __linux__
+	srvSendto(srvSock, clientID, arrData, size);													// If the IP address is not already set
+#elif defined _WIN32 || defined _WIN64
+	srvSendto(srvSockListen, clientID, arrData, size);												// If the IP address is not already set
+#endif
 }
 
 /*
@@ -170,7 +167,7 @@ void srvSendto(int sock, int clientID, int16_t data[], int size) {
 /*
 	JOR_Net: Receive data from client
 */
-int srvRecvfrom(int16_t arrData[]) {
+int JOR_NetSrvRecvfrom(int16_t arrData[]) {
 	struct sockaddr_in cliAddr;
 	socklen_t addr_size = JN_SA_SZ;
 	int curClient;

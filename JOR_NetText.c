@@ -12,7 +12,6 @@
 #include "JOR_NetText.h"
 #include <stdio.h>
 
-
 //#define RED   "\x1B[31m"
 //#define GREEN "\x1B[32m"
 //#define YELO  "\x1B[33m"

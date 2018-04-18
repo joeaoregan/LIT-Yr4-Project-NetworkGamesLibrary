@@ -23,13 +23,13 @@
 #endif
 
 #pragma comment(lib, "Ws2_32.lib")
-#include <WinSock2.h>																	// Windows sockets
-#include <ws2tcpip.h>																	// getaddrinfo()
+#include <WinSock2.h>																			// Windows sockets
+#include <ws2tcpip.h>																			// getaddrinfo()
 #endif
-#include <stdio.h>																		// printf()
-#include <stdint.h>																		// int16_t
-#include "stdbool.h"																	// Boolean values
-#include "Definitions.h"																// BUF_MAX, JN_MODIFIER
+#include <stdio.h>																				// printf()
+#include <stdint.h>																				// int16_t
+#include "stdbool.h"																			// Boolean values
+#include "Definitions.h"																		// BUF_MAX, JN_MODIFIER
 
 // extern "C" guards are only required when programming with C++
 #ifdef __cplusplus
@@ -39,19 +39,19 @@ extern "C" {
 	bool getServSockReady(); 
 	struct sockaddr_in getCliAddr();
 
-	JN_MODIFIER bool JOR_NetInitClientUDP();											// Create the client UDP socket
+	JN_MODIFIER bool JOR_NetInitClientUDP();													// Create the client UDP socket
 
-	JN_MODIFIER struct sockaddr_in JOR_NetCliAddr();									// JOR_Net: Create client sockaddr_in address structure
+	JN_MODIFIER struct sockaddr_in JOR_NetCliAddr();											// JOR_Net: Create client sockaddr_in address structure
 
-	JN_MODIFIER void cliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
+	JN_MODIFIER void JOR_NetCliSendTo(struct sockaddr_in srvAddr, int16_t id, int16_t keys);	// Send data from client to server over UDP
 
-	JN_MODIFIER int JOR_NetCliRecvfrom(int16_t *arrData);								// Receive data from server over UDP
+	JN_MODIFIER int JOR_NetCliRecvfrom(int16_t *arrData);										// Receive data from server over UDP
 
-	JN_MODIFIER void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);	// Set the ID for each player
+	JN_MODIFIER void JOR_NetSetClientID(int id, int16_t* clientID, int *numPlayers);			// Set the ID for each player
 
-	JN_MODIFIER bool JOR_NetCheckNewClient(int id, int *numPlayers);					// Increase number of players if new player added
+	JN_MODIFIER bool JOR_NetCheckNewClient(int id, int *numPlayers);							// Increase number of players if new player added
 
-	JN_MODIFIER void JOR_NetCloseClientSocket();										// Close Client socket
+	JN_MODIFIER void JOR_NetCloseClientSocket();												// Close Client socket
 
 #ifdef __cplusplus
 }

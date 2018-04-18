@@ -10,7 +10,7 @@
 #pragma once
 
 // Linux
-#if defined __linux__
+//#if defined __linux__
 // Colours
 //#define RED   "\x1B[31m"
 //#define GREEN "\x1B[32m"
@@ -20,7 +20,7 @@
 //#define CYAN  "\x1B[36m"
 //#define NORM  "\x1B[0m"
 // Windows
-#elif defined _WIN32 || defined _WIN64
+#if defined _WIN32 || defined _WIN64
 
 #ifdef JORNET_EXPORTS											// Added by default to the defined preprocessor macros for the DLL projet
 #define JORNET_API __declspec(dllexport)						// Modifier set on the function declarations. Tells the compiler and linker to export a function or variable from the DLL so that it can be used by other applications
@@ -30,7 +30,6 @@
 
 #include <windows.h>   											// WinApi header
 #endif
-
 
 #include "Definitions.h"
 
