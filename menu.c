@@ -2,6 +2,8 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
+	Originally by:	Maciej Spychala
+
 	menu.c
 
 	Added JOR_Net library for communication

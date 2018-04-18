@@ -2,6 +2,8 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
+	Originally by:	Maciej Spychala
+
 	Input.c
 
 	Added  keyboard keypad input
@@ -52,6 +54,7 @@ int16_t getPlayerKeyState(Player *player) {
     if (player->shoot) {
         key_state = key_state | ATTACK_KEY;						// 00000000 or 00010000
     }
+
     return key_state;
 }
 

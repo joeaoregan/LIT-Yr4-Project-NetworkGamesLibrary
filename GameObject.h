@@ -35,13 +35,9 @@ typedef struct BulletObject {
 
 void initPlayer(Player *players);								// Initialise the player struct
 
-//void resolve_player_key_up(int key, Player* player);
 bool isKeyUp(int key, Player* player);							// Return true if all game keys are up NOT CORRECT - should return true each key
-//void resolve_player_key_down(int key, Player* player);
 bool isKeyDown(int key, Player* player);						// Return true if any game key is pressed
-//void resolve_keyboard(SDL_Event e, Player* player);
 bool getInputFromPlayer(SDL_Event e, Player* player);			// Get keyboard input and set the player saved key presses
-//void set_player_pos(Player* player, float x, float y);
-Bullet init_bullet(int x, int y, int face);
+Bullet initBullet(int x, int y, int face);						// Initialise bullet objects, added check for player face, to make sure bullet fires from initial position
 
 #endif

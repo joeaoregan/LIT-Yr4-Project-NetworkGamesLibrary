@@ -2,6 +2,8 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
+	Originally by:	Maciej Spychala
+
 	GameObject.c
 
 	Added change in direction for player sprite
@@ -13,7 +15,7 @@
 #include "physic.h"
 #include "Definitions.h"
 #include "SDLFunctions.h"
-#include "JOR_Net.h"																	// JN_MAX_PLAYERS definition
+#include "JOR_Net.h"																	// JOR JN_MAX_PLAYERS definition
 
 /*
 	Initialise the list of players
@@ -22,12 +24,12 @@
 void initPlayer(Player *players) {
 	unsigned int i;
 	for (i = 0; i < JN_MAX_PLAYERS; i++) {
-		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// Init player position SDL_Rect
+		players[i].position = makeRect(SPAWN_X, SPAWN_Y, PLAYER_WIDTH, PLAYER_HEIGHT);	// JOR Init player position SDL_Rect
 		players[i].left_key = SDLK_LEFT;
 		players[i].right_key = SDLK_RIGHT;
 		players[i].up_key = SDLK_UP;
 		players[i].down_key = SDLK_DOWN;
-		players[i].attack_key = SDLK_SPACE;												// Change fire to spacebar (Was SDLK_z)
+		players[i].attack_key = SDLK_SPACE;												// JOR Change fire to spacebar (Was SDLK_z)
 		players[i].face = 1;
 		players[i].shoot = false;
 		players[i].y_speed = 0;
@@ -63,7 +65,7 @@ bool isKeyDown(int key, Player* player) {
         player->shoot = player->face;
     }
 
-	return (player->left || player->right || player->up || player->down || player->shoot);
+	return (player->left || player->right || player->up || player->down || player->shoot);	// JOR attempt to limit frequency of data sent
 }
 
 /*
@@ -89,7 +91,7 @@ bool isKeyUp(int key, Player* player) {
 
 
 	//return ((player->left && player->right && player->up && player->down && player->shoot));	// Moves around
-	return (!(player->left && player->right && player->up && player->down && player->shoot));
+	return (!(player->left && player->right && player->up && player->down && player->shoot));	// JOR attempt to limit the frequency of data sent
 }
 
 /*
@@ -101,7 +103,7 @@ bool getInputFromPlayer(SDL_Event e, Player* player) {
 
     if (e.type == SDL_KEYDOWN) {
         keyPressed = isKeyDown(e.key.keysym.sym, player);
-		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// Not needed, player->flip is now sent back from server
+		//if (e.key.keysym.sym == SDLK_LEFT) player->flip = 1;							// JOR Not needed, player->flip is now sent back from server
 		//else if (e.key.keysym.sym == SDLK_RIGHT) player->flip = 0;
     } 
    // else 
@@ -123,7 +125,7 @@ void set_player_pos(Player* player, float x, float y) {
 	Initialise the bullet using the player that fired its position as the spawn point
 	and the direction they are facing as the direction to move in
 */
-Bullet init_bullet(int x, int y, int face) {
+Bullet initBullet(int x, int y, int face) {
 	if (face != FORWARDS || face != BACKWARDS)											// JOR If the bullet isn't facing forwards or backwards it won't move
 		face = FORWARDS;																// JOR Set default to forwards initially when player was spawned face was 0
 

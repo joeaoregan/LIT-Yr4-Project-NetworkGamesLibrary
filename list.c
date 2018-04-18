@@ -1,5 +1,7 @@
 /*
 	list.c
+
+	Maciej Spychala
 */
 
 #include "list.h"

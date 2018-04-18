@@ -14,7 +14,7 @@
 #include "JOR_Net.h"	// Display errors in coloured text in console window
 
 /*
-	Highlight the local players kills and deaths in red
+	JOR Highlight the local players kills and deaths in red
 */
 int highlightLocalPlayerText(SDL_Renderer *renderer, TTF_Font *font, int posX, int data, int clientID, int index) {
 	char label[10] = "";
@@ -26,7 +26,7 @@ int highlightLocalPlayerText(SDL_Renderer *renderer, TTF_Font *font, int posX, i
 }
 
 /*
-	Draw the client ID, kills and deaths for each client
+	JOR Draw the client ID, kills and deaths for each client
 */
 void renderHUD(SDL_Renderer *renderer, TTF_Font *font, Player *players, int numPlayers, int clientID, char menu) {	// Render the HUD text to the screen
 	int i, numbytes;

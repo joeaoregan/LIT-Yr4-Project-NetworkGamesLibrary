@@ -18,6 +18,10 @@
 /*
 	JOR Additions
 */
+#define DEBUG_KEYSTATE true						// Debug the key presses
+#define DEBUG_INPUT_LOOP_COUNT false				// Main send loop
+#define DEBUG_MAIN_COORDS false						// Main coordinate check
+
 #define BUL_DATA 3									// Data for each bullet: x, y, and ID
 
 #define CENTRE_TEXT -1								// JOR If used for x coordinate centre horizonally, and y vertical

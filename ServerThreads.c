@@ -2,6 +2,9 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
+	Originally by:	Maciej Spychala
+
+
 	ServerThreads.c
 
 	Modified server functionality to work with windows
@@ -51,7 +54,7 @@ int serverInputLoop(void *arg) {
     initConnectedPlayersList();																	// Initialise the list of connected players
 
     while (1) {
-		curClientID = srvRecvfrom(arrData);														// Receive data from client, returning the client position in client address list
+		curClientID = JOR_NetSrvRecvfrom(arrData);												// Receive data from client, returning the client position in client address list
 
 		/*
 			Do existing client stuff

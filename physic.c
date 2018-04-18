@@ -2,6 +2,8 @@
 	Modified by:	Joe O'Regan
 					K00203642
 
+	Originally by:	Maciej Spychala
+
 	Physics.c
 
 	Added support for additional tiles to the tiled map

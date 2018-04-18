@@ -1,7 +1,11 @@
 /*
 	Modified by:	Joe O'Regan
 					K00203642
+
+	Originally by:	Maciej Spychala
+
 	Text.c
+
 	Added options to select text colour and centre horizontally and vertically
 	Added text centering on screen
 	Added colour selection and red and white text functions
