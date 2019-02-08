@@ -8,6 +8,8 @@
 ##### * Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. 
 ##### * The Network functionality still needs some work to be compatible with Windows (winsock2)
 
+Year 4 Project: Building a library for creating networked games
+
 ## Features:
 ##### Netork Library:
 * Server recieves and parses the players coordinates from the game
