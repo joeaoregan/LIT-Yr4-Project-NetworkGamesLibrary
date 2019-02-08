@@ -1,5 +1,5 @@
 ![JOR_Net: Logo](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/20180417_Lib_Logo.png "JOR_Net: Logo")
-JOR_Net: Cross-platform UDP Networked Games Library
+###### JOR_Net: Cross-platform UDP Networked Games Library
 
 # Year 4 Games Design & Development
 # Project: Cross-Plstform UDP Networked Games Library
@@ -30,6 +30,8 @@ JOR_Net: Cross-platform UDP Networked Games Library
 
 ### Antibody 3rd Year Project Game with added network functionality
 
+![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
+###### Simple 2D side-scrolling game in C++
 ![Feature 2: Networking](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/Feature2.png "Coordinates and shots fired data sending using UDP to Server")
 ###### Using UDP to communicate Player position and indicate shots fired, from Game Client to Server
 ![Server Assigns ID To Players](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/3ServerAssignsID.jpg "Player ID Assigned By Server")
