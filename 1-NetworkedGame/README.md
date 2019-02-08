@@ -1,8 +1,12 @@
-# Year 4 Games Design & Development 
-# Project: Networked Games Library
-### Joe O'Regan
-### K00203642
+# Year 4 Games Design & Development
+# Project: Cross-Plstform UDP Networked Games Library
+### Joe O'Regan (K00203642)
 #### 08/02/2018 
+
+---
+
+## Networked Games Library
+
 ##### * Server tells 2 connected players apart
 ##### * Changed server to C++ from C (not much difference). Server sends player ID when game connects
 ##### * Game is now cross-platform, compiling in both Windows (Visual Studio) and Ubuntu. 
@@ -23,7 +27,7 @@ Year 4 Project: Building a library for creating networked games
 
 ---
 
-![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
+![Feature 1: Simple Game](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/Feature1.png "Simple 2D Side-scrolling C++ game created using SDL2")
 Simple 2D side-scrolling game in C++
 
 ---
@@ -34,7 +38,7 @@ Simple 2D side-scrolling game in C++
 
 Simple 2D side-scrolling C++ game. Created in Linux (Ubuntu) using SDL2
 
-![Feature 2: Networking](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/Feature2.png "Coordinates and shots fired data sending using UDP to Server")
+![Feature 2: Networking](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/Feature2.png "Coordinates and shots fired data sending using UDP to Server")
 Using UDP to communicate Player position and indicate shots fired, from Game Client to Server
 
 ---
@@ -47,7 +51,7 @@ Game Client sends data to Server via UDP. Player coordinates update for X and Y,
 
 ###### 30/01/2018
 
-![Server Assigns ID To Players](https://raw.githubusercontent.com/joeaoregan/Yr4-Project-Networked-Games-Library/master/Screenshots/3ServerAssignsID.jpg "Player ID Assigned By Server")
+![Server Assigns ID To Players](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/3ServerAssignsID.jpg "Player ID Assigned By Server")
 Player ID Assigned By The Server, And Used To Identify Each Player In The Game
 
 ---
@@ -184,7 +188,3 @@ sudo apt-get install libsdl2-mixer-dev
 apt-cache search libsdl2-ttf
 sudo apt-get install libsdl2-ttf-dev
 ```
-
-
-
-

@@ -1,7 +1,10 @@
 # Year 4 Games Design & Development 
-# Project: Networked Games Library
-## UDP Test Cases
-### Joe O'Regan
-### K00203642
+# Project: Cross-Plstform UDP Networked Games Library
+### Joe O'Regan (K00203642)
 #### 16/02/2018 
-##### * UDP Client and Server with bidirectional communication
+
+---
+
+## UDP Test Cases
+
+* UDP Client and Server with bidirectional communication
