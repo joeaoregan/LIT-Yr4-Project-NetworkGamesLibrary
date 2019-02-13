@@ -1,11 +1,15 @@
 ![JOR_Net: Logo](https://raw.githubusercontent.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/master/Screenshots/20180417_Lib_Logo.png "JOR_Net: Logo")
 ###### JOR_Net: Cross-platform UDP Networked Games Library
 
-# Year 4 Games Design & Development
-# Project: Cross-Plstform UDP Networked Games Library
-### Joe O'Regan (K00203642)
+# Fourth Year Project
+## Joe O'Regan (K00203642)
+### Year 4 (2017/18), Semesters 7 and 8
+#### BSc Computing (Games Design and Development)
+##### Limerick Institute of Technology
 
 ---
+
+## Project: Cross-Plstform UDP Networked Games Library
 
 1. **[Networked Game](https://github.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/tree/master/1-NetworkedGamesLibrary)** Using C++ third-year project game Antibody
 2. **[UDP-Test](https://github.com/joeaoregan/LIT-Yr4-Project-NetworkGamesLibrary/tree/master/2-UDP-Test)** UDP communication test cases
